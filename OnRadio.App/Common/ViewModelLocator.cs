@@ -1,8 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
-using OnRadio.App.Services;
 using OnRadio.App.ViewModels;
+using OnRadio.BL.Interfaces;
+using OnRadio.PlayCz;
 
 namespace OnRadio.App.Common
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnRadio.App.Installers;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -57,6 +58,8 @@ namespace OnRadio.App
 
             if (e.PrelaunchActivated == false)
             {
+                IoCInstaller.Install();
+
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
@@ -64,6 +67,7 @@ namespace OnRadio.App
                     // parameter
                     rootFrame.Navigate(typeof(Views.RadioList), e.Arguments);
                 }
+
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
