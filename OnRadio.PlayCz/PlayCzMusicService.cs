@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
 using System.Collections.Generic;
@@ -43,9 +44,31 @@ namespace OnRadio.PlayCz
             return radios;
         }
 
-        public Task<string> GetRadioStreamUrlAsync(RadioItem radio)
+        public async Task<StreamItem> GetRadioStreamUrlAsync(RadioItem radio)
         {
-            return Task.FromResult("http://icecast3.play.cz/bonton-128.mp3");
+            using (var client = new HttpClient())
+            {
+                // ToDo: process radio.Id with url encode
+                var response = await client.GetAsync(baseUrl + @"/json/getStreamMobile/" + radio.Id);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    JObject result = JObject.Parse(responseContent);
+
+                    var stream = result["data"]["stream"].ToObject<ApiStreamItem>();
+
+                    return new StreamItem()
+                    {
+                        IsActive = stream.IsActive,
+                        Listeners = stream.Listeners,
+                        StreamUrl = stream.Pubpoint
+                    };
+                }
+            }
+
+            return null;
         }
     }
 }

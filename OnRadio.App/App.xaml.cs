@@ -20,7 +20,7 @@ namespace OnRadio.App
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            this.Construct();
         }
 
         /// <summary>
@@ -33,21 +33,45 @@ namespace OnRadio.App
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                this.DebugSettings.EnableFrameRateCounter = false;
             }
 #endif
+            IoCInstaller.Install();
+
+            CreateRootFrame(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
+
+            // Ensure the current window is active
+            Window.Current.Activate();
+        }
+
+        /// <summary>
+        /// Creates the frame containing the view
+        /// </summary>
+        /// <remarks>
+        /// This is the same code that was in OnLaunched() initially.
+        /// It is moved to a separate method so the view can be restored
+        /// when leaving the background if it was unloaded when the app
+        /// entered the background.
+        /// </remarks>
+        private void CreateRootFrame(ApplicationExecutionState previousExecutionState, string arguments, bool prelaunchActivated)
+        {
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
             {
+                System.Diagnostics.Debug.WriteLine("CreateFrame: Initializing root frame ...");
+
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
+                // Set the default language
+                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (previousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -56,20 +80,15 @@ namespace OnRadio.App
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (!prelaunchActivated)
             {
-                IoCInstaller.Install();
-
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(Views.RadioList), e.Arguments);
+                    rootFrame.Navigate(typeof(Views.RadioList), arguments);
                 }
-
-                // Ensure the current window is active
-                Window.Current.Activate();
             }
         }
 
@@ -83,18 +102,7 @@ namespace OnRadio.App
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
-        /// without knowing whether the application will be terminated or resumed with the contents
-        /// of memory still intact.
-        /// </summary>
-        /// <param name="sender">The source of the suspend request.</param>
-        /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
-            deferral.Complete();
-        }
+        // Add any application contructor code in here.
+        partial void Construct();
     }
 }

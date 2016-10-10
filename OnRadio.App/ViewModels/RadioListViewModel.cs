@@ -44,9 +44,9 @@ namespace OnRadio.App.ViewModels
 
         public async Task ItemSelected()
         {
-            var url = await _musicService.GetRadioStreamUrlAsync(SelectedRadioItem);
+            var stream = await _musicService.GetRadioStreamUrlAsync(SelectedRadioItem);
 
-            _backgroundAudio.Play(url);
+            _backgroundAudio.Play(stream.StreamUrl);
         }
 
         protected override async Task LoadData()

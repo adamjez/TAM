@@ -5,17 +5,26 @@ using Windows.Media.Playback;
 
 namespace OnRadio.BL.BackgroundAudio
 {
-    public class BackgroundAudio : IBackgroundAudio
+    public class BackgroundAudio : IBackgroundAudio, IDisposable
     {
-        private static readonly MediaPlayer MediaPlayer = new MediaPlayer();
+        public BackgroundAudio()
+        {
+            // Create the player instance
+            MediaPlayer = new MediaPlayer { AutoPlay = false };
+        }
+
+        public MediaPlayer MediaPlayer { get; private set; }
 
         public void Play(string url)
         {
             MediaPlayer.Source = MediaSource.CreateFromUri(new Uri(url));
 
             MediaPlayer.Play();
+        }
 
-            //MediaPlayer.Dispose();
+        public void Dispose()
+        {
+            MediaPlayer.Dispose();
         }
     }
 }

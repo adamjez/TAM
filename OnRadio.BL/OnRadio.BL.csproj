@@ -111,6 +111,7 @@
     <Compile Include="Interfaces\IBackgroundAudio.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
     <Compile Include="Models\RadioItem.cs" />
+    <Compile Include="Models\StreamItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\OnRadio.BL.rd.xml" />
   </ItemGroup>

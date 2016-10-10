@@ -8,6 +8,6 @@ namespace OnRadio.BL.Interfaces
     {
         Task<List<RadioItem>> GetRadiosAsync();
 
-        Task<string> GetRadioStreamUrlAsync(RadioItem radio);
+        Task<StreamItem> GetRadioStreamUrlAsync(RadioItem radio);
     }
 }
