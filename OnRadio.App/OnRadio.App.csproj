@@ -103,6 +103,7 @@
     <Compile Include="Common\ViewModelLocator.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
+    <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioListViewModel.cs" />
     <Compile Include="Views\RadioList.xaml.cs">
       <DependentUpon>RadioList.xaml</DependentUpon>

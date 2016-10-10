@@ -1,19 +1,18 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
+using OnRadio.BL.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.Media.Core;
-using Windows.Media.Playback;
 
 namespace OnRadio.App.ViewModels
 {
     public class RadioListViewModel : LoadingViewModelBase
     {
         private readonly IMusicService _musicService;
-        private readonly IBackgroundAudio _backgroundAudio;
+        private readonly PlaybackService _playbackService;
 
         private ObservableCollection<RadioItem> _radioList;
 
@@ -21,10 +20,10 @@ namespace OnRadio.App.ViewModels
 
         private RelayCommand _itemSelectedCommand;
 
-        public RadioListViewModel(IMusicService musicService, IBackgroundAudio backgroundAudio)
+        public RadioListViewModel(IMusicService musicService, PlaybackService playbackService)
         {
             _musicService = musicService;
-            _backgroundAudio = backgroundAudio;
+            _playbackService = playbackService;
         }
 
         public ObservableCollection<RadioItem> RadioList
@@ -46,7 +45,7 @@ namespace OnRadio.App.ViewModels
         {
             var stream = await _musicService.GetRadioStreamUrlAsync(SelectedRadioItem);
 
-            _backgroundAudio.Play(stream.StreamUrl);
+            _playbackService.PlayFromUrl(stream.StreamUrl);
         }
 
         protected override async Task LoadData()

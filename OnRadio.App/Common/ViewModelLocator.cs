@@ -25,9 +25,11 @@ namespace OnRadio.App.Common
                 SimpleIoc.Default.Register<IMusicService, PlayCzMusicService>();
             }
 
+            SimpleIoc.Default.Register<PlayerViewModel>();
             SimpleIoc.Default.Register<RadioListViewModel>();
         }
 
         public RadioListViewModel RadioList => ServiceLocator.Current.GetInstance<RadioListViewModel>();
+        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
     }
 }

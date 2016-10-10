@@ -107,8 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundAudio\BackgroundAudio.cs" />
-    <Compile Include="Interfaces\IBackgroundAudio.cs" />
+    <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
     <Compile Include="Models\RadioItem.cs" />
     <Compile Include="Models\StreamItem.cs" />
