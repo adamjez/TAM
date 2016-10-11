@@ -1,7 +1,10 @@
 using OnRadio.BL.Interfaces;
+using OnRadio.BL.Models;
 using System;
+using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage.Streams;
 
 namespace OnRadio.BL.Services
 {
@@ -22,7 +25,13 @@ namespace OnRadio.BL.Services
             // Create the player instance
             Player = new MediaPlayer
             {
-                AutoPlay = false
+                AutoPlay = false,
+                SystemMediaTransportControls =
+                {
+                    IsEnabled = true,
+                    IsPreviousEnabled = false,
+                    IsStopEnabled = true,
+                }
             };
         }
 
@@ -34,10 +43,33 @@ namespace OnRadio.BL.Services
         /// </summary>
         public MediaPlayer Player { get; private set; }
 
-        public void PlayFromUrl(string url)
+        public void Play(StreamModel stream)
         {
-            Player.Source = MediaSource.CreateFromUri(new Uri(url));
+            Player.Source = MediaSource.CreateFromUri(new Uri(stream.StreamUrl));
             Player.Play();
+        }
+
+        public void SetMusicInformation(MusicInformation song)
+        {
+            // Get the updater.
+            var updater = Player.SystemMediaTransportControls.DisplayUpdater;
+
+            // Music metadata.
+            updater.Type = MediaPlaybackType.Music;
+
+            updater.MusicProperties.AlbumArtist = song.Artist ?? "";
+            updater.MusicProperties.Title = song.Title ?? "";
+            updater.MusicProperties.AlbumTitle = song.Album ?? "";
+
+            // Set the album art thumbnail.
+            // RandomAccessStreamReference is defined in Windows.Storage.Streams
+            if (!string.IsNullOrEmpty(song.ThumbnailUrl))
+            {
+                updater.Thumbnail =
+                   RandomAccessStreamReference.CreateFromUri(new Uri(song.ThumbnailUrl));
+            }
+            // Update the system media transport controls.
+            updater.Update();
         }
     }
 }

@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="ApiRadioItem.cs" />
     <Compile Include="ApiResponse.cs" />
+    <Compile Include="ApiSongItem.cs" />
     <Compile Include="ApiStreamItem.cs" />
     <Compile Include="PlayCzMusicService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

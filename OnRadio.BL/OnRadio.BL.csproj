@@ -107,10 +107,13 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\IMusicFormatter.cs" />
+    <Compile Include="Models\MusicInformation.cs" />
+    <Compile Include="Models\SongModel.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
-    <Compile Include="Models\RadioItem.cs" />
-    <Compile Include="Models\StreamItem.cs" />
+    <Compile Include="Models\RadioModel.cs" />
+    <Compile Include="Models\StreamModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\OnRadio.BL.rd.xml" />
   </ItemGroup>

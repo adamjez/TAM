@@ -6,8 +6,10 @@ namespace OnRadio.BL.Interfaces
 {
     public interface IMusicService
     {
-        Task<List<RadioItem>> GetRadiosAsync();
+        Task<List<RadioModel>> GetRadiosAsync();
 
-        Task<StreamItem> GetRadioStreamUrlAsync(RadioItem radio);
+        Task<List<StreamModel>> GetRadioStreamUrlAsync(string radioId);
+
+        Task<SongModel> GetOnAir(string radioId);
     }
 }
