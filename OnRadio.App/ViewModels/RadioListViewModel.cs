@@ -5,6 +5,7 @@ using OnRadio.BL.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OnRadio.App.ViewModels
@@ -14,9 +15,9 @@ namespace OnRadio.App.ViewModels
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
 
-        private ObservableCollection<RadioItem> _radioList;
+        private ObservableCollection<RadioModel> _radioList;
 
-        private RadioItem selectedRadioItem;
+        private RadioModel selectedRadioItem;
 
         private RelayCommand _itemSelectedCommand;
 
@@ -26,13 +27,13 @@ namespace OnRadio.App.ViewModels
             _playbackService = playbackService;
         }
 
-        public ObservableCollection<RadioItem> RadioList
+        public ObservableCollection<RadioModel> RadioList
         {
             get { return _radioList; }
             set { Set(ref _radioList, value); }
         }
 
-        public RadioItem SelectedRadioItem
+        public RadioModel SelectedRadioItem
         {
             get { return selectedRadioItem; }
             set { Set(ref selectedRadioItem, value); }
@@ -43,15 +44,19 @@ namespace OnRadio.App.ViewModels
 
         public async Task ItemSelected()
         {
-            var stream = await _musicService.GetRadioStreamUrlAsync(SelectedRadioItem);
+            var stream = await _musicService.GetRadioStreamUrlAsync(SelectedRadioItem.Id);
 
-            _playbackService.PlayFromUrl(stream.StreamUrl);
+            _playbackService.SetMusicInformation(SelectedRadioItem.CreateMusicInformation());
+            _playbackService.Play(stream.First());
+
+            var song = await _musicService.GetOnAir(SelectedRadioItem.Id);
+            _playbackService.SetMusicInformation(song.CreateMusicInformation());
         }
 
         protected override async Task LoadData()
         {
-            List<RadioItem> items = await _musicService.GetRadiosAsync();
-            RadioList = new ObservableCollection<RadioItem>(items);
+            List<RadioModel> items = await _musicService.GetRadiosAsync();
+            RadioList = new ObservableCollection<RadioModel>(items);
         }
     }
 }

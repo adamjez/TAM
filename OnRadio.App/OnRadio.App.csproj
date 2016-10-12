@@ -137,7 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OnRadio.BL\OnRadio.BL.csproj">
-      <Project>{0485FD3F-E153-4756-BABD-E01E692C95F0}</Project>
+      <Project>{0485fd3f-e153-4756-babd-e01e692c95f0}</Project>
       <Name>OnRadio.BL</Name>
     </ProjectReference>
     <ProjectReference Include="..\OnRadio.PlayCz\OnRadio.PlayCz.csproj">
