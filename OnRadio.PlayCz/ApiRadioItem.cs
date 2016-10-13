@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using OnRadio.PlayCz.Utilities;
 
 namespace OnRadio.PlayCz
 {
@@ -21,10 +22,11 @@ namespace OnRadio.PlayCz
         public string Logo { get; set; }
 
         [JsonProperty(PropertyName = "listeners")]
-        public string Listeners { get; set; }
+        public int Listeners { get; set; }
 
+        //[JsonConverter(typeof(BoolConverter))]
         [JsonProperty(PropertyName = "onair")]
-        public string Onair { get; set; }
+        public bool Onair { get; set; }
 
         [JsonProperty(PropertyName = "style")]
         public IList<string> Style { get; set; }

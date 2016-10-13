@@ -54,12 +54,14 @@ namespace OnRadio.BL.Services
             // Get the updater.
             var updater = Player.SystemMediaTransportControls.DisplayUpdater;
 
+            updater.ClearAll();
+
             // Music metadata.
             updater.Type = MediaPlaybackType.Music;
 
-            updater.MusicProperties.AlbumArtist = song.Artist ?? "";
-            updater.MusicProperties.Title = song.Title ?? "";
-            updater.MusicProperties.AlbumTitle = song.Album ?? "";
+            updater.MusicProperties.Title = song.Title ?? string.Empty;
+            updater.MusicProperties.Artist = song.Artist ?? string.Empty;
+            updater.MusicProperties.AlbumTitle = song.Album ?? string.Empty;
 
             // Set the album art thumbnail.
             // RandomAccessStreamReference is defined in Windows.Storage.Streams

@@ -12,7 +12,16 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView ItemsSource="{Binding RadioList}"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Button Content="Sort Alphabetically" Command="{Binding SortAlphabeticallyCommand}"></Button>
+            <Button Content="Sort By Popularity" Command="{Binding SortByPopularityCommand}"></Button>
+
+        </StackPanel>
+        <ListView ItemsSource="{Binding RadioList}" Grid.Row="1"
                   SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="SelectionChanged">

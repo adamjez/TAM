@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnRadio.PlayCz.Utilities
 {
@@ -11,7 +7,7 @@ namespace OnRadio.PlayCz.Utilities
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(((bool)value) ? 1 : 0);
+            writer.WriteValue((bool)value ? 1 : 0);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

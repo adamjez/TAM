@@ -31,10 +31,12 @@ namespace OnRadio.PlayCz
                         var radio = new RadioModel()
                         {
                             Id = item.Value.Shortcut,
-                            Title = item.Key,
+                            Title = item.Value.Title,
                             Description = item.Value.Description,
                             Url = item.Value.Weburl,
                             LogoUrl = item.Value.Logo,
+                            Listenters = item.Value.Listeners,
+                            OnAir = item.Value.Onair
                         };
 
                         radios.Add(radio);

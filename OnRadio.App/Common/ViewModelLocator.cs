@@ -16,14 +16,7 @@ namespace OnRadio.App.Common
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            if (ViewModelBase.IsInDesignModeStatic)
-            {
-                SimpleIoc.Default.Register<IMusicService, PlayCzMusicService>();
-            }
-            else
-            {
-                SimpleIoc.Default.Register<IMusicService, PlayCzMusicService>();
-            }
+
 
             SimpleIoc.Default.Register<PlayerViewModel>();
             SimpleIoc.Default.Register<RadioListViewModel>();

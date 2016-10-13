@@ -10,6 +10,8 @@ namespace OnRadio.BL.Models
         public string Id { get; set; }
         public string LogoUrl { get; set; }
         public List<StreamModel> Streams { get; set; }
+        public int Listenters { get; set; }
+        public bool OnAir { get; set; }
 
         public MusicInformation CreateMusicInformation()
         {
@@ -17,8 +19,8 @@ namespace OnRadio.BL.Models
             {
                 Title = Title,
                 ThumbnailUrl = LogoUrl,
-                Artist = "",
-                Album = ""
+                Artist = string.Empty,
+                Album = string.Empty
             };
         }
     }

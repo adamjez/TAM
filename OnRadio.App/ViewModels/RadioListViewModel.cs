@@ -17,9 +17,13 @@ namespace OnRadio.App.ViewModels
 
         private ObservableCollection<RadioModel> _radioList;
 
-        private RadioModel selectedRadioItem;
+        private RadioModel _selectedRadioItem;
 
         private RelayCommand _itemSelectedCommand;
+
+        private RelayCommand _sortByPopularityCommand;
+
+        private RelayCommand _sortAlphabeticallyCommand;
 
         public RadioListViewModel(IMusicService musicService, PlaybackService playbackService)
         {
@@ -35,22 +39,50 @@ namespace OnRadio.App.ViewModels
 
         public RadioModel SelectedRadioItem
         {
-            get { return selectedRadioItem; }
-            set { Set(ref selectedRadioItem, value); }
+            get { return _selectedRadioItem; }
+            set { Set(ref _selectedRadioItem, value); }
         }
 
         public RelayCommand ItemSelectedCommand =>
             _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand(async () => await ItemSelected()));
 
+        public RelayCommand SortByPopularityCommand =>
+            _sortByPopularityCommand ?? (_sortByPopularityCommand = new RelayCommand(SortByPopularity));
+
+        public RelayCommand SortAlphabeticallyCommand =>
+            _sortAlphabeticallyCommand ?? (_sortAlphabeticallyCommand = new RelayCommand(SortAlphabetically));
+
         public async Task ItemSelected()
         {
-            var stream = await _musicService.GetRadioStreamUrlAsync(SelectedRadioItem.Id);
+            // Save pointer to current radio before someone select something different
+            var currentRadio = SelectedRadioItem;
+            if (currentRadio == null)
+            {
+                return;
+            }
 
-            _playbackService.SetMusicInformation(SelectedRadioItem.CreateMusicInformation());
+            var stream = await _musicService.GetRadioStreamUrlAsync(currentRadio.Id);
+
             _playbackService.Play(stream.First());
+            _playbackService.SetMusicInformation(currentRadio.CreateMusicInformation());
 
-            var song = await _musicService.GetOnAir(SelectedRadioItem.Id);
-            _playbackService.SetMusicInformation(song.CreateMusicInformation());
+            if (currentRadio.OnAir)
+            {
+                var song = await _musicService.GetOnAir(currentRadio.Id);
+                _playbackService.SetMusicInformation(song.CreateMusicInformation());
+            }
+        }
+
+        public void SortByPopularity()
+        {
+            RadioList = new ObservableCollection<RadioModel>(
+                RadioList.OrderByDescending(radio => radio.Listenters));
+        }
+
+        public void SortAlphabetically()
+        {
+            RadioList = new ObservableCollection<RadioModel>(
+                RadioList.OrderByDescending(radio => radio.Title));
         }
 
         protected override async Task LoadData()

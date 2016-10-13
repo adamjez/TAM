@@ -44,7 +44,7 @@ namespace OnRadio.App
             // can be recreated again later when leaving the background.
             if (isInBackgroundMode && Window.Current.Content != null)
             {
-                ShowToast("Unloading view");
+                LogInformation("Unloading view");
 
                 // Clear the view content. Note that views should rely on
                 // events like Page.Unloaded to further release resources. Be careful
@@ -64,7 +64,7 @@ namespace OnRadio.App
             // each Page.Unloaded handler to run.
             GC.Collect();
 
-            ShowToast("Finished reducing memory usage");
+            LogInformation("Finished reducing memory usage");
         }
 
         /// <summary>
@@ -72,21 +72,21 @@ namespace OnRadio.App
         /// </summary>
         /// <param name="msg">Message to send</param>
         /// <param name="subMsg">Sub message</param>
-        public void ShowToast(string msg, string subMsg = null)
+        public void LogInformation(string msg, string subMsg = null)
         {
             if (subMsg == null)
                 subMsg = GetMemoryUsageText();
 
             Debug.WriteLine(msg + "\n" + subMsg);
 
-            var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
+            //var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
 
-            var toastTextElements = toastXml.GetElementsByTagName("text");
-            toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
-            toastTextElements[1].AppendChild(toastXml.CreateTextNode(subMsg));
+            //var toastTextElements = toastXml.GetElementsByTagName("text");
+            //toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
+            //toastTextElements[1].AppendChild(toastXml.CreateTextNode(subMsg));
 
-            var toast = new ToastNotification(toastXml);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
+            //var toast = new ToastNotification(toastXml);
+            //ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace OnRadio.App
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             // Optional: Save application state and stop any background activity
-            ShowToast("Suspending");
+            LogInformation("Suspending");
             deferral.Complete();
         }
 
@@ -139,7 +139,7 @@ namespace OnRadio.App
         /// <param name="e"></param>
         private void App_Resuming(object sender, object e)
         {
-            ShowToast("Resuming");
+            LogInformation("Resuming");
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace OnRadio.App
         /// <param name="e"></param>
         private void MemoryManager_AppMemoryUsageLimitChanging(object sender, AppMemoryUsageLimitChangingEventArgs e)
         {
-            ShowToast("Memory usage limit changing from "
+            LogInformation("Memory usage limit changing from "
                 + (e.OldLimit / 1024) + "K to "
                 + (e.NewLimit / 1024) + "K");
 
@@ -191,7 +191,7 @@ namespace OnRadio.App
         /// <param name="e"></param>
         private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)
         {
-            ShowToast("Memory usage increased");
+            LogInformation("Memory usage increased");
 
             // Obtain the current usage level
             var level = MemoryManager.AppMemoryUsageLevel;
@@ -214,7 +214,7 @@ namespace OnRadio.App
         {
             // Place the application into "background mode" and note the
             // transition with a flag.
-            ShowToast("Entered background");
+            LogInformation("Entered background");
             isInBackgroundMode = true;
 
             // An application may wish to release views and view data
@@ -235,13 +235,13 @@ namespace OnRadio.App
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             // Mark the transition out of background mode.
-            ShowToast("Leaving background");
+            LogInformation("Leaving background");
             isInBackgroundMode = false;
 
             // Reastore view content if it was previously unloaded.
             if (Window.Current.Content == null)
             {
-                ShowToast("Loading view");
+                LogInformation("Loading view");
                 CreateRootFrame(ApplicationExecutionState.Running, string.Empty, false);
             }
         }
