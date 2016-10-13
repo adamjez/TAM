@@ -1,0 +1,45 @@
+Coding Conventions for fun and profit:
+	* nevynechavajte modifikatory pristupu (public, ...)
+	* vyhnut sa pouzitiu sbyte, short, uint, a ulong, pokial to nie je pre interop (P/Invoke) s nativnymi kniznicami
+	* kontrolu, ci je retazec prazdny vykonavajte String.Length == 0, nie cez String.empty alebo String == ""
+	* snazte sa vyhnut vnorenym try/catch v catch bloku. Pouzivajte exception argumenty (nie Exception, ale Exception ex) a pouzivajte finally blok pre uvolnenie prostriedkov
+	* pouzivat #region pre zoskupenie nejakych celkov
+	* kazdu triedu do samostatneho suboru
+	* dokumentacia XML, generovanie priamo z Visual Studia
+	* snazit sa nevytvarat funkcie co sa nezmestia cele na obrazovku
+	* nedeklarujte viac nez 1 namespace v jednom subore 
+	* je potreba refaktorovat? Urobte to
+	* IOC - inversion of control (v podstate novsi nazov pre Dependency injection)
+
+
+	* private atributy - zacinat znakom '_' 
+	* triedy zacinat velkym pismenom
+	* interface velkym I a pokracovat nasledujucim pismenom tiez velkym (napriklad IService)
+	* metody - zacinaju velkym pismenom, pouzivame camel case
+	* lokalne premenne malym pismenom
+	* boolean premenne zacinaju s prefixom 'Is', 'Has', 'Can', ...
+	* nevytvarat atributy, ktore maju v sebe nazov samotnej triedy, napriklad: nie Customer.CustomerName, ale Customer.Name 
+		
+	* nazov suboru rovnaky ako nazov triedy
+	* medzery medzi metodami: 1, triedami: 2
+	* do podmienok vzdy davajte zatvorky. Pre trivialne porovnania pouzivajte ternarny operator
+	* svorkove zatvorky na novy riadok
+
+	* poradie v triede: 
+		- atributy, 
+		- konstruktor, 
+		- finalizer, 
+		- vnorene enums, struktury, triedy,
+		- properties,
+		- metody
+	V ramci jednotlivych atribut, metod atd., ktore su na rovnakej 'urovni' v poradi, pouzivat priority podla identifikatorov pristupu, teda v poradi public, protected, internal a na koniec private.
+	Dalej podla abecedy, ak su definovane 2 public metody DoIt() a FooBar(), tak bude DoIt() definovana vyssie.
+	
+		
+	* komentovanie kodu: nepouzivat /* ... */, pouzivajte // alebo ///
+	* nepouzivat v komentoch 'flowerboxing' - // ######### Moj super koment #########
+	* nekomentovat to co je samozrejme, niekedy je kod dostatocne vysvetlujuci. Na kratke komentovanie kludne pouzit inline komentar 's //'
+	* pri komentovani sa hodi vyuzivat <summary>, <param>, <return, <exception> pre popis rozhrania a kratkeho infa napriklad o danej metode
+	* pouzivat TODO, UNDONE, HACK v komentaroch, napr:  // TODO: refactor this method 
+		
+Kludne doplnajte; pripadne hejty sem -> Ladislav Sulak

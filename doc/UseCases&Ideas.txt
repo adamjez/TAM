@@ -1,0 +1,35 @@
+Use Cases, TODOs, ideas:
+	General:
+		* dat pozor na to, co sa deje s aplikaciou ked je zamknuta obrazovka, alebo bezi na pozadi ,...
+
+		* todo? ovladanie apky pomocou hlasu - cez Cortanu?
+		* todo? vypnutie po urcitom datovom limite. Pripadne nejaka notifikacia predom, ze limit dochadza - zmenit kvalitu na najmensiu
+		* todo? kompatibilita s Windows 8, pripadne s konzolami ako xbox
+
+	Radia:
+		* vyhladat radio
+		* zobrazovanie radii podla oblubenosti/abecedy
+		* pridat radio do oblubenych
+		
+		* filtrovanie/vyhladavanie radii podla stylov
+		* po opatovnom spusteni apky posledne hrane radio
+		* kontaktne informacie - uzivatel ma k dispozicii webovu adresu, cislo, moze im zavolat, atd.
+
+	Skladby:
+		* zastavit skladbu
+		* historia skladieb / prehravat podcasty
+		* informacie o aktualnej skladbe - interpret, nazov skladby, obrazok?
+		* zmena kvaty skladby - standardna je najmensia mozna, po kliknuti sa tlacitko zvyrazni a bude lepsia (najlepsia?)
+
+		* todo? vypnutie apky za isty cas
+
+	Design:
+		* jedna obrazovka na zoznam radii, druha na prehravac
+		* nejaky graficky prvok pre pridavanie radia do oblubenych
+		* swipe screens - mozno presuvat radia
+		* zobrazit informacie o radiu, na taketo veci mozno pouzit tiez swipe screens
+		* menit styl aplikacie - farba (svatla/tmava)
+		* widget - lifetile (radio?)
+
+		* todo? Split screen pri zmene rotaci mobilu
+		* todo? Mini-ikonky radii?
