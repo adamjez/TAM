@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Autofac;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Services;
@@ -6,22 +7,20 @@ using OnRadio.PlayCz;
 
 namespace OnRadio.App.Installers
 {
-    public class IoCInstaller
+    public class IoCInstaller : Module
     {
-        public static void Install()
+        protected override void Load(ContainerBuilder builder)
         {
             var service = new PlaybackService();
-            SimpleIoc.Default.Register(() => service);
-            SimpleIoc.Default.Register(() => service.Player);
 
-            if (ViewModelBase.IsInDesignModeStatic)
-            {
-                SimpleIoc.Default.Register<IMusicService, PlayCzMusicService>();
-            }
-            else
-            {
-                SimpleIoc.Default.Register<IMusicService, PlayCzMusicService>();
-            }
+            builder.RegisterInstance(service);
+            builder.RegisterInstance(service.Player);
+
+            builder.RegisterType<HttpClient>()
+                .As<IHttpClient>();
+
+            builder.RegisterType<PlayCzMusicService>()
+                .As<IMusicService>();
         }
     }
 }

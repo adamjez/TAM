@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using OnRadio.PlayCz.Utilities;
 
 namespace OnRadio.PlayCz
 {
@@ -34,4 +33,19 @@ namespace OnRadio.PlayCz
         [JsonProperty(PropertyName = "region")]
         public IList<string> Region { get; set; }
     }
+
+    public class ApiStreamFormatsItem
+    {
+        [JsonProperty(PropertyName = "streams")]
+        public Dictionary<string, List<string>> Streams { get; set; }
+
+        [JsonProperty(PropertyName = "shortcut")]
+        public string Shortcut { get; set; }
+    }
+
+    public class ApiStreamFormatItem
+    {
+        public Dictionary<string, List<string>> FormatBitrates { get; set; }
+    }
+
 }

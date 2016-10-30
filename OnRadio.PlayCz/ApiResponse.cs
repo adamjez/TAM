@@ -6,6 +6,6 @@ namespace OnRadio.PlayCz
     public class ApiResponse<T>
     {
         [JsonProperty(PropertyName = "data")]
-        public Dictionary<string, T> Data { get; set; }
+        public T Data { get; set; }
     }
 }

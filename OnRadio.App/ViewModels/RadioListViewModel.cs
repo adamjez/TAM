@@ -61,14 +61,18 @@ namespace OnRadio.App.ViewModels
                 return;
             }
 
-            var stream = await _musicService.GetRadioStreamUrlAsync(currentRadio.Id);
+            var streams = await _musicService.GetAllRadioStreamsAsync(currentRadio.Id);
 
-            _playbackService.Play(stream.First());
+            var selectedStream = streams.First();
+            var selectedBitrate = selectedStream.Bitrates.First();
+            var stream = await _musicService.GetRadioStreamAsync(currentRadio.Id, selectedStream.Format, selectedBitrate);
+
+            _playbackService.Play(stream);
             _playbackService.SetMusicInformation(currentRadio.CreateMusicInformation());
 
             if (currentRadio.OnAir)
             {
-                var song = await _musicService.GetOnAir(currentRadio.Id);
+                var song = await _musicService.GetOnAirAsync(currentRadio.Id);
                 _playbackService.SetMusicInformation(song.CreateMusicInformation());
             }
         }
@@ -82,7 +86,7 @@ namespace OnRadio.App.ViewModels
         public void SortAlphabetically()
         {
             RadioList = new ObservableCollection<RadioModel>(
-                RadioList.OrderByDescending(radio => radio.Title));
+                RadioList.OrderBy(radio => radio.Title));
         }
 
         protected override async Task LoadData()

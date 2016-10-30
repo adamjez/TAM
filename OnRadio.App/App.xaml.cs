@@ -5,6 +5,8 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Autofac;
+using OnRadio.App.Common;
 
 namespace OnRadio.App
 {
@@ -21,6 +23,8 @@ namespace OnRadio.App
         {
             this.InitializeComponent();
             this.Construct();
+
+            InitializeCore();
         }
 
         /// <summary>
@@ -36,12 +40,24 @@ namespace OnRadio.App
                 this.DebugSettings.EnableFrameRateCounter = false;
             }
 #endif
-            IoCInstaller.Install();
 
             CreateRootFrame(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
 
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+
+        public static IContainer AutofacContainer;
+        private void InitializeCore()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterModule<IoCInstaller>();
+            builder.RegisterModule<ViewModelInstaller>();
+
+
+            AutofacContainer = builder.Build();
         }
 
         /// <summary>

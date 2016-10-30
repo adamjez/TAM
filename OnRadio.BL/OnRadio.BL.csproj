@@ -107,9 +107,12 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IHttpClient.cs" />
     <Compile Include="Models\IMusicFormatter.cs" />
     <Compile Include="Models\MusicInformation.cs" />
     <Compile Include="Models\SongModel.cs" />
+    <Compile Include="Models\StreamFormatModel.cs" />
+    <Compile Include="Services\HttpClient.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
     <Compile Include="Models\RadioModel.cs" />

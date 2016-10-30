@@ -104,6 +104,7 @@
     <Compile Include="Common\MvvmPage.cs" />
     <Compile Include="Common\ViewModelLocator.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
+    <Compile Include="Installers\ViewModelInstaller.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioListViewModel.cs" />
