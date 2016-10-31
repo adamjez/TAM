@@ -101,13 +101,18 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundApp.cs" />
+    <Compile Include="Common\DesignTimeViewModelLocator.cs" />
     <Compile Include="Common\MvvmPage.cs" />
     <Compile Include="Common\ViewModelLocator.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
+    <Compile Include="Installers\NavigationServiceInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioListViewModel.cs" />
+    <Compile Include="Views\Player.xaml.cs">
+      <DependentUpon>Player.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RadioList.xaml.cs">
       <DependentUpon>RadioList.xaml</DependentUpon>
     </Compile>
@@ -133,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\Player.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\RadioList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -151,11 +160,6 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
-      <Name>Behaviors SDK %28XAML%29</Name>
-    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

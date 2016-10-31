@@ -9,6 +9,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:common="using:OnRadio.App.Common"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=RadioList}"
+        d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

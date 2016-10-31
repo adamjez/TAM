@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
 
 namespace OnRadio.App.ViewModels
 {

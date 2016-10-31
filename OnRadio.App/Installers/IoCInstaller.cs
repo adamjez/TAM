@@ -1,9 +1,11 @@
-﻿using Autofac;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using Autofac;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Services;
 using OnRadio.PlayCz;
+using Module = Autofac.Module;
 
 namespace OnRadio.App.Installers
 {

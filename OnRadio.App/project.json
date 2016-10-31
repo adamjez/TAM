@@ -1,7 +1,10 @@
 ﻿{
   "dependencies": {
     "Autofac": "4.1.1",
+    "Autofac.Extras.CommonServiceLocator": "4.0.0",
+    "Bezysoftware.Navigation": "1.1.18",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+    "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
     "MvvmLight": "5.3.0",
     "Newtonsoft.Json": "9.0.1"
   },

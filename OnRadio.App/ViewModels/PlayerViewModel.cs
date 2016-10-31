@@ -1,17 +1,25 @@
 ﻿using OnRadio.BL.Services;
-using System;
 using Windows.Media.Playback;
+using Bezysoftware.Navigation;
+using Bezysoftware.Navigation.Activation;
+using OnRadio.BL.Models;
 
 namespace OnRadio.App.ViewModels
 {
-    public class PlayerViewModel : LoadingViewModelBase, IDisposable
+    public class PlayerViewModel : LoadingViewModelBase, IActivate<RadioModel>
     {
         private readonly PlaybackService _service;
-        private bool _disposed;
+        private RadioModel _radio;
 
         public PlayerViewModel(PlaybackService service)
         {
             _service = service;
+        }
+
+        public RadioModel Radio
+        {
+            get { return _radio; }
+            set { Set(ref _radio, value); }
         }
 
         public void TogglePlayPause()
@@ -29,12 +37,10 @@ namespace OnRadio.App.ViewModels
             }
         }
 
-        public void Dispose()
-        {
-            if (_disposed)
-                return;
 
-            _disposed = true;
+        public void Activate(NavigationType navigationType, RadioModel data)
+        {
+            Radio = data;
         }
     }
 }

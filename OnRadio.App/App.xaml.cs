@@ -24,7 +24,7 @@ namespace OnRadio.App
             this.InitializeComponent();
             this.Construct();
 
-            InitializeCore();
+            //InitializeCore();
         }
 
         /// <summary>
@@ -48,17 +48,17 @@ namespace OnRadio.App
         }
 
 
-        public static IContainer AutofacContainer;
-        private void InitializeCore()
-        {
-            var builder = new ContainerBuilder();
+        //public static IContainer AutofacContainer;
+        //private void InitializeCore()
+        //{
+        //    var builder = new ContainerBuilder();
 
-            builder.RegisterModule<IoCInstaller>();
-            builder.RegisterModule<ViewModelInstaller>();
+        //    builder.RegisterModule<IoCInstaller>();
+        //    builder.RegisterModule<ViewModelInstaller>();
 
 
-            AutofacContainer = builder.Build();
-        }
+        //    AutofacContainer = builder.Build();
+        //}
 
         /// <summary>
         /// Creates the frame containing the view

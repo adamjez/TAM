@@ -1,0 +1,25 @@
+﻿<common:MvvmPage
+    x:Class="OnRadio.App.Views.Player"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OnRadio.App"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:common="using:OnRadio.App.Common"
+    DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
+    d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+     
+        <StackPanel DataContext="{Binding Radio}">
+            <TextBlock Text="{Binding Title}"></TextBlock>
+        </StackPanel>
+    </Grid>
+</common:MvvmPage>

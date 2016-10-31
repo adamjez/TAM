@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Bezysoftware.Navigation;
 
 namespace OnRadio.App.ViewModels
 {
@@ -14,6 +15,7 @@ namespace OnRadio.App.ViewModels
     {
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
+        private readonly INavigationService _navigatioinService;
 
         private ObservableCollection<RadioModel> _radioList;
 
@@ -25,10 +27,11 @@ namespace OnRadio.App.ViewModels
 
         private RelayCommand _sortAlphabeticallyCommand;
 
-        public RadioListViewModel(IMusicService musicService, PlaybackService playbackService)
+        public RadioListViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigatioinService)
         {
             _musicService = musicService;
             _playbackService = playbackService;
+            _navigatioinService = navigatioinService;
         }
 
         public ObservableCollection<RadioModel> RadioList
@@ -42,6 +45,7 @@ namespace OnRadio.App.ViewModels
             get { return _selectedRadioItem; }
             set { Set(ref _selectedRadioItem, value); }
         }
+
 
         public RelayCommand ItemSelectedCommand =>
             _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand(async () => await ItemSelected()));
@@ -61,9 +65,11 @@ namespace OnRadio.App.ViewModels
                 return;
             }
 
-            var result1 = await _musicService.GetStyles();
+            await _navigatioinService.NavigateAsync<PlayerViewModel, RadioModel>(currentRadio);
 
-            var result2 = await _musicService.GetOnAirHistoryAsync(currentRadio.Id);
+            //var result1 = await _musicService.GetStyles();
+
+            //var result2 = await _musicService.GetOnAirHistoryAsync(currentRadio.Id);
 
             //var streams = await _musicService.GetAllRadioStreamsAsync(currentRadio.Id);
 
