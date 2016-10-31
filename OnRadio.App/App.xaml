@@ -7,7 +7,7 @@
     RequestedTheme="Light">
 
     <Application.Resources>
-        <common:ViewModelLocator x:Key="ViewModelLocator" />
+        <common:ViewModelLocator x:Key="ViewModelLocator"/>
         <common:DesignTimeViewModelLocator x:Key="DesignTimeViewModelLocator"/>
     </Application.Resources>
 </Application>

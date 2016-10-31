@@ -4,6 +4,7 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage.Streams;
+using GalaSoft.MvvmLight;
 
 namespace OnRadio.BL.Services
 {
@@ -32,6 +33,8 @@ namespace OnRadio.BL.Services
                     IsStopEnabled = true,
                 }
             };
+
+            _stream = null;
         }
 
         /// <summary>
@@ -42,13 +45,19 @@ namespace OnRadio.BL.Services
         /// </summary>
         public MediaPlayer Player { get; private set; }
 
-        public void Play(StreamModel stream)
+        private StreamModel _stream;
+
+        public StreamModel Stream
         {
-            Player.Source = MediaSource.CreateFromUri(new Uri(stream.StreamUrl));
-            Player.Play();
+            get { return _stream; }
+            set
+            {
+                _stream = value;
+                Player.Source = MediaSource.CreateFromUri(new Uri(_stream.StreamUrl));
+            }
         }
 
-        public void SetMusicInformation(MusicInformation song)
+        public void SetMusicInformation(MusicInformation information)
         {
             // Get the updater.
             var updater = Player.SystemMediaTransportControls.DisplayUpdater;
@@ -58,16 +67,16 @@ namespace OnRadio.BL.Services
             // Music metadata.
             updater.Type = MediaPlaybackType.Music;
 
-            updater.MusicProperties.Title = song.Title ?? string.Empty;
-            updater.MusicProperties.Artist = song.Artist ?? string.Empty;
-            updater.MusicProperties.AlbumTitle = song.Album ?? string.Empty;
+            updater.MusicProperties.Title = information.Title;
+            updater.MusicProperties.Artist = information.Artist;
+            updater.MusicProperties.AlbumTitle = information.Album;
 
             // Set the album art thumbnail.
             // RandomAccessStreamReference is defined in Windows.Storage.Streams
-            if (!string.IsNullOrEmpty(song.ThumbnailUrl))
+            if (!string.IsNullOrEmpty(information.ThumbnailUrl))
             {
                 updater.Thumbnail =
-                   RandomAccessStreamReference.CreateFromUri(new Uri(song.ThumbnailUrl));
+                   RandomAccessStreamReference.CreateFromUri(new Uri(information.ThumbnailUrl));
             }
             // Update the system media transport controls.
             updater.Update();

@@ -15,7 +15,6 @@ namespace OnRadio.App.Installers
             var service = new PlaybackService();
 
             builder.RegisterInstance(service);
-            builder.RegisterInstance(service.Player);
 
             builder.RegisterType<HttpClient>()
                 .Named<IHttpClient>("httpClient");
@@ -26,9 +25,9 @@ namespace OnRadio.App.Installers
             builder.RegisterType<PlayCzMusicService>()
                 .As<IMusicService>();
 
-
             var navigation = new NavigationService();
             navigation.Configure(nameof(Player), typeof(Player));
+            navigation.Configure(nameof(RadioList), typeof(RadioList));
             builder.RegisterInstance(navigation)
                .As<INavigationService>();
         }
