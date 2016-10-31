@@ -79,7 +79,7 @@ namespace OnRadio.App.ViewModels
         public RelayCommand FilterListCommand =>
             _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));
 
-        public async Task ItemSelected()
+        public void ItemSelected()
         {
             // Save pointer to current radio before someone select something different
             var currentRadio = SelectedRadioItem;
