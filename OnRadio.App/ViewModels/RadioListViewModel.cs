@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Bezysoftware.Navigation;
+using GalaSoft.MvvmLight.Views;
+using OnRadio.App.Views;
 
 namespace OnRadio.App.ViewModels
 {
@@ -15,7 +16,7 @@ namespace OnRadio.App.ViewModels
     {
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
-        private readonly INavigationService _navigatioinService;
+        private readonly INavigationService _navigationService;
 
         private ObservableCollection<RadioModel> _radioList;
 
@@ -27,11 +28,11 @@ namespace OnRadio.App.ViewModels
 
         private RelayCommand _sortAlphabeticallyCommand;
 
-        public RadioListViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigatioinService)
+        public RadioListViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService)
         {
             _musicService = musicService;
             _playbackService = playbackService;
-            _navigatioinService = navigatioinService;
+            _navigationService = navigationService;
         }
 
         public ObservableCollection<RadioModel> RadioList
@@ -48,7 +49,7 @@ namespace OnRadio.App.ViewModels
 
 
         public RelayCommand ItemSelectedCommand =>
-            _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand(async () => await ItemSelected()));
+            _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand(ItemSelected));
 
         public RelayCommand SortByPopularityCommand =>
             _sortByPopularityCommand ?? (_sortByPopularityCommand = new RelayCommand(SortByPopularity));
@@ -56,7 +57,7 @@ namespace OnRadio.App.ViewModels
         public RelayCommand SortAlphabeticallyCommand =>
             _sortAlphabeticallyCommand ?? (_sortAlphabeticallyCommand = new RelayCommand(SortAlphabetically));
 
-        public async Task ItemSelected()
+        public void ItemSelected()
         {
             // Save pointer to current radio before someone select something different
             var currentRadio = SelectedRadioItem;
@@ -65,7 +66,8 @@ namespace OnRadio.App.ViewModels
                 return;
             }
 
-            await _navigatioinService.NavigateAsync<PlayerViewModel, RadioModel>(currentRadio);
+
+            _navigationService.NavigateTo(nameof(Player), currentRadio);
 
             //var result1 = await _musicService.GetStyles();
 
@@ -104,5 +106,6 @@ namespace OnRadio.App.ViewModels
             List<RadioModel> items = await _musicService.GetRadiosAsync();
             RadioList = new ObservableCollection<RadioModel>(items);
         }
+       
     }
 }

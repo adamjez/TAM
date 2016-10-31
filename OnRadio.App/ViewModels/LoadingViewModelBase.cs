@@ -28,5 +28,10 @@ namespace OnRadio.App.ViewModels
         {
             return Task.FromResult(true);
         }
+
+        public virtual void Initialize(object argument)
+        {
+
+        }
     }
 }

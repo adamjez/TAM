@@ -20,7 +20,6 @@ namespace OnRadio.App.Common
 
             builder.RegisterModule<IoCInstaller>();
             builder.RegisterModule<ViewModelInstaller>();
-            builder.RegisterModule<NavigationServiceInstaller>();
 
             Container = builder.Build();
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(Container));

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
+using GalaSoft.MvvmLight.Views;
+using OnRadio.App.Views;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Services;
 using OnRadio.PlayCz;
@@ -26,6 +25,12 @@ namespace OnRadio.App.Installers
 
             builder.RegisterType<PlayCzMusicService>()
                 .As<IMusicService>();
+
+
+            var navigation = new NavigationService();
+            navigation.Configure(nameof(Player), typeof(Player));
+            builder.RegisterInstance(navigation)
+               .As<INavigationService>();
         }
     }
 }

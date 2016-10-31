@@ -1,12 +1,10 @@
 ﻿using OnRadio.BL.Services;
 using Windows.Media.Playback;
-using Bezysoftware.Navigation;
-using Bezysoftware.Navigation.Activation;
 using OnRadio.BL.Models;
 
 namespace OnRadio.App.ViewModels
 {
-    public class PlayerViewModel : LoadingViewModelBase, IActivate<RadioModel>
+    public class PlayerViewModel : LoadingViewModelBase
     {
         private readonly PlaybackService _service;
         private RadioModel _radio;
@@ -37,10 +35,16 @@ namespace OnRadio.App.ViewModels
             }
         }
 
-
-        public void Activate(NavigationType navigationType, RadioModel data)
+        public override void Initialize(object argument)
         {
-            Radio = data;
+            var radio = argument as RadioModel;
+
+            if (radio != null)
+            {
+                Radio = radio;
+            }
+
+            base.Initialize(argument);
         }
     }
 }
