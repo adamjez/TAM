@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace OnRadio.PlayCz
@@ -24,5 +25,8 @@ namespace OnRadio.PlayCz
 
         [JsonProperty(PropertyName = "timestamp")]
         public int Timestamp { get; set; }
+
+        [JsonProperty(PropertyName = "date")]
+        public DateTime Date { get; set; }
     }
 }

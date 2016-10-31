@@ -17,7 +17,10 @@ namespace OnRadio.App.Installers
             builder.RegisterInstance(service.Player);
 
             builder.RegisterType<HttpClient>()
-                .As<IHttpClient>();
+                .Named<IHttpClient>("httpClient");
+
+            builder.RegisterDecorator<IHttpClient>(
+                (c, inner) => new CachedHttpClientDecorator(inner), "httpClient");
 
             builder.RegisterType<PlayCzMusicService>()
                 .As<IMusicService>();

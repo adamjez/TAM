@@ -13,5 +13,9 @@ namespace OnRadio.BL.Interfaces
         Task<SongModel> GetOnAirAsync(string radioId);
 
         Task<List<StreamFormatModel>> GetAllRadioStreamsAsync(string radioId);
+
+        Task<List<StyleModel>> GetStyles();
+
+        Task<List<HistorySongModel>> GetOnAirHistoryAsync(string radioId);
     }
 }

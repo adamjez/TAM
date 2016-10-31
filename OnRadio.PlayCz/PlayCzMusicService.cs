@@ -86,6 +86,33 @@ namespace OnRadio.PlayCz
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public async Task<List<HistorySongModel>> GetOnAirHistoryAsync(string radioId)
+        {
+            try
+            {
+                var response =
+                    await _httpClient.GetStringAsync(BaseOnAirUrl + @"/json/" + WebUtility.UrlEncode(radioId) + "-history.json");
+
+                var result = JsonConvert.DeserializeObject<List<ApiSongItem>>(response);
+
+                return result.Select(item => new HistorySongModel()
+                {
+                    Title = item.Song,
+                    Artist = item.Artist,
+                    ThumbnailUrl = item.Img,
+                    PlayedAt = item.Date
+                }).ToList();
+            }
+            catch (HttpRequestException)
+            {
+                return new List<HistorySongModel>();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <exception cref="HttpRequestException">When api endpoint isn't reachable.</exception>
         /// <returns></returns>
         public async Task<StreamModel> GetRadioStreamAsync(string radioId, string format, int bitrate)
@@ -122,6 +149,27 @@ namespace OnRadio.PlayCz
                 {
                     Format = item.Key,
                     Bitrates = item.Value.Select(int.Parse).ToList()
+                })
+                .ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="HttpRequestException">When api endpoint isn't reachable.</exception>
+        /// <returns></returns>
+        public async Task<List<StyleModel>> GetStyles()
+        {
+            var response = await _httpClient.GetStringAsync(BaseUrl + @"/json/getStyles");
+
+            var result = JsonConvert.DeserializeObject<ApiResponse<List<ApiStyleItem>>>(response);
+
+            return result.Data
+                .Select(item => new StyleModel
+                {
+                    Title = item.Title,
+                    Description = item.Description,
+                    Count = item.Count
                 })
                 .ToList();
         }

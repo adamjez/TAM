@@ -61,20 +61,24 @@ namespace OnRadio.App.ViewModels
                 return;
             }
 
-            var streams = await _musicService.GetAllRadioStreamsAsync(currentRadio.Id);
+            var result1 = await _musicService.GetStyles();
 
-            var selectedStream = streams.First();
-            var selectedBitrate = selectedStream.Bitrates.First();
-            var stream = await _musicService.GetRadioStreamAsync(currentRadio.Id, selectedStream.Format, selectedBitrate);
+            var result2 = await _musicService.GetOnAirHistoryAsync(currentRadio.Id);
 
-            _playbackService.Play(stream);
-            _playbackService.SetMusicInformation(currentRadio.CreateMusicInformation());
+            //var streams = await _musicService.GetAllRadioStreamsAsync(currentRadio.Id);
 
-            if (currentRadio.OnAir)
-            {
-                var song = await _musicService.GetOnAirAsync(currentRadio.Id);
-                _playbackService.SetMusicInformation(song.CreateMusicInformation());
-            }
+            //var selectedStream = streams.First();
+            //var selectedBitrate = selectedStream.Bitrates.First();
+            //var stream = await _musicService.GetRadioStreamAsync(currentRadio.Id, selectedStream.Format, selectedBitrate);
+
+            //_playbackService.Play(stream);
+            //_playbackService.SetMusicInformation(currentRadio.CreateMusicInformation());
+
+            //if (currentRadio.OnAir)
+            //{
+            //    var song = await _musicService.GetOnAirAsync(currentRadio.Id);
+            //    _playbackService.SetMusicInformation(song.CreateMusicInformation());
+            //}
         }
 
         public void SortByPopularity()

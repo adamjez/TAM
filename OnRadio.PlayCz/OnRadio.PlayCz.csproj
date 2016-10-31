@@ -110,7 +110,10 @@
     <Compile Include="ApiRadioItem.cs" />
     <Compile Include="ApiResponse.cs" />
     <Compile Include="ApiSongItem.cs" />
+    <Compile Include="ApiStreamFormatItem.cs" />
+    <Compile Include="ApiStreamFormatsItem.cs" />
     <Compile Include="ApiStreamItem.cs" />
+    <Compile Include="ApiStyleItem.cs" />
     <Compile Include="PlayCzMusicService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\BoolConverter.cs" />

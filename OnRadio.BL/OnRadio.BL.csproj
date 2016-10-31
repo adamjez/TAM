@@ -108,10 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IHttpClient.cs" />
+    <Compile Include="Models\HistorySongModel.cs" />
     <Compile Include="Models\IMusicFormatter.cs" />
     <Compile Include="Models\MusicInformation.cs" />
     <Compile Include="Models\SongModel.cs" />
     <Compile Include="Models\StreamFormatModel.cs" />
+    <Compile Include="Models\StyleModel.cs" />
+    <Compile Include="Services\CachedHttpClientDecorator.cs" />
     <Compile Include="Services\HttpClient.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
