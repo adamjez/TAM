@@ -12,18 +12,28 @@
         d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
     mc:Ignorable="d">
 
+    
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <TextBox Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Button Content="F" Command="{Binding FilterListCommand}"></Button>
-            <Button Content="Sort Alphabetically" Command="{Binding SortAlphabeticallyCommand}"></Button>
-            <Button Content="Sort By Popularity" Command="{Binding SortByPopularityCommand}"></Button>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_OnTextChanged"></TextBox>
+            <Button Visibility="Collapsed" Name="SearchB" Content="F" Command="{Binding FilterListCommand}"></Button>
+            <Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
+            <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>
 
-        </StackPanel>
+            
+        </Grid>
+        
+        
         <ListView ItemsSource="{Binding RadioList}" Grid.Row="1"
                   SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}">
             <interactivity:Interaction.Behaviors>

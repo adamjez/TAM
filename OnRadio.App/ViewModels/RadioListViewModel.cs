@@ -125,7 +125,8 @@ namespace OnRadio.App.ViewModels
         public void FilterList()
         {
             RadioList = new ObservableCollection<RadioModel>(
-            AllRadioList.Where(radio => radio.Title.Contains(SearchString)));
+            AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
+            );
         }
 
         protected override async Task LoadData()
