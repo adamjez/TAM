@@ -34,7 +34,6 @@ namespace OnRadio.App.ViewModels
 
         private string _searchString;
 
-
         public RadioListViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService)
         {
             _musicService = musicService;
@@ -87,28 +86,7 @@ namespace OnRadio.App.ViewModels
             {
                 return;
             }
-
-
             _navigationService.NavigateTo(nameof(Player), currentRadio);
-
-            //var result1 = await _musicService.GetStyles();
-
-            //var result2 = await _musicService.GetOnAirHistoryAsync(currentRadio.Id);
-
-            //var streams = await _musicService.GetAllRadioStreamsAsync(currentRadio.Id);
-
-            //var selectedStream = streams.First();
-            //var selectedBitrate = selectedStream.Bitrates.First();
-            //var stream = await _musicService.GetRadioStreamAsync(currentRadio.Id, selectedStream.Format, selectedBitrate);
-
-            //_playbackService.Play(stream);
-            //_playbackService.SetMusicInformation(currentRadio.CreateMusicInformation());
-
-            //if (currentRadio.OnAir)
-            //{
-            //    var song = await _musicService.GetOnAirAsync(currentRadio.Id);
-            //    _playbackService.SetMusicInformation(song.CreateMusicInformation());
-            //}
         }
 
         public void SortByPopularity()
