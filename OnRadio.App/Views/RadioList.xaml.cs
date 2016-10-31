@@ -14,5 +14,10 @@ namespace OnRadio.App.Views
         {
             this.InitializeComponent();
         }
+
+        private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            SearchB.Command.Execute(null);
+        }
     }
 }

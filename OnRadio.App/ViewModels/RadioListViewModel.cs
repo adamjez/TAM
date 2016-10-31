@@ -20,6 +20,8 @@ namespace OnRadio.App.ViewModels
 
         private ObservableCollection<RadioModel> _radioList;
 
+        private ObservableCollection<RadioModel> _allRadioList;
+
         private RadioModel _selectedRadioItem;
 
         private RelayCommand _itemSelectedCommand;
@@ -27,6 +29,11 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _sortByPopularityCommand;
 
         private RelayCommand _sortAlphabeticallyCommand;
+
+        private RelayCommand _filterListCommand;
+
+        private string _searchString;
+
 
         public RadioListViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService)
         {
@@ -41,12 +48,24 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radioList, value); }
         }
 
+        public ObservableCollection<RadioModel> AllRadioList
+        {
+            get { return _allRadioList; }
+            set { Set(ref _allRadioList, value); }
+        }
+
+
         public RadioModel SelectedRadioItem
         {
             get { return _selectedRadioItem; }
             set { Set(ref _selectedRadioItem, value); }
         }
 
+        public string SearchString
+        {
+            get { return _searchString; }
+            set { Set(ref _searchString, value); Console.WriteLine(_searchString); }
+        }
 
         public RelayCommand ItemSelectedCommand =>
             _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand(ItemSelected));
@@ -57,7 +76,10 @@ namespace OnRadio.App.ViewModels
         public RelayCommand SortAlphabeticallyCommand =>
             _sortAlphabeticallyCommand ?? (_sortAlphabeticallyCommand = new RelayCommand(SortAlphabetically));
 
-        public void ItemSelected()
+        public RelayCommand FilterListCommand =>
+            _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));
+
+        public async Task ItemSelected()
         {
             // Save pointer to current radio before someone select something different
             var currentRadio = SelectedRadioItem;
@@ -101,10 +123,18 @@ namespace OnRadio.App.ViewModels
                 RadioList.OrderBy(radio => radio.Title));
         }
 
+        public void FilterList()
+        {
+            RadioList = new ObservableCollection<RadioModel>(
+            AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
+            );
+        }
+
         protected override async Task LoadData()
         {
             List<RadioModel> items = await _musicService.GetRadiosAsync();
             RadioList = new ObservableCollection<RadioModel>(items);
+            AllRadioList = RadioList; // Pro filtrovani
         }
        
     }
