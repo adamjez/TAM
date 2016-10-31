@@ -18,6 +18,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
+            <TextBox Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Button Content="F" Command="{Binding FilterListCommand}"></Button>
             <Button Content="Sort Alphabetically" Command="{Binding SortAlphabeticallyCommand}"></Button>
             <Button Content="Sort By Popularity" Command="{Binding SortByPopularityCommand}"></Button>
 
@@ -31,7 +33,10 @@
             </interactivity:Interaction.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}"></TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
+                        <TextBlock Text="{Binding Title}" Padding="10"></TextBlock>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
