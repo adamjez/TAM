@@ -9,7 +9,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:common="using:OnRadio.App.Common"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=RadioList}"
-        d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
+    d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
     mc:Ignorable="d">
 
     
@@ -25,8 +25,14 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBox_OnTextChanged"></TextBox>
-            <Button Visibility="Collapsed" Name="SearchB" Content="F" Command="{Binding FilterListCommand}"></Button>
+            <TextBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="TextChanged">
+                        <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBox>
+            <Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>
             <Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
             <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>
 

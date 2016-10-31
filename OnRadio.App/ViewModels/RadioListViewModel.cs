@@ -126,15 +126,15 @@ namespace OnRadio.App.ViewModels
         public void FilterList()
         {
             RadioList = new ObservableCollection<RadioModel>(
-            AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
+                AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
             );
         }
 
         protected override async Task LoadData()
         {
             List<RadioModel> items = await _musicService.GetRadiosAsync();
-            RadioList = new ObservableCollection<RadioModel>(items);
-            AllRadioList = RadioList; // Pro filtrovani
+            AllRadioList = new ObservableCollection<RadioModel>(items);
+            RadioList = AllRadioList; // Pro filtrovani
         }
        
     }

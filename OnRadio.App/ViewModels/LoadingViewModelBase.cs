@@ -20,8 +20,11 @@ namespace OnRadio.App.ViewModels
 
         internal async void StartLoadData()
         {
-            await LoadData();
-            Loaded = true;
+            if (!Loaded)
+            {
+                await LoadData();
+                Loaded = true;
+            }
         }
 
         protected virtual Task LoadData()
