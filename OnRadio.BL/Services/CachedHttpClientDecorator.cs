@@ -23,7 +23,7 @@ namespace OnRadio.BL.Services
 
             result = await _httpClient.GetStringAsync(url);
 
-            Cache[url] = result;
+            //Cache[url] = result;
 
             return result;
         }

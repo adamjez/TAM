@@ -8,8 +8,7 @@
     xmlns:converters="using:OnRadio.App.Converters"
     mc:Ignorable="d"
     d:DesignHeight="320"
-    d:DesignWidth="180"
-    d:DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}">
+    d:DesignWidth="180">
     
     <UserControl.Resources>
         <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>

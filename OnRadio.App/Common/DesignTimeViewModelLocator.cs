@@ -43,7 +43,7 @@ namespace OnRadio.App.Common
         public class DesignPlayerViewModel : PlayerViewModel
         {
             public DesignPlayerViewModel()
-                : base(null, null, null)
+                : base(null, null, null, null)
             {
 
             }
@@ -52,7 +52,8 @@ namespace OnRadio.App.Common
             {
                 Radio = new RadioModel()
                 {
-                    Title = "Radio Beat"
+                    Title = "Radio Beat",
+                    LogoUrl = "http://www.radio1.cz/media/images/design/radio1-logo.png"
                 };
                 return Task.FromResult(true);
             }

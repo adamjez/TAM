@@ -10,6 +10,7 @@
     xmlns:common="using:OnRadio.App.Common"
     xmlns:controls="using:OnRadio.App.Controls"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
+    d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
     mc:Ignorable="d">
 
     <Page.Transitions>

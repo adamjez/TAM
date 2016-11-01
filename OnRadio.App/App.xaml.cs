@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Autofac;
+using GalaSoft.MvvmLight.Threading;
 using OnRadio.App.Common;
 
 namespace OnRadio.App
@@ -41,6 +42,8 @@ namespace OnRadio.App
                 this.DebugSettings.EnableFrameRateCounter = false;
             }
 #endif
+
+            DispatcherHelper.Initialize();
 
             CreateRootFrame(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
 

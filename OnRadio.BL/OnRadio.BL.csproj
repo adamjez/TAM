@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Interfaces\IHttpClient.cs" />
     <Compile Include="Models\HistorySongModel.cs" />
     <Compile Include="Models\IMusicFormatter.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Models\StyleModel.cs" />
     <Compile Include="Services\CachedHttpClientDecorator.cs" />
     <Compile Include="Services\HttpClient.cs" />
+    <Compile Include="Services\IMediaPlayerNotify.cs" />
+    <Compile Include="Services\MediaUpdater.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
     <Compile Include="Models\RadioModel.cs" />

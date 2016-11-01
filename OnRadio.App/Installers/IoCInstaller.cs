@@ -25,6 +25,9 @@ namespace OnRadio.App.Installers
             builder.RegisterType<PlayCzMusicService>()
                 .As<IMusicService>();
 
+            builder.RegisterType<MediaUpdater>()
+                .SingleInstance();
+
             var navigation = new NavigationService();
             navigation.Configure(nameof(Player), typeof(Player));
             navigation.Configure(nameof(RadioList), typeof(RadioList));

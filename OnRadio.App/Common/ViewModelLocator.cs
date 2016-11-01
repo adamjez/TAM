@@ -3,6 +3,7 @@ using Autofac.Extras.CommonServiceLocator;
 using Microsoft.Practices.ServiceLocation;
 using OnRadio.App.Installers;
 using OnRadio.App.ViewModels;
+using OnRadio.BL.Services;
 
 namespace OnRadio.App.Common
 {
@@ -22,6 +23,7 @@ namespace OnRadio.App.Common
             builder.RegisterModule<ViewModelInstaller>();
 
             Container = builder.Build();
+
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(Container));
 
         }

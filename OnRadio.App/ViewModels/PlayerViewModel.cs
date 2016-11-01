@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
@@ -8,8 +9,10 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Views;
+using OnRadio.BL.Helpers;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
 
@@ -20,6 +23,7 @@ namespace OnRadio.App.ViewModels
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
         private INavigationService _navigationService;
+        private readonly MediaUpdater _mediaUpdater;
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
 
@@ -52,18 +56,27 @@ namespace OnRadio.App.ViewModels
         public MusicInformation Information
         {
             get { return _information; }
-            private set { Set(ref _information, value); }
+            private set
+            {
+                if (Information != null && ObjectHelper.PublicInstancePropertiesEqual(Information, value))
+                {
+                    return;
+                }
+                _playbackService.SetMusicInformation(Information);
+                Set(ref _information, value);
+            }
         }
 
-        public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService)
+        public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService,
+            MediaUpdater mediaUpdater)
         {
             _musicService = musicService;
             _playbackService = playbackService;
             _navigationService = navigationService;
+            _mediaUpdater = mediaUpdater;
 
             _playIcon = new BitmapImage(new Uri("ms-appx:/Icons/play.png", UriKind.RelativeOrAbsolute));
             _pauseIcon = new BitmapImage(new Uri("ms-appx:/Icons/pause.png", UriKind.RelativeOrAbsolute));
-            IsPlaying = false;
         }
 
         private void OpenRadioList()
@@ -102,15 +115,22 @@ namespace OnRadio.App.ViewModels
             {
                 Radio = radio;
             }
+            else
+            {
+                throw new ArgumentException("Page was accessed without proper argument");
+            }
+
+            if (Radio.OnAir)
+            {
+                _mediaUpdater.MediaUpdated += BackgroundMediaUpdate;
+                _mediaUpdater.Enabled = true;
+            }
 
             base.Initialize(argument);
         }
 
         protected override async Task LoadData()
         {
-            if (Radio == null)
-                return;
-
             _playbackService.Player.Pause();
             IsPlaying = false;
             await LoadRadioAsync();
@@ -118,11 +138,8 @@ namespace OnRadio.App.ViewModels
             IsPlaying = true;
         }
 
-        public async Task<bool> LoadRadioAsync()
+        public async Task LoadRadioAsync()
         {
-            if (Radio == null)
-                return false;
-            
             var streams = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
 
             var selectedStream = streams.First();
@@ -141,10 +158,19 @@ namespace OnRadio.App.ViewModels
             {
                 Information = Radio.CreateMusicInformation();
             }
+        }
 
-            _playbackService.SetMusicInformation(Information);
+        public async void BackgroundMediaUpdate(object sender, EventArgs args)
+        {
+            if (Radio == null)
+                return;
 
-            return true;
+            var song = await _musicService.GetOnAirAsync(Radio.Id);
+
+            await DispatcherHelper.RunAsync(() =>
+            {
+                Information = song.CreateMusicInformation();
+            });
         }
     }
 }

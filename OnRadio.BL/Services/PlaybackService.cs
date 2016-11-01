@@ -32,8 +32,6 @@ namespace OnRadio.BL.Services
                     IsStopEnabled = true,
                 }
             };
-
-            _stream = null;
         }
 
         /// <summary>
@@ -80,6 +78,11 @@ namespace OnRadio.BL.Services
             }
             // Update the system media transport controls.
             updater.Update();
+        }
+
+        public void AddMediaController(IMediaPlayerNotify controller)
+        {
+            Player.PlaybackSession.PlaybackStateChanged += controller.Update;
         }
     }
 }
