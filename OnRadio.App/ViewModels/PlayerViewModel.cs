@@ -36,8 +36,6 @@ namespace OnRadio.App.ViewModels
         public RelayCommand TogglePlayPauseCommand =>
            _togglePlayPauseCommand ?? (_togglePlayPauseCommand = new RelayCommand(TogglePlayPause));
 
-        private readonly ImageSource _playIcon;
-        private readonly ImageSource _pauseIcon;
         private bool _isPlaying;
 
         public bool IsPlaying
@@ -46,24 +44,21 @@ namespace OnRadio.App.ViewModels
             private set
             {
                 Set(ref _isPlaying, value);
-                RaisePropertyChanged(() => PlayPauceIcon);
             }
         }
-
-        public ImageSource PlayPauceIcon => IsPlaying ? _pauseIcon : _playIcon;
-
 
         public MusicInformation Information
         {
             get { return _information; }
-            private set
+            set
             {
                 if (Information != null && ObjectHelper.PublicInstancePropertiesEqual(Information, value))
                 {
                     return;
                 }
-                _playbackService.SetMusicInformation(Information);
+
                 Set(ref _information, value);
+                _playbackService?.SetMusicInformation(Information);
             }
         }
 
