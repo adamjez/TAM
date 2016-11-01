@@ -108,7 +108,7 @@ namespace OnRadio.App
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(Views.Player), arguments);
+                    rootFrame.Navigate(typeof(Views.RadioList), arguments);
                 }
             }
         }
