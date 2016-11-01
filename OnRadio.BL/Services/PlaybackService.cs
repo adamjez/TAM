@@ -44,6 +44,7 @@ namespace OnRadio.BL.Services
         /// application defined data model.
         /// </summary>
         public MediaPlayer Player { get; private set; }
+        
 
         private StreamModel _stream;
 

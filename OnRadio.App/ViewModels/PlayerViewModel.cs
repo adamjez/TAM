@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Views;
@@ -29,6 +32,22 @@ namespace OnRadio.App.ViewModels
         public RelayCommand TogglePlayPauseCommand =>
            _togglePlayPauseCommand ?? (_togglePlayPauseCommand = new RelayCommand(TogglePlayPause));
 
+        private readonly ImageSource _playIcon;
+        private readonly ImageSource _pauseIcon;
+        private bool _isPlaying;
+
+        public bool IsPlaying
+        {
+            get { return _isPlaying; }
+            private set
+            {
+                Set(ref _isPlaying, value);
+                RaisePropertyChanged(() => PlayPauceIcon);
+            }
+        }
+
+        public ImageSource PlayPauceIcon => IsPlaying ? _pauseIcon : _playIcon;
+
 
         public MusicInformation Information
         {
@@ -41,6 +60,10 @@ namespace OnRadio.App.ViewModels
             _musicService = musicService;
             _playbackService = playbackService;
             _navigationService = navigationService;
+
+            _playIcon = new BitmapImage(new Uri("ms-appx:/Icons/play.png", UriKind.RelativeOrAbsolute));
+            _pauseIcon = new BitmapImage(new Uri("ms-appx:/Icons/pause.png", UriKind.RelativeOrAbsolute));
+            IsPlaying = false;
         }
 
         private void OpenRadioList()
@@ -61,10 +84,12 @@ namespace OnRadio.App.ViewModels
             {
                 case MediaPlaybackState.Playing:
                     player.Pause();
+                    IsPlaying = false;
                     break;
 
                 case MediaPlaybackState.Paused:
                     player.Play();
+                    IsPlaying = true;
                     break;
             }
         }
@@ -83,9 +108,14 @@ namespace OnRadio.App.ViewModels
 
         protected override async Task LoadData()
         {
+            if (Radio == null)
+                return;
+
             _playbackService.Player.Pause();
+            IsPlaying = false;
             await LoadRadioAsync();
-            RadioLoaded();
+            _playbackService.Player.Play();
+            IsPlaying = true;
         }
 
         public async Task<bool> LoadRadioAsync()
@@ -115,11 +145,6 @@ namespace OnRadio.App.ViewModels
             _playbackService.SetMusicInformation(Information);
 
             return true;
-        }
-
-        public void RadioLoaded()
-        {
-            _playbackService.Player.Play();
         }
     }
 }
