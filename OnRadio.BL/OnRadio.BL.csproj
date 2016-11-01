@@ -123,11 +123,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\OnRadio.BL.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="GalaSoft.MvvmLight">
-      <HintPath>C:\Users\raven\.nuget\packages\MvvmLightLibs\5.3.0\lib\windows81\GalaSoft.MvvmLight.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

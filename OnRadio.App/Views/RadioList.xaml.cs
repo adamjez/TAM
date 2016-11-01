@@ -1,5 +1,6 @@
 ﻿using OnRadio.App.Common;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -13,11 +14,7 @@ namespace OnRadio.App.Views
         public RadioList()
         {
             this.InitializeComponent();
-        }
-
-        private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            SearchB.Command.Execute(null);
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
     }
 }

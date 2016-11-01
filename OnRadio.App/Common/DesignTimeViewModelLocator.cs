@@ -25,11 +25,13 @@ namespace OnRadio.App.Common
                     {
                         new RadioModel()
                         {
-                            Title = "Radio Beat"
+                            Title = "Radio Beat",
+                            LogoUrl = "http://www.radio1.cz/media/images/design/radio1-logo.png"
                         },
                         new RadioModel()
                         {
-                            Title = "Evropa 2"
+                            Title = "Evropa 2",
+                            LogoUrl = "http://www.radio1.cz/media/images/design/radio1-logo.png"
                         }
                     });
                 return Task.FromResult(true);

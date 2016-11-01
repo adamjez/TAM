@@ -7,24 +7,23 @@ namespace OnRadio.BL.Services
     public class CachedHttpClientDecorator : IHttpClient
     {
         private readonly IHttpClient _httpClient;
-        private readonly Dictionary<string, string> _cache;
+        private static readonly Dictionary<string, string> Cache = new Dictionary<string, string>();
         public CachedHttpClientDecorator(IHttpClient httpClient)
         {
             _httpClient = httpClient;
-            _cache = new Dictionary<string, string>();
         }
 
         public async Task<string> GetStringAsync(string url)
         {
             string result;
-            if (_cache.TryGetValue(url, out result))
+            if (Cache.TryGetValue(url, out result))
             {
                 return result;
             }
 
             result = await _httpClient.GetStringAsync(url);
 
-            _cache[url] = result;
+            Cache[url] = result;
 
             return result;
         }
