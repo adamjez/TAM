@@ -75,8 +75,6 @@ namespace OnRadio.App.ViewModels
             _navigationService = navigationService;
             _mediaUpdater = mediaUpdater;
 
-            _playIcon = new BitmapImage(new Uri("ms-appx:/Icons/play.png", UriKind.RelativeOrAbsolute));
-            _pauseIcon = new BitmapImage(new Uri("ms-appx:/Icons/pause.png", UriKind.RelativeOrAbsolute));
         }
 
         private void OpenRadioList()

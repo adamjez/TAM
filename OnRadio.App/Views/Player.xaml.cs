@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Media.Animation;
+﻿using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media.Animation;
 using OnRadio.App.Common;
 
 namespace OnRadio.App.Views
@@ -11,6 +12,8 @@ namespace OnRadio.App.Views
         public Player()
         {
             this.InitializeComponent();
+
+            var compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
         }
     }
 }

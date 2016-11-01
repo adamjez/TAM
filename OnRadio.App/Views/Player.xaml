@@ -8,11 +8,16 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:common="using:OnRadio.App.Common"
-    xmlns:controls="using:OnRadio.App.Controls"
+    xmlns:converters="using:OnRadio.App.Converters"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
     mc:Ignorable="d">
 
+    <common:MvvmPage.Resources>
+        <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
+        <converters:PlayIconConverter x:Key="PlayIconConverter"/>
+    </common:MvvmPage.Resources>
+    
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>
@@ -24,6 +29,41 @@
     </Page.Transitions>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <controls:PlayerControl DataContext="{Binding}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Command="{Binding OpenRadioListCommand}" FontFamily="Segoe MDL2 Assets" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="48">
+            &#xE14C;
+        </Button>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center"/>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="3">
+                <Canvas>
+                    <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill"/>
+                </Canvas>
+            </Grid>
+            <Image Grid.Row="1" Grid.Column="1" Source="{Binding Information.ThumbnailUrl}"/>
+            <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Grid.Row="4" Grid.ColumnSpan="3" Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis"/>
+        </Grid>
+        
+        <Button Grid.Row="2" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Image Source="{Binding IsPlaying, Converter={StaticResource PlayIconConverter}}"/>
+        </Button>
     </Grid>
 </common:MvvmPage>
