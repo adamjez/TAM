@@ -52,7 +52,7 @@ namespace OnRadio.App.ViewModels
         public MusicInformation Information
         {
             get { return _information; }
-            private set { Set(ref _information, value); }
+            set { Set(ref _information, value); }
         }
 
         public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService)
@@ -61,8 +61,6 @@ namespace OnRadio.App.ViewModels
             _playbackService = playbackService;
             _navigationService = navigationService;
 
-            _playIcon = new BitmapImage(new Uri("ms-appx:/Icons/play.png", UriKind.RelativeOrAbsolute));
-            _pauseIcon = new BitmapImage(new Uri("ms-appx:/Icons/pause.png", UriKind.RelativeOrAbsolute));
             IsPlaying = false;
         }
 
