@@ -13,48 +13,49 @@
     mc:Ignorable="d">
 
     
-    
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+    <ScrollViewer>
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="TextChanged">
+                            <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>
+                <Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
+                <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>
+
+
+            </Grid>
+
+
+            <ListView ItemsSource="{Binding RadioList}" Grid.Row="1"
+                      SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}">
                 <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="TextChanged">
-                        <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
+                    <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
-            </TextBox>
-            <Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>
-            <Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
-            <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>
-
-            
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
+                            <TextBlock Text="{Binding Title}" Padding="10"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
-        
-        
-        <ListView ItemsSource="{Binding RadioList}" Grid.Row="1"
-                  SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="SelectionChanged">
-                    <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
-                        <TextBlock Text="{Binding Title}" Padding="10"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </Grid>
+    </ScrollViewer>
 </common:MvvmPage>
