@@ -55,13 +55,13 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="3">
-                <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill">
+                <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" HorizontalAlignment="Center">
                     <interactivity:Interaction.Behaviors>
                         <behaviors:Blur
                            Value="10" 
                            Duration="1" 
                            Delay="0" 
-                           AutomaticallyStart="True"/>
+                           AutomaticallyStart="True" />
                     </interactivity:Interaction.Behaviors>
                 </Image>
             </Grid>
