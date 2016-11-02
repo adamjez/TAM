@@ -10,6 +10,7 @@
     xmlns:common="using:OnRadio.App.Common"
     xmlns:converters="using:OnRadio.App.Converters"
     xmlns:xaml="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
     mc:Ignorable="d">
@@ -53,10 +54,17 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center"/>
-            <Grid x:Name="TestGrid" Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="3">
-                <xaml:CanvasControl Draw="CanvasControl_OnDraw" CreateResources="CanvasControl_OnCreateResources"/>
-                <!--<Canvas x:Name="CanvasTest"/>
-                <Image x:Name="ImageTest" Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" ImageOpened="ImageTest_OnImageOpened"/>-->
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="3">
+
+                <Image x:Name="ImageTest" Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:Blur x:Name="BlurBehavior" 
+                           Value="10" 
+                           Duration="1" 
+                           Delay="0" 
+                           AutomaticallyStart="True"/>
+                    </interactivity:Interaction.Behaviors>
+                </Image>
             </Grid>
             <Image Grid.Row="1" Grid.Column="1" Source="{Binding Information.ThumbnailUrl}"/>
             <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0" Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis"/>

@@ -113,11 +113,8 @@ namespace OnRadio.App.ViewModels
                 throw new ArgumentException("Page was accessed without proper argument");
             }
 
-            if (Radio.OnAir)
-            {
-                _mediaUpdater.MediaUpdated += BackgroundMediaUpdate;
-                _mediaUpdater.Enabled = true;
-            }
+            _mediaUpdater.MediaUpdated += BackgroundMediaUpdate;
+            _mediaUpdater.Enabled = Radio.OnAir;
 
             base.Initialize(argument);
         }
