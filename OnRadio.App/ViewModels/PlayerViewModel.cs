@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
 using Windows.Media.Playback;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -71,6 +72,8 @@ namespace OnRadio.App.ViewModels
             _mediaUpdater = mediaUpdater;
 
         }
+
+        public Brush BackgroundBrush => new SolidColorBrush {Color = Color.FromArgb(100, 0, 0, 0)};
 
         private void OpenRadioList()
         {
@@ -145,7 +148,6 @@ namespace OnRadio.App.ViewModels
             {
                 var song = await _musicService.GetOnAirAsync(Radio.Id);
                 Information = song.CreateMusicInformation();
-
             }
             else
             {
