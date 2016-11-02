@@ -35,7 +35,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
         <Button Grid.Row="0" Command="{Binding OpenRadioListCommand}" FontFamily="Segoe MDL2 Assets" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="48">
             &#xE14C;
@@ -47,18 +47,17 @@
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center"/>
-            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="3">
-
-                <Image x:Name="ImageTest" Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill">
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="3">
+                <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:Blur x:Name="BlurBehavior" 
+                        <behaviors:Blur
                            Value="10" 
                            Duration="1" 
                            Delay="0" 
@@ -66,9 +65,16 @@
                     </interactivity:Interaction.Behaviors>
                 </Image>
             </Grid>
-            <Image Grid.Row="1" Grid.Column="1" Source="{Binding Information.ThumbnailUrl}"/>
-            <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0" Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis"/>
-            <TextBlock Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis"/>
+            <Border Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                <TextBlock Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center" Foreground="White"/>
+            </Border>
+            <Image Grid.Row="2" Grid.Column="1" Source="{Binding Information.ThumbnailUrl}"/>
+            <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
+            </Border>
+            <Border Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                <TextBlock Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed" Foreground="White"/>
+            </Border>
         </Grid>
         
         <Button Grid.Row="2" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
