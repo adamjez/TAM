@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Views;
+using OnRadio.App.Services;
 using OnRadio.App.Views;
 
 namespace OnRadio.App.ViewModels
@@ -15,7 +16,7 @@ namespace OnRadio.App.ViewModels
     public class RadioListViewModel : LoadingViewModelBase
     {
         private readonly IMusicService _musicService;
-        private readonly PlaybackService _playbackService;
+        private readonly ITileManager _tileManager;
         private readonly INavigationService _navigationService;
 
         private ObservableCollection<RadioModel> _radioList;
@@ -34,10 +35,10 @@ namespace OnRadio.App.ViewModels
 
         private string _searchString;
 
-        public RadioListViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService)
+        public RadioListViewModel(IMusicService musicService, ITileManager tileManager, INavigationService navigationService)
         {
             _musicService = musicService;
-            _playbackService = playbackService;
+            _tileManager = tileManager;
             _navigationService = navigationService;
         }
 
@@ -86,6 +87,16 @@ namespace OnRadio.App.ViewModels
             {
                 return;
             }
+            //if (_tileManager.Exists(currentRadio))
+            //{
+            //    await _tileManager.RemoveTileAsync(currentRadio);
+
+            //}
+            //else
+            //{
+            //    await _tileManager.CreateTileAsync(currentRadio);
+
+            //}
             _navigationService.NavigateTo(nameof(Player), currentRadio);
         }
 
