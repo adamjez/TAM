@@ -1,5 +1,9 @@
-﻿using Autofac;
+﻿using System;
+using Windows.Storage;
+using Autofac;
 using GalaSoft.MvvmLight.Views;
+using Microsoft.Toolkit.Uwp.UI;
+using OnRadio.App.Services;
 using OnRadio.App.Views;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Services;
@@ -28,11 +32,24 @@ namespace OnRadio.App.Installers
             builder.RegisterType<MediaUpdater>()
                 .SingleInstance();
 
+
             var navigation = new NavigationService();
             navigation.Configure(nameof(Player), typeof(Player));
             navigation.Configure(nameof(RadioList), typeof(RadioList));
             builder.RegisterInstance(navigation)
                .As<INavigationService>();
+
+            
+            // Image Cache
+            var cache = new ImageCache {CacheDuration = TimeSpan.FromDays(7)};
+            cache.InitializeAsync(ApplicationData.Current.LocalCacheFolder, "tmp").GetAwaiter().GetResult();
+            builder.RegisterInstance(cache);
+
+            builder.RegisterType<TileManager>()
+                .As<ITileManager>();
+
+            builder.RegisterType<ImageManager>()
+               .As<IImageManager>();
         }
     }
 }

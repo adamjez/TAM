@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
 using Windows.Media.Playback;
 using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Views;
@@ -23,13 +19,16 @@ namespace OnRadio.App.ViewModels
     {
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
-        private INavigationService _navigationService;
+        private readonly INavigationService _navigationService;
         private readonly MediaUpdater _mediaUpdater;
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
 
         private RadioModel _radio;
         private MusicInformation _information;
+
+        private bool _radioLoaded;
+
 
         public RelayCommand OpenRadioListCommand =>
            _openRadioListCommand ?? (_openRadioListCommand = new RelayCommand(OpenRadioList));
@@ -70,7 +69,6 @@ namespace OnRadio.App.ViewModels
             _playbackService = playbackService;
             _navigationService = navigationService;
             _mediaUpdater = mediaUpdater;
-
         }
 
         public Brush BackgroundBrush => new SolidColorBrush {Color = Color.FromArgb(100, 0, 0, 0)};
@@ -110,28 +108,45 @@ namespace OnRadio.App.ViewModels
             if (radio != null)
             {
                 Radio = radio;
+                _radioLoaded = true;
+            }
+            else if (argument is string)
+            {
+                Radio = new RadioModel() {Id = (string)argument};;
             }
             else
             {
                 throw new ArgumentException("Page was accessed without proper argument");
             }
 
-            _mediaUpdater.MediaUpdated += BackgroundMediaUpdate;
-            _mediaUpdater.Enabled = Radio.OnAir;
-
             base.Initialize(argument);
         }
+
 
         protected override async Task LoadData()
         {
             _playbackService.Player.Pause();
             IsPlaying = false;
-            await LoadRadioAsync();
+
+            if (!_radioLoaded)
+            {
+                Radio = (await _musicService.GetRadiosAsync())
+                    .FirstOrDefault(radio => radio.Id == Radio.Id);
+
+                // ToDo: handle this a show this in proper way
+                if(Radio == null)
+                    throw new ArgumentException("Radio doesn't exists");
+            }
+
+            _mediaUpdater.MediaUpdated += BackgroundMediaUpdate;
+            _mediaUpdater.Enabled = Radio.OnAir;
+
+            await LoadStreamAndInfoAsync();
             _playbackService.Player.Play();
             IsPlaying = true;
         }
 
-        public async Task LoadRadioAsync()
+        public async Task LoadStreamAndInfoAsync()
         {
             var streams = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
 

@@ -116,14 +116,19 @@
     <Compile Include="Models\StreamFormatModel.cs" />
     <Compile Include="Models\StyleModel.cs" />
     <Compile Include="Services\CachedHttpClientDecorator.cs" />
+    <Compile Include="Services\DownloadResult.cs" />
     <Compile Include="Services\HttpClient.cs" />
+    <Compile Include="Services\IImageManager.cs" />
+    <Compile Include="Services\ImageManager.cs" />
     <Compile Include="Services\IMediaPlayerNotify.cs" />
+    <Compile Include="Services\ITileManager.cs" />
     <Compile Include="Services\MediaUpdater.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
     <Compile Include="Models\RadioModel.cs" />
     <Compile Include="Models\StreamModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TileManager.cs" />
     <EmbeddedResource Include="Properties\OnRadio.BL.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +136,11 @@
       <Project>{87add1b9-fa9c-4106-a42c-7071e12cb00b}</Project>
       <Name>OnRadio.DAL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Toolkit.Uwp">
+      <HintPath>..\..\..\..\.nuget\packages\Microsoft.Toolkit.Uwp\1.1.0\lib\uap10.0\Microsoft.Toolkit.Uwp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

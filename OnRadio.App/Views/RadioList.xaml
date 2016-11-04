@@ -8,11 +8,14 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:common="using:OnRadio.App.Common"
+    xmlns:converters="using:OnRadio.App.Converters"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=RadioList}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
     mc:Ignorable="d">
 
-    
+    <common:MvvmPage.Resources>
+    </common:MvvmPage.Resources>
+
     <ScrollViewer>
         <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <Grid.RowDefinitions>

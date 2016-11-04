@@ -8,6 +8,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Autofac;
 using GalaSoft.MvvmLight.Threading;
+using OnRadio.App.ViewModels;
+using OnRadio.App.Views;
 using OnRadio.App.Common;
 using OnRadio.DAL;
 
@@ -111,12 +113,24 @@ namespace OnRadio.App
 
             if (!prelaunchActivated)
             {
-                if (rootFrame.Content == null)
+                
+                if (!string.IsNullOrEmpty(arguments))
+                {
+                    // User launched app throw secondary tile
+                    var page = rootFrame.Content as Player;
+                    var viewModel = page?.DataContext as PlayerViewModel;
+
+                    if (page == null || viewModel == null || viewModel.Radio.Id != arguments)
+                    {
+                        rootFrame.Navigate(typeof(Player), arguments);
+                    }
+                }
+                else if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(Views.RadioList), arguments);
+                    rootFrame.Navigate(typeof(RadioList), arguments);
                 }
             }
         }
