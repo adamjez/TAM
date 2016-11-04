@@ -126,6 +126,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\OnRadio.BL.rd.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OnRadio.DAL\OnRadio.DAL\OnRadio.DAL.csproj">
+      <Project>{87add1b9-fa9c-4106-a42c-7071e12cb00b}</Project>
+      <Name>OnRadio.DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

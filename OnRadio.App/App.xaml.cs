@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Navigation;
 using Autofac;
 using GalaSoft.MvvmLight.Threading;
 using OnRadio.App.Common;
+using OnRadio.DAL;
 
 namespace OnRadio.App
 {
@@ -46,6 +47,10 @@ namespace OnRadio.App
             DispatcherHelper.Initialize();
 
             CreateRootFrame(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
+
+
+            LocalDatabaseStorage.CreateDatabase();
+
 
             // Ensure the current window is active
             Window.Current.Activate();

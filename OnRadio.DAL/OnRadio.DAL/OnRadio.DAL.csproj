@@ -4,22 +4,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{F5CB2109-9675-4067-AFC0-4D57C0BD13AE}</ProjectGuid>
-    <OutputType>AppContainerExe</OutputType>
+    <ProjectGuid>{87ADD1B9-FA9C-4106-A42C-7071E12CB00B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OnRadio.App</RootNamespace>
-    <AssemblyName>OnRadio.App</AssemblyName>
+    <RootNamespace>OnRadio.DAL</RootNamespace>
+    <AssemblyName>OnRadio.DAL</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>OnRadio.App_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <PackageCertificateKeyFile>OnRadio.DAL_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -31,8 +28,6 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -97,82 +92,25 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BackgroundApp.cs" />
-    <Compile Include="Common\DesignTimeViewModelLocator.cs" />
-    <Compile Include="Common\MvvmPage.cs" />
-    <Compile Include="Common\ViewModelLocator.cs" />
-    <Compile Include="Converters\IsNotNullConverter.cs" />
-    <Compile Include="Converters\PlayIconConverter.cs" />
-    <Compile Include="Converters\IsNullConverter.cs" />
-    <Compile Include="Installers\IoCInstaller.cs" />
-    <Compile Include="Installers\ViewModelInstaller.cs" />
-    <Compile Include="ViewModels\LoadingViewModelBase.cs" />
-    <Compile Include="ViewModels\PlayerViewModel.cs" />
-    <Compile Include="ViewModels\RadioListViewModel.cs" />
-    <Compile Include="Views\Player.xaml.cs">
-      <DependentUpon>Player.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RadioList.xaml.cs">
-      <DependentUpon>RadioList.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="LocalDatabaseStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
+    <None Include="OnRadio.DAL_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icons\pause.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\play.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <EmbeddedResource Include="Properties\OnRadio.DAL.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="Views\Player.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\RadioList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.15.0">
+      <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OnRadio.BL\OnRadio.BL.csproj">
-      <Project>{0485fd3f-e153-4756-babd-e01e692c95f0}</Project>
-      <Name>OnRadio.BL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OnRadio.DAL\OnRadio.DAL\OnRadio.DAL.csproj">
-      <Project>{87add1b9-fa9c-4106-a42c-7071e12cb00b}</Project>
-      <Name>OnRadio.DAL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OnRadio.PlayCz\OnRadio.PlayCz.csproj">
-      <Project>{FB7E81C8-9AAD-4B0D-A663-3DC1C3441368}</Project>
-      <Name>OnRadio.PlayCz</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
