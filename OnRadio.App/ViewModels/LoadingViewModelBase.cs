@@ -20,7 +20,7 @@ namespace OnRadio.App.ViewModels
 
         internal async void StartLoadData()
         {
-            if (!Loaded)
+            //if (!Loaded)
             {
                 await LoadData();
                 Loaded = true;

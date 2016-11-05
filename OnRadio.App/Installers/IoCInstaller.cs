@@ -29,7 +29,7 @@ namespace OnRadio.App.Installers
             builder.RegisterType<PlayCzMusicService>()
                 .As<IMusicService>();
 
-            builder.RegisterType<MediaUpdater>()
+            builder.RegisterType<MediaNotify>()
                 .SingleInstance();
 
 

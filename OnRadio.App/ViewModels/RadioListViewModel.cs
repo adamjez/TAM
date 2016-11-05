@@ -121,6 +121,11 @@ namespace OnRadio.App.ViewModels
 
         protected override async Task LoadData()
         {
+            if (Loaded)
+            {
+                return;
+            }
+
             List<RadioModel> items = await _musicService.GetRadiosAsync();
             AllRadioList = new ObservableCollection<RadioModel>(items);
             RadioList = AllRadioList; // Pro filtrovani

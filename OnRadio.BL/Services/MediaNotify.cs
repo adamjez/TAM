@@ -4,7 +4,7 @@ using Windows.System.Threading;
 
 namespace OnRadio.BL.Services
 {
-    public class MediaUpdater : IMediaPlayerNotify
+    public class MediaNotify : IMediaNotify
     {
         private const int Period = 10;
         private ThreadPoolTimer _threadPoolTimer;
@@ -12,7 +12,7 @@ namespace OnRadio.BL.Services
         public event EventHandler MediaUpdated;
         public bool Enabled { get; set; }
 
-        public MediaUpdater(PlaybackService playbackService)
+        public MediaNotify(PlaybackService playbackService)
         {
             playbackService.AddMediaController(this);
         }

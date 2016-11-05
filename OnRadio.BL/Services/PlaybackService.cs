@@ -80,7 +80,7 @@ namespace OnRadio.BL.Services
             updater.Update();
         }
 
-        public void AddMediaController(IMediaPlayerNotify controller)
+        public void AddMediaController(IMediaNotify controller)
         {
             Player.PlaybackSession.PlaybackStateChanged += controller.Update;
         }

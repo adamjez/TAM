@@ -120,9 +120,9 @@
     <Compile Include="Services\HttpClient.cs" />
     <Compile Include="Services\IImageManager.cs" />
     <Compile Include="Services\ImageManager.cs" />
-    <Compile Include="Services\IMediaPlayerNotify.cs" />
+    <Compile Include="Services\IMediaNotify.cs" />
     <Compile Include="Services\ITileManager.cs" />
-    <Compile Include="Services\MediaUpdater.cs" />
+    <Compile Include="Services\MediaNotify.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
     <Compile Include="Models\RadioModel.cs" />

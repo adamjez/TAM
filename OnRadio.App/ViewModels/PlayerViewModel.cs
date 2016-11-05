@@ -20,7 +20,7 @@ namespace OnRadio.App.ViewModels
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
         private readonly INavigationService _navigationService;
-        private readonly MediaUpdater _mediaUpdater;
+        private readonly MediaNotify _mediaNotify;
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
 
@@ -63,12 +63,12 @@ namespace OnRadio.App.ViewModels
         }
 
         public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService,
-            MediaUpdater mediaUpdater)
+            MediaNotify mediaNotify)
         {
             _musicService = musicService;
             _playbackService = playbackService;
             _navigationService = navigationService;
-            _mediaUpdater = mediaUpdater;
+            _mediaNotify = mediaNotify;
         }
 
         public Brush BackgroundBrush => new SolidColorBrush {Color = Color.FromArgb(100, 0, 0, 0)};
@@ -125,7 +125,7 @@ namespace OnRadio.App.ViewModels
 
         protected override async Task LoadData()
         {
-            _playbackService.Player.Pause();
+            _playbackService.Player.Source = null;
             IsPlaying = false;
 
             if (!_radioLoaded)
@@ -138,8 +138,8 @@ namespace OnRadio.App.ViewModels
                     throw new ArgumentException("Radio doesn't exists");
             }
 
-            _mediaUpdater.MediaUpdated += BackgroundMediaUpdate;
-            _mediaUpdater.Enabled = Radio.OnAir;
+            _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
+            _mediaNotify.Enabled = Radio.OnAir;
 
             await LoadStreamAndInfoAsync();
             _playbackService.Player.Play();
