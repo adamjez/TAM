@@ -132,6 +132,12 @@
     <EmbeddedResource Include="Properties\OnRadio.BL.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OnRadio.DAL\OnRadio.DAL\OnRadio.DAL.csproj">
+      <Project>{87add1b9-fa9c-4106-a42c-7071e12cb00b}</Project>
+      <Name>OnRadio.DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.Toolkit.Uwp">
       <HintPath>..\..\..\..\.nuget\packages\Microsoft.Toolkit.Uwp\1.1.0\lib\uap10.0\Microsoft.Toolkit.Uwp.dll</HintPath>
     </Reference>

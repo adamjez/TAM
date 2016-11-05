@@ -1,12 +1,17 @@
-﻿using System;
+﻿using OnRadio.App.Installers;
+using System;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Autofac;
 using GalaSoft.MvvmLight.Threading;
 using OnRadio.App.ViewModels;
 using OnRadio.App.Views;
+using OnRadio.App.Common;
+using OnRadio.DAL;
 
 namespace OnRadio.App
 {
@@ -44,6 +49,10 @@ namespace OnRadio.App
             DispatcherHelper.Initialize();
 
             CreateRootFrame(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
+
+
+            LocalDatabaseStorage.CreateDatabase();
+
 
             // Ensure the current window is active
             Window.Current.Activate();
