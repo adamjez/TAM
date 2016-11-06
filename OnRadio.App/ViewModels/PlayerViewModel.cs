@@ -15,7 +15,7 @@ using OnRadio.BL.Models;
 
 namespace OnRadio.App.ViewModels
 {
-    public class PlayerViewModel : LoadingViewModelBase
+    public class PlayerViewModel : LoadingViewModelBase, IDisposable
     {
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
@@ -23,6 +23,7 @@ namespace OnRadio.App.ViewModels
         private readonly MediaNotify _mediaNotify;
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
+        private RelayCommand _navigateToPlayerCommand;
 
         private RadioModel _radio;
         private MusicInformation _information;
@@ -36,16 +37,9 @@ namespace OnRadio.App.ViewModels
         public RelayCommand TogglePlayPauseCommand =>
            _togglePlayPauseCommand ?? (_togglePlayPauseCommand = new RelayCommand(TogglePlayPause));
 
-        private bool _isPlaying;
 
-        public bool IsPlaying
-        {
-            get { return _isPlaying; }
-            private set
-            {
-                Set(ref _isPlaying, value);
-            }
-        }
+        public RelayCommand NavigateToPlayerCommand =>
+           _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
 
         public MusicInformation Information
         {
@@ -58,24 +52,12 @@ namespace OnRadio.App.ViewModels
                 }
 
                 Set(ref _information, value);
-                _playbackService?.SetMusicInformation(Information);
+
+                if(value == null)
+                    _playbackService.ClearMusicInformation();
+                else
+                    _playbackService.SetMusicInformation(Information);
             }
-        }
-
-        public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService,
-            MediaNotify mediaNotify)
-        {
-            _musicService = musicService;
-            _playbackService = playbackService;
-            _navigationService = navigationService;
-            _mediaNotify = mediaNotify;
-        }
-
-        public Brush BackgroundBrush => new SolidColorBrush {Color = Color.FromArgb(100, 0, 0, 0)};
-
-        private void OpenRadioList()
-        {
-            _navigationService.NavigateTo(nameof(RadioList));
         }
 
         public RadioModel Radio
@@ -84,21 +66,49 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radio, value); }
         }
 
+        public PlaybackSessionViewModel PlaybackSession { get; private set; }
+
+
+        public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService,
+            MediaNotify mediaNotify)
+        {
+            _musicService = musicService;
+            _playbackService = playbackService;
+            _navigationService = navigationService;
+            _mediaNotify = mediaNotify;
+
+            PlaybackSession = new PlaybackSessionViewModel(playbackService.Player.PlaybackSession);
+            _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
+        }
+
+        public Brush BackgroundBrush => new SolidColorBrush { Color = Color.FromArgb(100, 0, 0, 0) };
+
+        private void OpenRadioList()
+        {
+            _navigationService.NavigateTo(nameof(RadioList));
+        }
+
         public void TogglePlayPause()
         {
             var player = _playbackService.Player;
             switch (player.PlaybackSession.PlaybackState)
             {
                 case MediaPlaybackState.Playing:
-                    player.Pause();
-                    IsPlaying = false;
+                    _playbackService.Stop();
+                    Information = Radio.CreateMusicInformation();
                     break;
 
                 case MediaPlaybackState.Paused:
-                    player.Play();
-                    IsPlaying = true;
+                case MediaPlaybackState.None:
+                    _playbackService.Play();
+                    _playbackService.SetMusicInformation(Information);
                     break;
             }
+        }
+
+        public void NavigateToPlayer()
+        {
+            _navigationService.NavigateTo(nameof(Player), true);
         }
 
         public override void Initialize(object argument)
@@ -107,12 +117,28 @@ namespace OnRadio.App.ViewModels
 
             if (radio != null)
             {
+                // Normal navigation from radio list
+                if (Loaded && Radio?.Id != radio.Id)
+                {
+                    // Loading different radio from radio list
+                    Clear();
+                }
+
                 Radio = radio;
                 _radioLoaded = true;
             }
             else if (argument is string)
             {
-                Radio = new RadioModel() {Id = (string)argument};;
+                // Page navigated from Secondary Tile
+                Radio = new RadioModel() { Id = (string)argument }; ;
+            }
+            else if (argument is bool)
+            {
+                // Page navigated back -> data should be already loaded
+                if (Radio != null)
+                {
+                    Loaded = true;
+                }
             }
             else
             {
@@ -122,11 +148,15 @@ namespace OnRadio.App.ViewModels
             base.Initialize(argument);
         }
 
+        private void Clear()
+        {
+            Loaded = false;
+            Information = null;
+        }
 
         protected override async Task LoadData()
         {
-            _playbackService.Player.Source = null;
-            IsPlaying = false;
+            _playbackService.Stop();
 
             if (!_radioLoaded)
             {
@@ -134,19 +164,22 @@ namespace OnRadio.App.ViewModels
                     .FirstOrDefault(radio => radio.Id == Radio.Id);
 
                 // ToDo: handle this a show this in proper way
-                if(Radio == null)
+                if (Radio == null)
                     throw new ArgumentException("Radio doesn't exists");
+
+                _radioLoaded = true;
             }
 
-            _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
             _mediaNotify.Enabled = Radio.OnAir;
 
-            await LoadStreamAndInfoAsync();
-            _playbackService.Player.Play();
-            IsPlaying = true;
+            await LoadStreamAsync();
+
+            _playbackService.Play();
+
+            await LoadInfoAsync();
         }
 
-        public async Task LoadStreamAndInfoAsync()
+        public async Task LoadStreamAsync()
         {
             var streams = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
 
@@ -155,7 +188,10 @@ namespace OnRadio.App.ViewModels
             var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
 
             _playbackService.Stream = stream;
+        }
 
+        public async Task LoadInfoAsync()
+        {
             if (Radio.OnAir)
             {
                 var song = await _musicService.GetOnAirAsync(Radio.Id);
@@ -178,6 +214,12 @@ namespace OnRadio.App.ViewModels
             {
                 Information = song.CreateMusicInformation();
             });
+        }
+
+        public void Dispose()
+        {
+            _mediaNotify.MediaUpdated -= BackgroundMediaUpdate;
+            PlaybackSession.Dispose();
         }
     }
 }

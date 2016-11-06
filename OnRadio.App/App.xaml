@@ -4,12 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OnRadio.App"
     xmlns:common="using:OnRadio.App.Common"
-    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-    RequestedTheme="Light">
+    xmlns:toolkitConverters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:converters="using:OnRadio.App.Converters">
 
     <Application.Resources>
         <common:ViewModelLocator x:Key="ViewModelLocator"/>
         <common:DesignTimeViewModelLocator x:Key="DesignTimeViewModelLocator"/>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+        <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter" />
     </Application.Resources>
 </Application>

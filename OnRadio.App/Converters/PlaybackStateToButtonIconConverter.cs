@@ -1,30 +1,27 @@
 ﻿using System;
 using Windows.Media.Playback;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace OnRadio.App.Converters
 {
-    public class PlayIconConverter : IValueConverter
+    public class PlaybackStateToButtonIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            const string playIcon = "ms-appx:/Icons/play.png";
-            const string pauseIcon = "ms-appx:/Icons/pause.png";
-
             if (value is MediaPlaybackState)
             {
                 var state = (MediaPlaybackState)value;
 
                 if (state == MediaPlaybackState.Playing)
                 {
-                    return pauseIcon;
+                    return Symbol.Stop;
                 }
                 else
                 {
-                    return playIcon;
+                    return Symbol.Play;
                 }
             }
-
             return null;
         }
 

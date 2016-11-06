@@ -108,11 +108,13 @@
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\IsNotNullConverter.cs" />
+    <Compile Include="Converters\PlaybackStateToButtonIconConverter.cs" />
     <Compile Include="Converters\PlayIconConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
+    <Compile Include="ViewModels\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioListViewModel.cs" />
     <Compile Include="Views\Player.xaml.cs">

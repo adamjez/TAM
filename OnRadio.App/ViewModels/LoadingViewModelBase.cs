@@ -10,7 +10,7 @@ namespace OnRadio.App.ViewModels
         public bool Loaded
         {
             get { return loaded; }
-            private set
+            set
             {
                 if (value == loaded) return;
                 loaded = value;
@@ -20,7 +20,7 @@ namespace OnRadio.App.ViewModels
 
         internal async void StartLoadData()
         {
-            //if (!Loaded)
+            if (!Loaded)
             {
                 await LoadData();
                 Loaded = true;

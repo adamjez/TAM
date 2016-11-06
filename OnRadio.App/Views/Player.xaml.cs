@@ -1,16 +1,4 @@
-﻿using System;
-using System.Numerics;
-using Windows.Graphics.Display;
-using Windows.UI.Composition;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Graphics.Canvas.UI;
-using Microsoft.Graphics.Canvas.UI.Xaml;
-using OnRadio.App.Common;
+﻿using OnRadio.App.Common;
 
 namespace OnRadio.App.Views
 {

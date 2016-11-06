@@ -29,6 +29,8 @@ namespace OnRadio.BL.Services
                 {
                     IsEnabled = true,
                     IsPreviousEnabled = false,
+                    IsNextEnabled = false,
+                    IsPauseEnabled = false,
                     IsStopEnabled = true,
                 }
             };
@@ -41,18 +43,18 @@ namespace OnRadio.BL.Services
         /// application defined data model.
         /// </summary>
         public MediaPlayer Player { get; private set; }
-        
 
-        private StreamModel _stream;
+        public StreamModel Stream { get; set; }
 
-        public StreamModel Stream
+        public void Play()
         {
-            get { return _stream; }
-            set
-            {
-                _stream = value;
-                Player.Source = MediaSource.CreateFromUri(new Uri(_stream.StreamUrl));
-            }
+            Player.Source = MediaSource.CreateFromUri(new Uri(Stream.StreamUrl));
+            Player.Play();
+        }
+
+        public void Stop()
+        {
+            Player.Source = null;
         }
 
         public void SetMusicInformation(MusicInformation information)
@@ -77,6 +79,13 @@ namespace OnRadio.BL.Services
                    RandomAccessStreamReference.CreateFromUri(new Uri(information.ThumbnailUrl));
             }
             // Update the system media transport controls.
+            updater.Update();
+        }
+
+        public void ClearMusicInformation()
+        {
+            var updater = Player.SystemMediaTransportControls.DisplayUpdater;
+            updater.ClearAll();
             updater.Update();
         }
 

@@ -96,17 +96,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OnRadio.DAL_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\OnRadio.DAL.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="SQLite.UWP.2015, Version=3.15.0">
-      <Name>SQLite for Universal Windows Platform</Name>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.15.1">
+      <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.15.1%29</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>

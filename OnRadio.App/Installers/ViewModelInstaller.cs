@@ -7,7 +7,8 @@ namespace OnRadio.App.Installers
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<PlayerViewModel>().SingleInstance();
+            builder.RegisterType<PlayerViewModel>()
+                .SingleInstance();
             builder.RegisterType<RadioListViewModel>();
         }
     }

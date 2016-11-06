@@ -58,7 +58,7 @@
                 <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" HorizontalAlignment="Center">
                     <interactivity:Interaction.Behaviors>
                         <behaviors:Blur
-                           Value="10" 
+                           Value="4" 
                            Duration="1" 
                            Delay="0" 
                            AutomaticallyStart="True" />
@@ -78,7 +78,7 @@
         </Grid>
         
         <Button Grid.Row="2" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <Image Source="{Binding IsPlaying, Converter={StaticResource PlayIconConverter}}"/>
+            <Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>
         </Button>
     </Grid>
 </common:MvvmPage>

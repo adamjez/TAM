@@ -1,4 +1,5 @@
-﻿using OnRadio.App.ViewModels;
+﻿using System;
+using OnRadio.App.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 

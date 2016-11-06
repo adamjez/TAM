@@ -22,21 +22,30 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Image Source="{Binding Information.ThumbnailUrl}" Stretch="UniformToFill"/>
-            <StackPanel Grid.Column="1">
-                <TextBlock Text="{Binding Information.Title}" FontSize="16" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" />
-                <TextBlock Text="{Binding Information.Artist}" FontSize="12" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed"/>
-            </StackPanel>
+            <Button Command="{Binding NavigateToPlayerCommand}" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Information.ThumbnailUrl}" Stretch="UniformToFill" HorizontalAlignment="Left"/>
+                    <StackPanel Grid.Column="1" Margin="6, 0">
+                        <TextBlock Text="{Binding Information.Title}" FontSize="16" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" />
+                        <TextBlock Text="{Binding Information.Artist}" FontSize="12" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed"/>
+                    </StackPanel>
+                </Grid>
+            </Button>
+
         </Grid>
         <Grid Grid.Column="1">
-            <Button Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}">
-                <Image Source="{Binding IsPlaying, Converter={StaticResource PlayIconConverter}}"/>
+            <Button Command="{Binding TogglePlayPauseCommand}" 
+                    IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                    >
+                <SymbolIcon Symbol="{Binding PlaybackSession.PlaybackState, Mode=OneWay, Converter={StaticResource PlaybackStateToButtonIconConverter}}"/>
             </Button>
         </Grid>
-        <!--<xaml:CanvasControl Draw="CanvasControl_OnDraw"  CreateResources="CanvasControl_OnCreateResources"/>-->
     </Grid>
 </UserControl>

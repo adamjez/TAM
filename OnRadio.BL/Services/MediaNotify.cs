@@ -29,8 +29,8 @@ namespace OnRadio.BL.Services
                 case MediaPlaybackState.Playing:
                     InitializeBackgroundWork();
                     break;
+                case MediaPlaybackState.None:
                 case MediaPlaybackState.Paused:
-                default:
                     CancelBackgroundWork();
                     break;
             }

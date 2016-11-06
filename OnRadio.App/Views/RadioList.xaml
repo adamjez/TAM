@@ -68,7 +68,7 @@
             </Grid>
         </ScrollViewer>
 
-        <controls:MiniPlayer Grid.Row="1" Height="100" Visibility="{Binding Loaded, Converter={StaticResource BoolToVisibilityConverter}}" 
+        <controls:MiniPlayer Grid.Row="1" Height="60" Visibility="{Binding Loaded, Converter={StaticResource BoolToVisibilityConverter}}" 
                              DataContext="{Binding Player, Source={StaticResource ViewModelLocator}}"/>
     </Grid>
 </common:MvvmPage>
