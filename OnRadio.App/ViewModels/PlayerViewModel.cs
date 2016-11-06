@@ -183,8 +183,8 @@ namespace OnRadio.App.ViewModels
         {
             var streams = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
 
-            var selectedStream = streams.First();
-            var selectedBitrate = selectedStream.Bitrates.First();
+            var selectedStream = streams.OrderBy(x => x.Bitrates.Max()).First();
+            var selectedBitrate = selectedStream.Bitrates.Max();
             var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
 
             _playbackService.Stream = stream;
