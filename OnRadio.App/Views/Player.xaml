@@ -85,5 +85,6 @@
         <Button Grid.Row="2" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>
         </Button>
+        <Button Content="AddFav" Grid.Row="2" Command="{Binding AddToFavoriteListCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"></Button>
     </Grid>
 </common:MvvmPage>
