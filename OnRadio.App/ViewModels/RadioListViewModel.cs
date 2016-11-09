@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
 using Windows.ApplicationModel.VoiceCommands;
 using GalaSoft.MvvmLight.Views;
+using OnRadio.App.Messages;
 using OnRadio.App.Services;
 using OnRadio.App.Views;
 using OnRadio.DAL;
@@ -47,7 +48,7 @@ namespace OnRadio.App.ViewModels
             _musicService = musicService;
             _tileManager = tileManager;
             _navigationService = navigationService;
-            MessengerInstance.Register<NotificationMessage>(this, NotifyMe);
+            MessengerInstance.Register<FavoriteChangeMessage>(this, FavoriteChangeHandler);
         }
 
         public ObservableCollection<RadioModel> RadioList
@@ -137,39 +138,34 @@ namespace OnRadio.App.ViewModels
             List<RadioModel> items = await _musicService.GetRadiosAsync();
             AllRadioList = new ObservableCollection<RadioModel>(items);
             RadioList = AllRadioList; // Pro filtrovani
-            LoadFavorites();
+            FavoriteRadioList = new ObservableCollection<RadioModel>(LoadFavorites());
         }
 
-        private void LoadFavorites()
+        private IEnumerable<RadioModel> LoadFavorites()
         {
-            List<string> favList = LocalDatabaseStorage.GetFavorites();
-            List<RadioModel> parsedList = ParseFavorites(favList);
-            FavoriteRadioList = new ObservableCollection<RadioModel>(parsedList);
+            List<FavoriteRadio> favList = LocalDatabaseStorage.GetFavorites();
+            return AllRadioList
+                .Where(radio => favList.Select(f => f.RadioId).Contains(radio.Id))
+                .ToList();
         }
 
-        private List<RadioModel> ParseFavorites(List<string> radioIds)
+        public void FavoriteChangeHandler(FavoriteChangeMessage message)
         {
-            var favList = new List<RadioModel>();
+            var selectedRadio = RadioList.FirstOrDefault(r => r.Id == message.RadioId);
 
-            IEnumerator e = radioIds.GetEnumerator();
-            while (e.MoveNext())
+            if (selectedRadio == null)
             {
-                RadioModel favorite = GetRadioModelFromId(e.Current.ToString());
-                favList.Add(favorite);
+                return;
             }
 
-            return favList;
-
-        }
-
-        private RadioModel GetRadioModelFromId(string radioId)
-        {
-            return AllRadioList.FirstOrDefault(o => o.Id == radioId);
-        }
-
-        public void NotifyMe(NotificationMessage notmes)
-        {
-            LoadFavorites();
+            if (message.Favorited)
+            {
+                FavoriteRadioList.Add(selectedRadio);
+            }
+            else
+            {
+                FavoriteRadioList.Remove(selectedRadio);
+            }
         }
 
 

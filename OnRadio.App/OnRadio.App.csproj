@@ -114,6 +114,7 @@
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
+    <Compile Include="Messages\FavoriteChangeMessage.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
     <Compile Include="ViewModels\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
@@ -186,7 +187,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\" />
     <Folder Include="Models\" />
     <Folder Include="Services\" />
   </ItemGroup>

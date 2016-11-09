@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Views;
+using OnRadio.App.Messages;
 using OnRadio.App.Views;
 using OnRadio.BL.Helpers;
 using OnRadio.BL.Interfaces;
@@ -132,7 +133,6 @@ namespace OnRadio.App.ViewModels
 
             if (radio != null)
             {
-                IsFavorite = LocalDatabaseStorage.IsFavorite(radio.Id);
                 NavigatedViaModel(radio);
             }
             else if (argument is string)
@@ -188,6 +188,7 @@ namespace OnRadio.App.ViewModels
         {
             _playbackService.Stop();
 
+            IsFavorite = LocalDatabaseStorage.IsFavorite(Radio.Id);
             if (!_radioLoaded)
             {
                 await LoadRadioAsync();
@@ -256,20 +257,18 @@ namespace OnRadio.App.ViewModels
             if(Radio == null) 
                 return;
 
-            var radioId = Radio.Id;
-
             if (IsFavorite)
             {
-                LocalDatabaseStorage.DeleteFavorite(radioId);
+                LocalDatabaseStorage.DeleteFavorite(Radio.Id);
                 IsFavorite = false;
             }
             else
             {
-                LocalDatabaseStorage.InsertFavorite(radioId);
+                LocalDatabaseStorage.InsertFavorite(Radio.Id);
                 IsFavorite = true;
             }
             //Favorite list changed, Send message about it :P
-            MessengerInstance.Send<NotificationMessage>(new NotificationMessage("change"));
+            MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, IsFavorite));
         }
 
         public void Dispose()

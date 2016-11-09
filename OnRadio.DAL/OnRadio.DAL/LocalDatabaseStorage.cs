@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SQLite.Net.Platform.WinRT;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using SQLite.Net.Attributes;
 using SQLite.Net;
 
@@ -55,37 +56,24 @@ namespace OnRadio.DAL
 
         public static void DeleteFavorite(string radioId)
         {
-            int Id = GetFavoriteId(radioId);
-            if (Id == 0) return;
-
-            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
+            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, true)))
             {
-                conn.Delete<FavoriteRadio>(primaryKey: Id);
+                conn.Table<FavoriteRadio>().Delete(fav => fav.RadioId == radioId);
             }
         }
 
-        public static List<string> GetFavorites()
+        public static List<FavoriteRadio> GetFavorites()
         {
-            var favoriteList = new List<string>();
-
-            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
+            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, true)))
             {
-                
-                IEnumerator e = conn.Table<FavoriteRadio>().GetEnumerator();
-                while (e.MoveNext())
-                {
-                    var curr = (FavoriteRadio)e.Current;
-                    Debug.WriteLine(curr.RadioId);
-                    favoriteList.Add(curr.RadioId);
-                }
+                return conn.Table<FavoriteRadio>().ToList();
             }
 
-            return favoriteList;
         }
 
         public static void DeleteAllFavorites()
         {
-            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
+            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, true)))
             {
                 conn.DeleteAll<FavoriteRadio>();
             }
@@ -93,37 +81,11 @@ namespace OnRadio.DAL
 
         public static bool IsFavorite(string radioId)
         {
-            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
+            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, true)))
             {
-                IEnumerator e = conn.Table<FavoriteRadio>().GetEnumerator();
-                while (e.MoveNext())
-                {
-                    var curr = (FavoriteRadio) e.Current;
-                    if (curr.RadioId == radioId) return true;
-                }
-
+                return conn.Table<FavoriteRadio>().Where(fav => fav.RadioId == radioId).FirstOrDefault() != null;
             }
-
-            return false;
         }
-
-        public static int GetFavoriteId(string radioId)
-        {
-            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
-            {
-                IEnumerator e = conn.Table<FavoriteRadio>().GetEnumerator();
-                while (e.MoveNext())
-                {
-                    var curr = (FavoriteRadio)e.Current;
-                    if (curr.RadioId == radioId) return curr.Id;
-                }
-
-            }
-
-            return 0;
-        }
-
-        
     }
 
     public class CachedData
