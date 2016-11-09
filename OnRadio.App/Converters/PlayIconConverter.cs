@@ -8,8 +8,11 @@ namespace OnRadio.App.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            const string playIcon = "ms-appx:/Icons/play.png";
-            const string pauseIcon = "ms-appx:/Icons/pause.png";
+            //const string playIcon = "ms-appx:/Icons/play.png";
+            //const string pauseIcon = "ms-appx:/Icons/pause.png";
+
+            const string playIcon = "\uE102";
+            const string pauseIcon = "\uE15B";
 
             if (value is MediaPlaybackState)
             {
