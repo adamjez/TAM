@@ -20,6 +20,7 @@
     <common:MvvmPage.Resources>
         <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
         <converters:PlayIconConverter x:Key="PlayIconConverter"/>
+        <converters:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
     </common:MvvmPage.Resources>
 
     <Page.Transitions>
@@ -81,10 +82,18 @@
                 <TextBlock Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed" Foreground="White"/>
             </Border>
         </Grid>
-        
-        <Button Grid.Row="2" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>
-        </Button>
-        <Button Content="AddFav" Grid.Row="2" Command="{Binding AddToFavoriteListCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"></Button>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>
+            </Button>
+            <Button Grid.Column="1" Command="{Binding ToggleFavoriteCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <Image Source="{Binding IsFavorite, Converter={StaticResource FavoriteIconConverter}}"></Image>
+            </Button>
+        </Grid>
     </Grid>
 </common:MvvmPage>

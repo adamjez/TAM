@@ -6,6 +6,7 @@ using Windows.Media.Playback;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Views;
@@ -25,12 +26,14 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
         private RelayCommand _navigateToPlayerCommand;
-        private RelayCommand _addToFavoriteCommand;
+        private RelayCommand _toggleFavoriteCommand;
 
         private RadioModel _radio;
         private MusicInformation _information;
 
         private bool _radioLoaded;
+
+        private bool _isFavorite;
 
 
         public RelayCommand OpenRadioListCommand =>
@@ -43,8 +46,8 @@ namespace OnRadio.App.ViewModels
         public RelayCommand NavigateToPlayerCommand =>
            _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
 
-        public RelayCommand AddToFavoriteListCommand =>
-           _addToFavoriteCommand ?? (_addToFavoriteCommand = new RelayCommand(AddToFavoriteList));
+        public RelayCommand ToggleFavoriteCommand =>
+           _toggleFavoriteCommand ?? (_toggleFavoriteCommand = new RelayCommand(ToggleFavorite));
 
         public MusicInformation Information
         {
@@ -63,6 +66,12 @@ namespace OnRadio.App.ViewModels
                 else
                     _playbackService.SetMusicInformation(Information);
             }
+        }
+
+        public bool IsFavorite
+        {
+            get { return _isFavorite; }
+            set { Set(ref _isFavorite, value); }
         }
 
         public RadioModel Radio
@@ -90,7 +99,7 @@ namespace OnRadio.App.ViewModels
 
         private void OpenRadioList()
         {
-            _navigationService.NavigateTo(nameof(RadioList));
+            _navigationService.NavigateTo(nameof(RadioList), "refresh");
         }
 
         public void TogglePlayPause()
@@ -113,6 +122,7 @@ namespace OnRadio.App.ViewModels
 
         public void NavigateToPlayer()
         {
+            
             _navigationService.NavigateTo(nameof(Player), true);
         }
 
@@ -131,6 +141,7 @@ namespace OnRadio.App.ViewModels
 
                 Radio = radio;
                 _radioLoaded = true;
+                IsFavorite = LocalDatabaseStorage.IsFavorite(radio.Id);
             }
             else if (argument is string)
             {
@@ -221,14 +232,25 @@ namespace OnRadio.App.ViewModels
             });
         }
 
-        public void AddToFavoriteList()
+        public void ToggleFavorite()
         {
             if(Radio == null) 
                 return;
 
             var radioId = Radio.Id;
 
-            LocalDatabaseStorage.InsertFavorite(radioId);
+            if (IsFavorite)
+            {
+                LocalDatabaseStorage.DeleteFavorite(radioId);
+                IsFavorite = false;
+            }
+            else
+            {
+                LocalDatabaseStorage.InsertFavorite(radioId);
+                IsFavorite = true;
+            }
+            //Favorite list changed, Send message about it :P
+            MessengerInstance.Send<NotificationMessage>(new NotificationMessage("change"));
         }
 
         public void Dispose()

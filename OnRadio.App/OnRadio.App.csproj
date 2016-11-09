@@ -107,6 +107,7 @@
     <Compile Include="Controls\MiniPlayer.xaml.cs">
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FavoriteIconConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
     <Compile Include="Converters\PlaybackStateToButtonIconConverter.cs" />
     <Compile Include="Converters\PlayIconConverter.cs" />
@@ -138,6 +139,8 @@
     <Content Include="Icons\play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icons\star.png" />
+    <Content Include="Icons\star_blank.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

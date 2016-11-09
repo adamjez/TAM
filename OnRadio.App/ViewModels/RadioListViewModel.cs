@@ -3,13 +3,17 @@ using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
 using OnRadio.BL.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Services;
 using OnRadio.App.Views;
+using OnRadio.DAL;
 
 namespace OnRadio.App.ViewModels
 {
@@ -22,6 +26,8 @@ namespace OnRadio.App.ViewModels
         private ObservableCollection<RadioModel> _radioList;
 
         private ObservableCollection<RadioModel> _allRadioList;
+
+        private ObservableCollection<RadioModel> _favoriteRadioList;
 
         private RadioModel _selectedRadioItem;
 
@@ -40,6 +46,7 @@ namespace OnRadio.App.ViewModels
             _musicService = musicService;
             _tileManager = tileManager;
             _navigationService = navigationService;
+            MessengerInstance.Register<NotificationMessage>(this, NotifyMe);
         }
 
         public ObservableCollection<RadioModel> RadioList
@@ -54,6 +61,11 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _allRadioList, value); }
         }
 
+        public ObservableCollection<RadioModel> FavoriteRadioList
+        {
+            get { return _favoriteRadioList; }
+            set { Set(ref _favoriteRadioList, value); }
+        }
 
         public RadioModel SelectedRadioItem
         {
@@ -77,7 +89,7 @@ namespace OnRadio.App.ViewModels
             _sortAlphabeticallyCommand ?? (_sortAlphabeticallyCommand = new RelayCommand(SortAlphabetically));
 
         public RelayCommand FilterListCommand =>
-            _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));
+            _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));        
 
         public void ItemSelected()
         {
@@ -124,6 +136,39 @@ namespace OnRadio.App.ViewModels
             List<RadioModel> items = await _musicService.GetRadiosAsync();
             AllRadioList = new ObservableCollection<RadioModel>(items);
             RadioList = AllRadioList; // Pro filtrovani
+            LoadFavorites();
+        }
+
+        private void LoadFavorites()
+        {
+            List<string> favList = LocalDatabaseStorage.GetFavorites();
+            List<RadioModel> parsedList = ParseFavorites(favList);
+            FavoriteRadioList = new ObservableCollection<RadioModel>(parsedList);
+        }
+
+        private List<RadioModel> ParseFavorites(List<string> radioIds)
+        {
+            var favList = new List<RadioModel>();
+
+            IEnumerator e = radioIds.GetEnumerator();
+            while (e.MoveNext())
+            {
+                RadioModel favorite = GetRadioModelFromId(e.Current.ToString());
+                favList.Add(favorite);
+            }
+
+            return favList;
+
+        }
+
+        private RadioModel GetRadioModelFromId(string radioId)
+        {
+            return AllRadioList.FirstOrDefault(o => o.Id == radioId);
+        }
+
+        public void NotifyMe(NotificationMessage notmes)
+        {
+            LoadFavorites();
         }
        
     }
