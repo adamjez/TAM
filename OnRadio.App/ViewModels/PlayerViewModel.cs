@@ -117,28 +117,16 @@ namespace OnRadio.App.ViewModels
 
             if (radio != null)
             {
-                // Normal navigation from radio list
-                if (Loaded && Radio?.Id != radio.Id)
-                {
-                    // Loading different radio from radio list
-                    Clear();
-                }
-
-                Radio = radio;
-                _radioLoaded = true;
+                NavigatedViaModel(radio);
             }
             else if (argument is string)
             {
-                // Page navigated from Secondary Tile
-                Radio = new RadioModel() { Id = (string)argument }; ;
+                // Normal navigation from radio list
+                NavigatedViaId((string)argument);
             }
             else if (argument is bool)
             {
                 // Page navigated back -> data should be already loaded
-                if (Radio != null)
-                {
-                    Loaded = true;
-                }
             }
             else
             {
@@ -148,10 +136,36 @@ namespace OnRadio.App.ViewModels
             base.Initialize(argument);
         }
 
+        private void NavigatedViaModel(RadioModel radio)
+        {
+            // Normal navigation from radio list
+            if (Loaded && Radio?.Id != radio.Id)
+            {
+                // Loading different radio from radio list
+                Clear();
+            }
+
+            Radio = radio;
+            _radioLoaded = true;
+        }
+
+        private void NavigatedViaId(string argument)
+        {
+            if (Loaded && Radio?.Id != argument)
+            {
+                // Loading different radio 
+                Clear();
+            }
+            // Page navigated from Secondary Tile
+            Radio = new RadioModel() {Id = argument};
+        }
+
         private void Clear()
         {
-            Loaded = false;
             Information = null;
+            Radio = null;
+            _radioLoaded = false;
+            Loaded = false;
         }
 
         protected override async Task LoadData()
@@ -160,14 +174,7 @@ namespace OnRadio.App.ViewModels
 
             if (!_radioLoaded)
             {
-                Radio = (await _musicService.GetRadiosAsync())
-                    .FirstOrDefault(radio => radio.Id == Radio.Id);
-
-                // ToDo: handle this a show this in proper way
-                if (Radio == null)
-                    throw new ArgumentException("Radio doesn't exists");
-
-                _radioLoaded = true;
+                await LoadRadioAsync();
             }
 
             _mediaNotify.Enabled = Radio.OnAir;
@@ -177,6 +184,18 @@ namespace OnRadio.App.ViewModels
             _playbackService.Play();
 
             await LoadInfoAsync();
+        }
+
+        private async Task LoadRadioAsync()
+        {
+            Radio = (await _musicService.GetRadiosAsync())
+                .FirstOrDefault(radio => String.Compare(radio.Id, Radio.Id, StringComparison.OrdinalIgnoreCase) == 0);
+
+            // ToDo: handle this a show this in proper way
+            if (Radio == null)
+                throw new ArgumentException("Radio doesn't exists");
+
+            _radioLoaded = true;
         }
 
         public async Task LoadStreamAsync()

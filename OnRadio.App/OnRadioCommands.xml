@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="en-us" Name="OnRadioCommandSet_en-us">
+    <AppName> Online Radio </AppName>
+    <Example> Play Beat radio </Example>
+    
+    <Command Name="playRadio">
+      <Example> Play Beat radio </Example>
+      <ListenFor RequireAppName="BeforeOrAfterPhrase"> play {radio} [radio] </ListenFor>
+      <ListenFor RequireAppName="ExplicitlySpecified"> play {radio} [radio] with {builtin:AppName} </ListenFor>
+      <Feedback> Playing {radio} </Feedback>
+      <Navigate />
+    </Command>
+
+    <PhraseList Label="radio">
+      <Item>Beat</Item>
+      <Item>Radio 1</Item>
+      <Item>Bonton</Item>
+    </PhraseList>
+  </CommandSet>
+</VoiceCommands>

@@ -23,10 +23,14 @@
           <uap:Rotation Preference="portrait" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.personalAssistantLaunch" />
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
     <uap3:Capability Name="backgroundMediaPlayback" />
+    <DeviceCapability Name="microphone" />
   </Capabilities>
 </Package>

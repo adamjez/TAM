@@ -1,13 +1,18 @@
 ﻿using OnRadio.App.Installers;
 using System;
+using System.Linq;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Media.SpeechRecognition;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Autofac;
 using GalaSoft.MvvmLight.Threading;
+using GalaSoft.MvvmLight.Views;
 using OnRadio.App.ViewModels;
 using OnRadio.App.Views;
 using OnRadio.App.Common;
@@ -28,8 +33,6 @@ namespace OnRadio.App
         {
             this.InitializeComponent();
             this.Construct();
-
-            //InitializeCore();
         }
 
         /// <summary>
@@ -37,7 +40,7 @@ namespace OnRadio.App
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -46,16 +49,39 @@ namespace OnRadio.App
             }
 #endif
 
-            DispatcherHelper.Initialize();
-
-            CreateRootFrame(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
-
-
-            LocalDatabaseStorage.CreateDatabase();
-
+            OnLaunchCore(e.PreviousExecutionState, e.Arguments, e.PrelaunchActivated);
 
             // Ensure the current window is active
             Window.Current.Activate();
+
+            try
+            {
+                // Install the main VCD. Since there's no simple way to test that the VCD has been imported, or that it's your most recent
+                // version, it's not unreasonable to do this upon app load.
+                StorageFile vcdStorageFile = await Package.Current.InstalledLocation.GetFileAsync(@"OnRadioCommands.xml");
+                await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.
+                    InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
+
+                //// Update phrase list.
+                //ViewModel.ViewModelLocator locator = App.Current.Resources["ViewModelLocator"] as ViewModel.ViewModelLocator;
+                //if (locator != null)
+                //{
+                //    await locator.TripViewModel.UpdateDestinationPhraseList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Installing Voice Commands Failed: " + ex.ToString());
+            }
+        }
+
+        private void OnLaunchCore(ApplicationExecutionState state, string arguments, bool prelaunchActivated)
+        {
+            DispatcherHelper.Initialize();
+
+            CreateRootFrame(state, arguments, prelaunchActivated);
+
+            LocalDatabaseStorage.CreateDatabase();
         }
 
 
@@ -133,6 +159,85 @@ namespace OnRadio.App
                     rootFrame.Navigate(typeof(RadioList), arguments);
                 }
             }
+        }
+
+        /// <summary>
+        /// OnActivated is the entry point for an application when it is launched via
+        /// means other normal user interaction. This includes Voice Commands, URI activation,
+        /// being used as a share target from another app, etc. Here, we're going to handle the
+        /// Voice Command activation from Cortana.
+        /// 
+        /// Note: Be aware that an older VCD could still be in place for your application if you
+        /// modify it and update your app via the store. You should be aware that you could get 
+        /// activations that include commands in older versions of your VCD, and you should try
+        /// to handle them gracefully.
+        /// </summary>
+        /// <param name="args">Details about the activation method, including the activation
+        /// phrase (for voice commands) and the semantic interpretation, parameters, etc.</param>
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+
+            string navigationArgument = null;
+            //ViewModel.TripVoiceCommand? navigationCommand = null;
+
+            // If the app was launched via a Voice Command, this corresponds to the "show trip to <location>" command. 
+            // Protocol activation occurs when a tile is clicked within Cortana (via the background task)
+            if (args.Kind == ActivationKind.VoiceCommand)
+            {
+                // The arguments can represent many different activation types. Cast it so we can get the
+                // parameters we care about out.
+                var commandArgs = args as VoiceCommandActivatedEventArgs;
+
+                SpeechRecognitionResult speechRecognitionResult = commandArgs.Result;
+
+                // The commandMode is either "voice" or "text", and it indictes how the voice command
+                // was entered by the user.
+                // Apps should respect "text" mode by providing feedback in silent form.
+                navigationArgument = this.SemanticInterpretation("radio", speechRecognitionResult);
+            }
+
+
+            OnLaunchCore(args.PreviousExecutionState, navigationArgument, false);
+
+            NormalizeFrameBackStack();
+
+
+            // Ensure the current window is active
+            Window.Current.Activate();
+        }
+
+        private static void NormalizeFrameBackStack()
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null)
+            {
+                if (rootFrame.BackStackDepth == 0)
+                {
+                    rootFrame.BackStack.Insert(0,
+                        new PageStackEntry(typeof(RadioList), null, new SuppressNavigationTransitionInfo()));
+                }
+                else if (rootFrame.BackStackDepth > 1)
+                {
+                    for (int i = rootFrame.BackStackDepth - 1; i > 0; i--)
+                    {
+                        rootFrame.BackStack.RemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the semantic interpretation of a speech result. Returns null if there is no interpretation for
+        /// that key.
+        /// </summary>
+        /// <param name="interpretationKey">The interpretation key.</param>
+        /// <param name="speechRecognitionResult">The result to get an interpretation from.</param>
+        /// <returns></returns>
+        private string SemanticInterpretation(string interpretationKey, SpeechRecognitionResult speechRecognitionResult)
+        {
+            return speechRecognitionResult.SemanticInterpretation.Properties[interpretationKey].FirstOrDefault();
         }
 
         /// <summary>
