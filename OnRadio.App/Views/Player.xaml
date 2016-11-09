@@ -57,7 +57,7 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="3">
-                <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" HorizontalAlignment="Center">
+                <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <interactivity:Interaction.Behaviors>
                         <behaviors:Blur
                             x:Name="BlurBehavior" 
@@ -72,7 +72,7 @@
             <Border Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
                 <TextBlock Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center" Foreground="White"/>
             </Border>
-            <controls:ImageEx Grid.Row="2" Grid.Column="1" PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="UniformToFill"
+            <controls:ImageEx Grid.Row="2" Grid.Column="1" PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
                               Source="{Binding Information.ThumbnailUrl}"/>
             <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
                 <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
@@ -82,9 +82,20 @@
             </Border>
         </Grid>
         
-        <Button Grid.Row="2" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>
-        </Button>
-        <Button Content="AddFav" Grid.Row="2" Command="{Binding AddToFavoriteListCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"></Button>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding TogglePlayPauseCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    Content="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}" FontFamily="Segoe MDL2 Assets" FontSize="48"
+                    />
+                <!--<Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>-->
+            
+            <Button FontFamily="Segoe MDL2 Assets" FontSize="32" Grid.Column="1" Command="{Binding AddToFavoriteListCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                &#xE00B;
+            </Button>
+        </Grid>
     </Grid>
 </common:MvvmPage>
