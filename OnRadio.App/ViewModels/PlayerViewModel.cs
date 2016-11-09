@@ -12,6 +12,7 @@ using OnRadio.App.Views;
 using OnRadio.BL.Helpers;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
+using OnRadio.DAL;
 
 namespace OnRadio.App.ViewModels
 {
@@ -24,6 +25,7 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
         private RelayCommand _navigateToPlayerCommand;
+        private RelayCommand _addToFavoriteCommand;
 
         private RadioModel _radio;
         private MusicInformation _information;
@@ -40,6 +42,9 @@ namespace OnRadio.App.ViewModels
 
         public RelayCommand NavigateToPlayerCommand =>
            _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
+
+        public RelayCommand AddToFavoriteListCommand =>
+           _addToFavoriteCommand ?? (_addToFavoriteCommand = new RelayCommand(AddToFavoriteList));
 
         public MusicInformation Information
         {
@@ -233,6 +238,16 @@ namespace OnRadio.App.ViewModels
             {
                 Information = song.CreateMusicInformation();
             });
+        }
+
+        public void AddToFavoriteList()
+        {
+            if(Radio == null) 
+                return;
+
+            var radioId = Radio.Id;
+
+            LocalDatabaseStorage.InsertFavorite(radioId);
         }
 
         public void Dispose()

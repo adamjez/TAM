@@ -17,6 +17,7 @@ namespace OnRadio.DAL
             using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
             {
                 conn.CreateTable<CachedData>();
+                conn.CreateTable<FavoriteRadio>();         
             }
         }
 
@@ -35,6 +36,30 @@ namespace OnRadio.DAL
                 conn.Insert(record);
             }
         }
+
+        public static void InsertFavorite(string radioId)
+        {
+            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
+            {
+                FavoriteRadio record = new FavoriteRadio()
+                {
+                    RadioId = radioId
+                };
+                Debug.WriteLine(record.RadioId);
+                conn.Insert(record);
+                
+            }
+        }
+
+        public static void DeleteFavorite(int radioId)
+        {
+            using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
+            {
+                          
+            }
+        }
+
+        
     }
 
     public class CachedData
@@ -44,5 +69,13 @@ namespace OnRadio.DAL
         public DateTime Timestamp { get; set; }
         public DateTime ExpireAt { get; set; }
         public string Data { get; set; }
+    }
+
+    public class FavoriteRadio
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string RadioId { get; set; }
+
     }
 }
