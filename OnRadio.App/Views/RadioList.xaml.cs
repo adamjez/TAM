@@ -16,5 +16,10 @@ namespace OnRadio.App.Views
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
+
+        private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

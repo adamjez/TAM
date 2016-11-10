@@ -138,11 +138,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Toolkit.Uwp">
-      <HintPath>..\..\..\..\.nuget\packages\Microsoft.Toolkit.Uwp\1.1.0\lib\uap10.0\Microsoft.Toolkit.Uwp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>

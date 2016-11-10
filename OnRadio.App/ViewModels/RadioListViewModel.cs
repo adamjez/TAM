@@ -3,17 +3,15 @@ using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
 using OnRadio.BL.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight.Messaging;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Messages;
-using OnRadio.App.Services;
+using OnRadio.App.Models;
 using OnRadio.App.Views;
 using OnRadio.DAL;
 
@@ -25,20 +23,10 @@ namespace OnRadio.App.ViewModels
         private readonly ITileManager _tileManager;
         private readonly INavigationService _navigationService;
 
-        private ObservableCollection<RadioModel> _radioList;
-
-        private ObservableCollection<RadioModel> _allRadioList;
-
-        private ObservableCollection<RadioModel> _favoriteRadioList;
-
-        private RadioModel _selectedRadioItem;
-
-        private RelayCommand _itemSelectedCommand;
-
+        private ObservableCollection<GroupRadioList> _groupRadioList;
+        private RelayCommand<ItemClickEventArgs> _itemSelectedCommand;
         private RelayCommand _sortByPopularityCommand;
-
         private RelayCommand _sortAlphabeticallyCommand;
-
         private RelayCommand _filterListCommand;
 
         private string _searchString;
@@ -51,38 +39,22 @@ namespace OnRadio.App.ViewModels
             MessengerInstance.Register<FavoriteChangeMessage>(this, FavoriteChangeHandler);
         }
 
-        public ObservableCollection<RadioModel> RadioList
-        {
-            get { return _radioList; }
-            set { Set(ref _radioList, value); }
-        }
+        public List<RadioModel> RadioList { get; set; }
 
-        public ObservableCollection<RadioModel> AllRadioList
+        public ObservableCollection<GroupRadioList> GroupRadioList
         {
-            get { return _allRadioList; }
-            set { Set(ref _allRadioList, value); }
-        }
-
-        public ObservableCollection<RadioModel> FavoriteRadioList
-        {
-            get { return _favoriteRadioList; }
-            set { Set(ref _favoriteRadioList, value); }
-        }
-
-        public RadioModel SelectedRadioItem
-        {
-            get { return _selectedRadioItem; }
-            set { Set(ref _selectedRadioItem, value); }
+            get { return _groupRadioList; }
+            set { Set(ref _groupRadioList, value); }
         }
 
         public string SearchString
         {
             get { return _searchString; }
-            set { Set(ref _searchString, value); Console.WriteLine(_searchString); }
+            set { Set(ref _searchString, value); }
         }
 
-        public RelayCommand ItemSelectedCommand =>
-            _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand(ItemSelected));
+        public RelayCommand<ItemClickEventArgs> ItemSelectedCommand =>
+            _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand<ItemClickEventArgs>(ItemSelected));
 
         public RelayCommand SortByPopularityCommand =>
             _sortByPopularityCommand ?? (_sortByPopularityCommand = new RelayCommand(SortByPopularity));
@@ -93,11 +65,10 @@ namespace OnRadio.App.ViewModels
         public RelayCommand FilterListCommand =>
             _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));        
 
-        public void ItemSelected()
+        public void ItemSelected(ItemClickEventArgs arg)
         {
             // Save pointer to current radio before someone select something different
-            var currentRadio = SelectedRadioItem;
-            if (currentRadio == null)
+            if (arg.ClickedItem == null)
             {
                 return;
             }
@@ -111,42 +82,72 @@ namespace OnRadio.App.ViewModels
             //    await _tileManager.CreateTileAsync(currentRadio);
 
             //}
-            _navigationService.NavigateTo(nameof(Player), currentRadio);
+            _navigationService.NavigateTo(nameof(Player), arg.ClickedItem);
         }
 
         public void SortByPopularity()
         {
-            RadioList = new ObservableCollection<RadioModel>(
-                RadioList.OrderByDescending(radio => radio.Listenters));
+            //RadioList = new ObservableCollection<RadioModel>(
+            //    RadioList.OrderByDescending(radio => radio.Listenters));
         }
 
         public void SortAlphabetically()
         {
-            RadioList = new ObservableCollection<RadioModel>(
-                RadioList.OrderBy(radio => radio.Title));
+            //RadioList = new ObservableCollection<RadioModel>(
+            //    RadioList.OrderBy(radio => radio.Title));
         }
 
         public void FilterList()
         {
-            RadioList = new ObservableCollection<RadioModel>(
-                AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
-            );
+            //RadioList = new ObservableCollection<RadioModel>(
+            //    AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
+            //);
         }
 
         protected override async Task LoadData()
         {
-            List<RadioModel> items = await _musicService.GetRadiosAsync();
-            AllRadioList = new ObservableCollection<RadioModel>(items);
-            RadioList = AllRadioList; // Pro filtrovani
-            FavoriteRadioList = new ObservableCollection<RadioModel>(LoadFavorites());
+            RadioList = await _musicService.GetRadiosAsync();
+
+            AddFavoriteFlag(RadioList);
+
+            GroupRadioList = new ObservableCollection<GroupRadioList>(CreateGroupedList(RadioList));
         }
 
-        private IEnumerable<RadioModel> LoadFavorites()
+        private void AddFavoriteFlag(List<RadioModel> items)
         {
             List<FavoriteRadio> favList = LocalDatabaseStorage.GetFavorites();
-            return AllRadioList
-                .Where(radio => favList.Select(f => f.RadioId).Contains(radio.Id))
-                .ToList();
+            foreach(var item in items.Where(radio => favList.Select(f => f.RadioId).Contains(radio.Id)))
+            {
+                item.IsFavorite = true;
+            }
+        }
+
+        public List<GroupRadioList> CreateGroupedList(List<RadioModel> radios)
+        {
+            var groupList = new List<GroupRadioList>();
+
+            var query = radios.GroupBy(radio => radio.IsFavorite)
+                .OrderByDescending(g => g.Key)
+                .Select(g => new {GroupName = g.Key, Items = g});
+
+            foreach (var group in query)
+            {
+                GroupRadioList info = new GroupRadioList
+                {
+                    Type = group.GroupName ? GroupType.Favorited : GroupType.Others
+                };
+
+
+                foreach (var item in group.Items)
+                {
+                    info.Add(item);
+                }
+
+                groupList.Add(info);
+            }
+
+            return groupList;
+
         }
 
         public void FavoriteChangeHandler(FavoriteChangeMessage message)
@@ -158,13 +159,23 @@ namespace OnRadio.App.ViewModels
                 return;
             }
 
+            var favoriteList = GroupRadioList.FirstOrDefault(x => x.Type == GroupType.Favorited);
+            var otherList = GroupRadioList.FirstOrDefault(x => x.Type == GroupType.Others);
             if (message.Favorited)
             {
-                FavoriteRadioList.Add(selectedRadio);
+                if (favoriteList == null)
+                {
+                    favoriteList = new GroupRadioList();
+                    GroupRadioList.Add(favoriteList);
+                }
+
+                favoriteList.Add(selectedRadio);
+                otherList.Remove(selectedRadio);
             }
             else
             {
-                FavoriteRadioList.Remove(selectedRadio);
+                favoriteList?.Remove(selectedRadio);
+                otherList.Add(selectedRadio);
             }
         }
 
@@ -186,7 +197,7 @@ namespace OnRadio.App.ViewModels
                 if (VoiceCommandDefinitionManager.InstalledCommandDefinitions.TryGetValue(commandSetKey, out commandDefinitions))
                 {
                     List<string> destinations = new List<string>();
-                    foreach (var radio in AllRadioList)
+                    foreach (var radio in RadioList)
                     {
                         destinations.Add(radio.Title);
                     }

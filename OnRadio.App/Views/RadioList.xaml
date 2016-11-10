@@ -15,6 +15,7 @@
     mc:Ignorable="d">
 
     <common:MvvmPage.Resources>
+        <CollectionViewSource x:Key="RadioListSource" Source="{Binding GroupRadioList}" IsSourceGrouped="True" />
     </common:MvvmPage.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -26,7 +27,6 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid>
@@ -49,47 +49,33 @@
 
                 </Grid>
 
-                <ListView ItemsSource="{Binding FavoriteRadioList}" Grid.Row="1"
-                      SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}">
+                <ListView ItemsSource="{Binding Source={StaticResource RadioListSource}}" Grid.Row="1"
+                      SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}" SelectionMode="None" IsItemClickEnabled="True">
                     <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:EventTriggerBehavior EventName="ItemClick">
                             <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
-                    <ListView.Header>
-                        <TextBlock Text="Favorite List"></TextBlock>
-                    </ListView.Header>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
                                 <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
-                                <TextBlock Text="{Binding Title}" Padding="10"></TextBlock>
+                                <TextBlock Text="{Binding Title}" FontWeight="Medium" Padding="8 0 0 0"
+                                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding  Type}" 
+                                       Style="{ThemeResource TitleTextBlockStyle}"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
                 </ListView>
-
-
-                <ListView ItemsSource="{Binding RadioList}" Grid.Row="2"
-                      SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="SelectionChanged">
-                            <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                    <ListView.Header>
-                        <TextBlock Text="Radio List"></TextBlock>
-                    </ListView.Header>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
-                                <TextBlock Text="{Binding Title}" Padding="10"></TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                
             </Grid>
         </ScrollViewer>
 

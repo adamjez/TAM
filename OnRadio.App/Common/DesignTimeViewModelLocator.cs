@@ -1,7 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Composition;
 using Microsoft.Graphics.Canvas.Effects;
+using OnRadio.App.Models;
 using OnRadio.App.ViewModels;
 using OnRadio.BL.Models;
 
@@ -22,18 +24,25 @@ namespace OnRadio.App.Common
 
             protected override Task LoadData()
             {
-                RadioList = new ObservableCollection<RadioModel>(
+                GroupRadioList = new ObservableCollection<GroupRadioList>(
                     new[]
                     {
-                        new RadioModel()
+                        new GroupRadioList(new [] {new RadioModel()
                         {
-                            Title = "Radio Beat",
+                             Title = "Radio Beat",
                             LogoUrl = "http://www.radio1.cz/media/images/design/radio1-logo.png"
+                        } })
+                        {
+                            Type = GroupType.Favorited,
                         },
-                        new RadioModel()
+                        new GroupRadioList(new [] {new RadioModel()
                         {
-                            Title = "Evropa 2",
+                                  Title = "Evropa 2",
                             LogoUrl = "http://www.radio1.cz/media/images/design/radio1-logo.png"
+                        } })
+                        {
+                            Type = GroupType.Others
+  
                         }
                     });
                 return Task.FromResult(true);

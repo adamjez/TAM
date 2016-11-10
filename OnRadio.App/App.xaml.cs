@@ -85,18 +85,6 @@ namespace OnRadio.App
         }
 
 
-        //public static IContainer AutofacContainer;
-        //private void InitializeCore()
-        //{
-        //    var builder = new ContainerBuilder();
-
-        //    builder.RegisterModule<IoCInstaller>();
-        //    builder.RegisterModule<ViewModelInstaller>();
-
-
-        //    AutofacContainer = builder.Build();
-        //}
-
         /// <summary>
         /// Creates the frame containing the view
         /// </summary>
