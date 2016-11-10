@@ -9,8 +9,8 @@ namespace OnRadio.App.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            const string isFavorite = "ms-appx:/Icons/star.png";
-            const string notFavorite = "ms-appx:/Icons/star_blank.png";
+            const string isFavorite = "\uE00B";
+            const string notFavorite = "\uE006";
 
             if (!(value is bool)) return null;
             var state = (bool)value;

@@ -94,9 +94,9 @@
                     />
                 <!--<Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>-->
             
-            <Button FontFamily="Segoe MDL2 Assets" FontSize="32" Grid.Column="1" Command="{Binding ToggleFavoriteCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                &#xE00B;
-            </Button>
+            <Button FontFamily="Segoe MDL2 Assets" FontSize="32" Grid.Column="1" Command="{Binding ToggleFavoriteCommand}" IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}" 
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Content="{Binding IsFavorite, Converter={StaticResource FavoriteIconConverter}}"
+                    />
         </Grid>
     </Grid>
 </common:MvvmPage>
