@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.Media.Playback;
 using Windows.UI.Xaml.Data;
-using OnRadio.BL.Models;
 
 namespace OnRadio.App.Converters
 {
@@ -9,13 +8,11 @@ namespace OnRadio.App.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            const string isFavorite = "\uE00B";
-            const string notFavorite = "\uE006";
+            const string addFavoriteIcon = "\uEB51"; // Empty Heart
+            const string removeFavoriteIcon = "\uEB52"; // Full Heart
 
-            if (!(value is bool)) return null;
-            var state = (bool)value;
-
-            return state ? isFavorite : notFavorite;
+            var isFavorite = value as bool? ?? false;
+            return isFavorite ? removeFavoriteIcon : addFavoriteIcon;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -9,20 +9,19 @@ namespace OnRadio.App.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is MediaPlaybackState)
-            {
-                var state = (MediaPlaybackState)value;
+            if (!(value is MediaPlaybackState)) return null;
+            var state = (MediaPlaybackState)value;
 
-                if (state == MediaPlaybackState.Playing)
-                {
-                    return Symbol.Stop;
-                }
-                else
-                {
-                    return Symbol.Play;
-                }
+            if (state == MediaPlaybackState.Playing ||
+                state == MediaPlaybackState.Buffering ||
+                state == MediaPlaybackState.Opening)
+            {
+                return Symbol.Stop;
             }
-            return null;
+            else
+            {
+                return Symbol.Play;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
