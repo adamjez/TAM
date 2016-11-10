@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
@@ -27,15 +28,13 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
         private RelayCommand _navigateToPlayerCommand;
-        private RelayCommand _toggleFavoriteCommand;
+        private RelayCommand _toggleRadioIsFavoriteCommand;
+        private RelayCommand _togglePlaybackQualityCommand;
 
         private RadioModel _radio;
         private MusicInformation _information;
 
         private bool _radioLoaded;
-
-        private bool _isFavorite;
-
 
         public RelayCommand OpenRadioListCommand =>
            _openRadioListCommand ?? (_openRadioListCommand = new RelayCommand(OpenRadioList));
@@ -43,12 +42,14 @@ namespace OnRadio.App.ViewModels
         public RelayCommand TogglePlayPauseCommand =>
            _togglePlayPauseCommand ?? (_togglePlayPauseCommand = new RelayCommand(TogglePlayPause));
 
+        public RelayCommand TogglePlaybackQualityCommand =>
+            _togglePlaybackQualityCommand ?? (_togglePlaybackQualityCommand = new RelayCommand(TogglePlaybackQuality));
 
         public RelayCommand NavigateToPlayerCommand =>
            _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
 
-        public RelayCommand ToggleFavoriteCommand =>
-           _toggleFavoriteCommand ?? (_toggleFavoriteCommand = new RelayCommand(ToggleFavorite));
+        public RelayCommand ToggleRadioIsFavoriteCommand =>
+           _toggleRadioIsFavoriteCommand ?? (_toggleRadioIsFavoriteCommand = new RelayCommand(ToggleRadioIsFavorite));
 
         public MusicInformation Information
         {
@@ -69,11 +70,7 @@ namespace OnRadio.App.ViewModels
             }
         }
 
-        public bool IsFavorite
-        {
-            get { return _isFavorite; }
-            set { Set(ref _isFavorite, value); }
-        }
+        public StreamModel Stream => _playbackService.Stream;
 
         public RadioModel Radio
         {
@@ -188,7 +185,7 @@ namespace OnRadio.App.ViewModels
         {
             _playbackService.Stop();
 
-            IsFavorite = LocalDatabaseStorage.IsFavorite(Radio.Id);
+            
             if (!_radioLoaded)
             {
                 await LoadRadioAsync();
@@ -212,6 +209,8 @@ namespace OnRadio.App.ViewModels
             if (Radio == null)
                 throw new ArgumentException("Radio doesn't exists");
 
+            Radio.IsFavorite = LocalDatabaseStorage.IsFavorite(Radio.Id);
+
             _radioLoaded = true;
         }
 
@@ -219,11 +218,24 @@ namespace OnRadio.App.ViewModels
         {
             var streams = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
 
-            var selectedStream = streams.OrderBy(x => x.Bitrates.Max()).First();
-            var selectedBitrate = selectedStream.Bitrates.Max();
+            Radio.Streams = new List<StreamModel>();
+
+            // Select Low Quality stream
+            var selectedStream = streams.OrderBy(x => x.Bitrates.Min()).First();
+            var selectedBitrate = selectedStream.Bitrates.Min();
             var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
+            stream.Quality = StreamModel.StreamQuality.Low;
+            Radio.Streams.Add(stream);
+
+            // Select High Quality stream
+            selectedStream = streams.OrderBy(x => x.Bitrates.Max()).First();
+            selectedBitrate = selectedStream.Bitrates.Max();
+            stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
+            stream.Quality = StreamModel.StreamQuality.High;
+            Radio.Streams.Add(stream);
 
             _playbackService.Stream = stream;
+            RaisePropertyChanged(() => Stream);
         }
 
         public async Task LoadInfoAsync()
@@ -252,23 +264,52 @@ namespace OnRadio.App.ViewModels
             });
         }
 
-        public void ToggleFavorite()
+        public void TogglePlaybackQuality()
+        {
+            if (Radio == null)
+                return;
+
+            StreamModel newQualityStream = null;
+            switch (Stream.Quality)
+            {
+                case StreamModel.StreamQuality.High:
+                    newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.Low);
+                    break;
+                case StreamModel.StreamQuality.Low:
+                    newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.High);
+                    break;
+                default:
+                    throw new ArgumentException("Unhandled stream quality value");
+            }
+
+            if (newQualityStream == null)
+                return;
+            _playbackService.Stream = newQualityStream;
+            if (PlaybackSession.PlaybackState != MediaPlaybackState.Paused)
+            {
+                _playbackService.Stop();
+                _playbackService.Play();
+            }
+                
+            RaisePropertyChanged(()=>Stream);
+        }
+
+        public void ToggleRadioIsFavorite()
         {
             if(Radio == null) 
                 return;
 
-            if (IsFavorite)
+            if (Radio.IsFavorite)
             {
                 LocalDatabaseStorage.DeleteFavorite(Radio.Id);
-                IsFavorite = false;
             }
             else
             {
                 LocalDatabaseStorage.InsertFavorite(Radio.Id);
-                IsFavorite = true;
             }
-            //Favorite list changed, Send message about it :P
-            MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, IsFavorite));
+            Radio.IsFavorite = !Radio.IsFavorite;
+            MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, Radio.IsFavorite));
+            RaisePropertyChanged(()=>Radio);
         }
 
         public void Dispose()

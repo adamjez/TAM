@@ -12,6 +12,7 @@ namespace OnRadio.BL.Models
         public List<StreamModel> Streams { get; set; }
         public int Listenters { get; set; }
         public bool OnAir { get; set; }
+        public bool IsFavorite { get; set; }
 
         public MusicInformation CreateMusicInformation()
         {

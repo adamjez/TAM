@@ -107,9 +107,10 @@
     <Compile Include="Controls\MiniPlayer.xaml.cs">
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\FavoriteIconConverter.cs" />
+    <Compile Include="Converters\PlaybackQualityConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
     <Compile Include="Converters\PlaybackStateToButtonIconConverter.cs" />
+    <Compile Include="Converters\FavoriteIconConverter.cs" />
     <Compile Include="Converters\PlayIconConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
