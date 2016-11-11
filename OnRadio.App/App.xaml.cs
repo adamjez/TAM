@@ -17,6 +17,8 @@ using OnRadio.App.ViewModels;
 using OnRadio.App.Views;
 using OnRadio.App.Common;
 using OnRadio.DAL;
+using Windows.Foundation;
+using Microsoft.Toolkit.Uwp;
 
 namespace OnRadio.App
 {
@@ -80,8 +82,11 @@ namespace OnRadio.App
             DispatcherHelper.Initialize();
 
             CreateRootFrame(state, arguments, prelaunchActivated);
-
             LocalDatabaseStorage.CreateDatabase();
+            SaveRoamingSettings();
+            LoadRoamingSettings();
+
+
         }
 
 
@@ -250,5 +255,29 @@ namespace OnRadio.App
 
         // Add any application contructor code in here.
         partial void Construct();
+
+        private void SaveRoamingSettings()
+        {
+            var helper = new RoamingObjectStorageHelper();
+            helper.Save("isHQ", true);
+            helper.Save("lastRadio", "radio_name");
+        }
+
+        private void LoadRoamingSettings()
+        {
+            var helper = new RoamingObjectStorageHelper();
+            string keyIsHQ = "isHQ";
+            string keyLastRadio = "lastRadio";
+            if (helper.KeyExists(keyIsHQ))
+            {
+                string result = helper.Read<string>(keyIsHQ);
+                //Debug.WriteLine(result);
+            }
+            if (helper.KeyExists(keyLastRadio))
+            {
+                string result = helper.Read<string>(keyLastRadio);
+                //Debug.WriteLine(result);
+            }
+        }
     }
 }

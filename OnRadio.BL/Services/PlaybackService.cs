@@ -49,6 +49,7 @@ namespace OnRadio.BL.Services
         public void Play()
         {
             Player.Source = MediaSource.CreateFromUri(new Uri(Stream.StreamUrl));
+            Player.AudioCategory = MediaPlayerAudioCategory.Media;
             Player.Play();
         }
 

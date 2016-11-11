@@ -75,7 +75,7 @@
             <Grid Grid.Row="2" Grid.Column="1">
                 <controls1:CompositionShadow BlurRadius="100.0" ShadowOpacity="1.0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <controls:ImageEx PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      Source="{Binding Information.ThumbnailUrl}" x:Name="ImageTest">
+                                      Source="{Binding Information.ThumbnailUrl}">
                     </controls:ImageEx>
                 </controls1:CompositionShadow>
             </Grid>

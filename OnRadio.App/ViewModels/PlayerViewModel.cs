@@ -16,6 +16,9 @@ using OnRadio.BL.Helpers;
 using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
 using OnRadio.DAL;
+using Microsoft.Toolkit.Uwp;
+using System.Diagnostics;
+using OnRadio.App.Helpers;
 
 namespace OnRadio.App.ViewModels
 {
@@ -128,6 +131,8 @@ namespace OnRadio.App.ViewModels
         {
             var radio = argument as RadioModel;
 
+            SaveRadio(radio);
+
             if (radio != null)
             {
                 NavigatedViaModel(radio);
@@ -145,8 +150,29 @@ namespace OnRadio.App.ViewModels
             {
                 throw new ArgumentException("Page was accessed without proper argument");
             }
-
+           
             base.Initialize(argument);
+        }
+
+        public async void SaveRadio(RadioModel radio)
+        {
+            var helper = new RoamingObjectStorageHelper();
+            FIFOStack<string> lastRadios;
+
+            string keyRadiosHistory = "LastRadios";
+            if (await helper.FileExistsAsync(keyRadiosHistory))
+            {
+                lastRadios = await helper.ReadFileAsync<FIFOStack<string>>(keyRadiosHistory);
+            }
+            else
+            {
+                lastRadios = new FIFOStack<string>();
+                lastRadios.SetCapacity(5);
+            }
+            lastRadios.Push(radio.Title);
+            lastRadios.DebugPrint();
+
+            await helper.SaveFileAsync(keyRadiosHistory, lastRadios);
         }
 
         private void NavigatedViaModel(RadioModel radio)
@@ -178,6 +204,7 @@ namespace OnRadio.App.ViewModels
             Information = null;
             Radio = null;
             _radioLoaded = false;
+
             Loaded = false;
         }
 
@@ -235,6 +262,20 @@ namespace OnRadio.App.ViewModels
             Radio.Streams.Add(stream);
 
             _playbackService.Stream = stream;
+
+            var helper = new RoamingObjectStorageHelper();
+            string keyIsLQ = "isLQ";
+            if (helper.KeyExists(keyIsLQ))
+            {
+                StreamModel.StreamQuality lastQuality = helper.Read<StreamModel.StreamQuality>(keyIsLQ);
+                if (lastQuality == StreamModel.StreamQuality.Low)
+                {
+                    StreamModel newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.Low);
+                    if (newQualityStream == null)
+                        return;
+                }
+            }
+
             RaisePropertyChanged(() => Stream);
         }
 
@@ -285,6 +326,10 @@ namespace OnRadio.App.ViewModels
             if (newQualityStream == null)
                 return;
             _playbackService.Stream = newQualityStream;
+
+            var roamingStorage = new RoamingObjectStorageHelper();
+            roamingStorage.Save("isLQ", newQualityStream.Quality);
+
             if (PlaybackSession.PlaybackState != MediaPlaybackState.Paused)
             {
                 _playbackService.Stop();

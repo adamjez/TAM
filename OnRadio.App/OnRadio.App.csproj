@@ -117,6 +117,7 @@
     <Compile Include="Converters\PlayIconConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Helpers\CompositionImageBrush.cs" />
+    <Compile Include="Helpers\FIFOStack.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
     <Compile Include="Messages\FavoriteChangeMessage.cs" />

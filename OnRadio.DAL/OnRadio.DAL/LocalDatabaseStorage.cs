@@ -30,8 +30,7 @@ namespace OnRadio.DAL
             {
                 using (SQLiteConnection conn = new SQLiteConnectionWithLock(new SQLitePlatformWinRT(), new SQLiteConnectionString(localSqlPath, storeDateTimeAsTicks: true)))
                 {
-                    Debug.Write("EXPIRATION: ");
-                    Debug.WriteLine(expireAt);
+                    Debug.WriteLine("Expication of cache: " + expireAt.ToString());
                     
                     CachedData record = new CachedData()
                     {
@@ -65,7 +64,7 @@ namespace OnRadio.DAL
                 {
                     RadioId = radioId
                 };
-                Debug.WriteLine(record.RadioId);
+                Debug.WriteLine("New favovite: " + record.RadioId);
                 conn.Insert(record);
                 
             }
