@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using OnRadio.DAL;
+using System.Diagnostics;
 
 namespace OnRadio.PlayCz
 {
@@ -32,12 +34,35 @@ namespace OnRadio.PlayCz
         /// <returns></returns>
         public async Task<List<RadioModel>> GetRadiosAsync()
         {
+            string dataDeserialized;
             var radios = new List<RadioModel>();
 
-            var response = await _httpClient.GetStringAsync(BaseUrl + RadiosPath);
-            var result = JsonConvert.DeserializeObject<ApiResponse<Dictionary<string, ApiRadioItem>>>(response);
+            if (LocalDatabaseStorage.IsCached(DateTime.Now, CachedDataType.getRadios))
+            {
+                dataDeserialized = LocalDatabaseStorage.getDataFromCache(CachedDataType.getRadios);
+            }
 
-            foreach (var item in result.Data)
+            else
+            {
+                var response = await _httpClient.GetStringAsync(BaseUrl + RadiosPath);
+                dataDeserialized = JObject.Parse(response)["data"].ToString();
+                try
+                {
+                    var expirationDate = JObject.Parse(response)["_expireAt"].ToString();
+                    //cacheId = parseResponsePartial["_cacheId"].ToString();  // Not used for now.
+
+                    LocalDatabaseStorage.InsertOrUpdateCachedData(CachedDataType.getRadios, Convert.ToDateTime(expirationDate), dataDeserialized);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("[<RadioModel> GetRadiosAsync] Error during deserialization of element '_expireAt' in HTTP response: " + e);
+                    Debug.WriteLine("Caching is not performed.");
+                }
+            }
+
+            var result = JsonConvert.DeserializeObject<Dictionary<string, ApiRadioItem>>(dataDeserialized);
+
+            foreach (var item in result)
             {
                 var radio = new RadioModel()
                 {
@@ -52,7 +77,6 @@ namespace OnRadio.PlayCz
 
                 radios.Add(radio);
             }
-
 
             return radios;
         }
@@ -117,13 +141,36 @@ namespace OnRadio.PlayCz
         /// <returns></returns>
         public async Task<StreamModel> GetRadioStreamAsync(string radioId, string format, int bitrate)
         {
-            var url = BaseUrl + @"/json/getStreamMobile/" + WebUtility.UrlEncode(radioId) + '/' +
+            string dataDeserialized;
+
+            if (LocalDatabaseStorage.IsCached(DateTime.Now, CachedDataType.getRadioStream))
+            {
+                dataDeserialized = LocalDatabaseStorage.getDataFromCache(CachedDataType.getRadioStream);
+            }
+
+            else
+            {
+
+                var url = BaseUrl + @"/json/getStreamMobile/" + WebUtility.UrlEncode(radioId) + '/' +
                       WebUtility.UrlEncode(format) + '/' + bitrate;
-            var response = await _httpClient.GetStringAsync(url);
+                var response = await _httpClient.GetStringAsync(url);
+                dataDeserialized = JObject.Parse(response)["data"].ToString();
 
-            JObject result = JObject.Parse(response);
+                try
+                {
+                    var expirationDate = JObject.Parse(response)["_expireAt"].ToString();
+                    LocalDatabaseStorage.InsertOrUpdateCachedData(CachedDataType.getRadioStream, Convert.ToDateTime(expirationDate), dataDeserialized);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("[<StyleModel> GetStyles] Error during deserialization of element '_expireAt' in HTTP response: " + e);
+                    Debug.WriteLine("Caching is not performed.");
+                }
+            }
 
-            var stream = result["data"]["stream"].ToObject<ApiStreamItem>();
+            JObject result = JObject.Parse(dataDeserialized);
+
+            var stream = result["stream"].ToObject<ApiStreamItem>();
 
             return new StreamModel()
             {
@@ -140,11 +187,32 @@ namespace OnRadio.PlayCz
         /// <returns></returns>
         public async Task<List<StreamFormatModel>> GetAllRadioStreamsAsync(string radioId)
         {
-            var response = await _httpClient.GetStringAsync(BaseUrl + @"/json/getAllStreamsMobile?shortcut=" + WebUtility.UrlEncode(radioId));
+            string dataDeserialized;
 
-            var result = JsonConvert.DeserializeObject<ApiResponse<ApiStreamFormatsItem>>(response);
+            if (LocalDatabaseStorage.IsCached(DateTime.Now, CachedDataType.getAllRadioStreams))
+            {
+                dataDeserialized = LocalDatabaseStorage.getDataFromCache(CachedDataType.getAllRadioStreams);
+            }
 
-            return result.Data.Streams
+            else
+            {
+                var response = await _httpClient.GetStringAsync(BaseUrl + @"/json/getAllStreamsMobile?shortcut=" + WebUtility.UrlEncode(radioId));
+                dataDeserialized = JObject.Parse(response)["data"].ToString();
+
+                try
+                {
+                    var expirationDate = JObject.Parse(response)["_expireAt"].ToString();
+                    LocalDatabaseStorage.InsertOrUpdateCachedData(CachedDataType.getAllRadioStreams, Convert.ToDateTime(expirationDate), dataDeserialized);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("[<StyleModel> GetStyles] Error during deserialization of element '_expireAt' in HTTP response: " + e);
+                    Debug.WriteLine("Caching is not performed.");
+                }
+            }
+            var result = JsonConvert.DeserializeObject<ApiStreamFormatsItem>(dataDeserialized);
+
+            return result.Streams
                 .Select(item => new StreamFormatModel
                 {
                     Format = item.Key,
@@ -160,11 +228,32 @@ namespace OnRadio.PlayCz
         /// <returns></returns>
         public async Task<List<StyleModel>> GetStyles()
         {
-            var response = await _httpClient.GetStringAsync(BaseUrl + @"/json/getStyles");
+            string dataDeserialized;
 
-            var result = JsonConvert.DeserializeObject<ApiResponse<List<ApiStyleItem>>>(response);
+            if (LocalDatabaseStorage.IsCached(DateTime.Now, CachedDataType.getStyles))
+            {
+                dataDeserialized = LocalDatabaseStorage.getDataFromCache(CachedDataType.getStyles);
+            }
 
-            return result.Data
+            else
+            {
+                var response = await _httpClient.GetStringAsync(BaseUrl + @"/json/getStyles");
+                dataDeserialized = JObject.Parse(response)["data"].ToString();
+                try
+                {
+                    var expirationDate = JObject.Parse(response)["_expireAt"].ToString();
+                    LocalDatabaseStorage.InsertOrUpdateCachedData(CachedDataType.getStyles, Convert.ToDateTime(expirationDate), dataDeserialized);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("[<StyleModel> GetStyles] Error during deserialization of element '_expireAt' in HTTP response: " + e);
+                    Debug.WriteLine("Caching is not performed.");
+                }
+            }
+
+            var result = JsonConvert.DeserializeObject<List<ApiStyleItem>>(dataDeserialized);
+
+            return result
                 .Select(item => new StyleModel
                 {
                     Title = item.Title,

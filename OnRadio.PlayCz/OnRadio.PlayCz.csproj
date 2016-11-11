@@ -124,6 +124,10 @@
       <Project>{0485FD3F-E153-4756-BABD-E01E692C95F0}</Project>
       <Name>OnRadio.BL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OnRadio.DAL\OnRadio.DAL\OnRadio.DAL.csproj">
+      <Project>{87add1b9-fa9c-4106-a42c-7071e12cb00b}</Project>
+      <Name>OnRadio.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

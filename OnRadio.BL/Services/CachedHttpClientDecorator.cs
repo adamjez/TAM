@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OnRadio.BL.Interfaces;
 using System.Diagnostics;
-using OnRadio.DAL;
 
 namespace OnRadio.BL.Services
 {
@@ -25,11 +24,6 @@ namespace OnRadio.BL.Services
             }
 
             result = await _httpClient.GetStringAsync(url);
-
-            //Cache[url] = result;
-
-            // var cachedInfo = JsonConvert.DeserializeObject<ApiResponse>(result);
-            //LocalDatabaseStorage.InsertCachedData(cachedInfo.CacheID, cachedInfo.ExpireAt, result.data);
 
             return result;
         }
