@@ -20,7 +20,7 @@
 
     <common:MvvmPage.Resources>
         <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
-        <converters:PlayIconConverter x:Key="PlayIconConverter"/>
+        <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter"/>
         <converters:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <converters:PlaybackQualityConverter x:Key="PlaybackQualityConverter"/>
     </common:MvvmPage.Resources>
@@ -54,7 +54,7 @@
 
             </Image>
         </Grid>
-        
+
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"></ColumnDefinition>
@@ -72,9 +72,18 @@
             <Border Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
                 <TextBlock Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center" Foreground="White"/>
             </Border>
-            <controls:ImageEx Grid.Row="2" Grid.Column="1" PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      Source="{Binding Information.ThumbnailUrl}">
-            </controls:ImageEx>
+            <Grid Grid.Row="2" Grid.Column="1" x:Name="ShadowGrid">
+                <!--<Border Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Width="{Binding ElementName=SongImage, Path=ActualWidth, Converter={StaticResource AddMarginConverter}, ConverterParameter=5}"
+                        Height="{Binding ElementName=SongImage, Path=ActualHeight, Converter={StaticResource AddMarginConverter}, ConverterParameter=5}">
+                    
+                </Border>-->
+                <Border x:Name="ShadowBorder" Background="#7F000000"/>
+                <controls:ImageEx PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Source="{Binding Information.ThumbnailUrl}" Margin="5" x:Name="SongImage" SizeChanged="OnSongImageLoaded">
+                </controls:ImageEx>
+            </Grid>
 
             <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
                 <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
@@ -97,9 +106,11 @@
                         Command="{Binding TogglePlayPauseCommand}"
                         IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
                         Background="Transparent"
-                        Content="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"
-                        FontFamily="Segoe MDL2 Assets" FontSize="48"
-                        />
+                        >
+                    <Viewbox MaxHeight="50" MaxWidth="50">
+                        <SymbolIcon  Symbol="{Binding PlaybackSession.PlaybackState, Mode=OneWay, Converter={StaticResource PlaybackStateToButtonIconConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Viewbox>
+                </Button>
                 <!--<Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>-->
 
                 <Grid Grid.Column="1">
