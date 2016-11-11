@@ -165,7 +165,10 @@ namespace OnRadio.App.ViewModels
             {
                 if (favoriteList == null)
                 {
-                    favoriteList = new GroupRadioList();
+                    favoriteList = new GroupRadioList
+                    {
+                        Type = GroupType.Favorited
+                    };
                     GroupRadioList.Add(favoriteList);
                 }
 
