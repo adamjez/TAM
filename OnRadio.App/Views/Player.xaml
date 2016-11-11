@@ -17,7 +17,7 @@
 
     <common:MvvmPage.Resources>
         <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
-        <converters:PlayIconConverter x:Key="PlayIconConverter"/>
+        <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter"/>
         <converters:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <converters:PlaybackQualityConverter x:Key="PlaybackQualityConverter"/>
     </common:MvvmPage.Resources>
@@ -101,9 +101,11 @@
                         Command="{Binding TogglePlayPauseCommand}"
                         IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
                         Background="Transparent"
-                        Content="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"
-                        FontFamily="Segoe MDL2 Assets" FontSize="48"
-                        />
+                        >
+                    <Viewbox MaxHeight="50" MaxWidth="50">
+                        <SymbolIcon  Symbol="{Binding PlaybackSession.PlaybackState, Mode=OneWay, Converter={StaticResource PlaybackStateToButtonIconConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Viewbox>
+                </Button>
                 <!--<Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>-->
 
                 <Grid Grid.Column="1">

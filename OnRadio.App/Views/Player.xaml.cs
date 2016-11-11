@@ -1,12 +1,15 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using Windows.Foundation;
+using Windows.Graphics.Imaging;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
-using Microsoft.Graphics.Canvas.Effects;
+using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using OnRadio.App.Common;
+using OnRadio.App.Helpers;
 
 namespace OnRadio.App.Views
 {
@@ -18,6 +21,12 @@ namespace OnRadio.App.Views
         public Player()
         {
             this.InitializeComponent();
+        }
+
+        void OnSongImageLoaded(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+        {
+            ShadowBorder.Height = SongImage.ActualHeight + 10;
+            ShadowBorder.Width = SongImage.ActualWidth + 10;
         }
     }
 }
