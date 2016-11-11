@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OnRadio.BL.Interfaces;
 using System.Diagnostics;
+using Newtonsoft.Json.Linq;
+using OnRadio.DAL;
 
 namespace OnRadio.BL.Services
 {
     public class CachedHttpClientDecorator : IHttpClient
     {
         private readonly IHttpClient _httpClient;
-        private static readonly Dictionary<string, string> Cache = new Dictionary<string, string>();
         public CachedHttpClientDecorator(IHttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -17,13 +18,31 @@ namespace OnRadio.BL.Services
 
         public async Task<string> GetStringAsync(string url)
         {
-            string result;
-            if (Cache.TryGetValue(url, out result))
+            var cache = LocalDatabaseStorage.GetDataFromCache(url);
+            if (cache != null && DateTime.UtcNow < Convert.ToDateTime(cache.ExpireAt))
             {
-                return result;
+                return cache.Data;
             }
 
-            result = await _httpClient.GetStringAsync(url);
+            var result = await _httpClient.GetStringAsync(url);
+
+            try
+            {
+                var lifetime = JObject.Parse(result)["_lifetime"];
+
+                if (lifetime != null && lifetime.Type == JTokenType.Integer)
+                {
+                    var lifetimeNumber = lifetime.Value<int>();
+                    var expirationDate = DateTime.UtcNow.AddSeconds(lifetimeNumber);
+
+                    LocalDatabaseStorage.InsertOrUpdateCachedData(url, Convert.ToDateTime(expirationDate), result);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error during deserialization of element '_expireAt' in HTTP response: " + e);
+                Debug.WriteLine("Caching is not performed.");
+           }
 
             return result;
         }
