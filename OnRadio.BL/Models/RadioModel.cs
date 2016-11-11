@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using GalaSoft.MvvmLight;
 
 namespace OnRadio.BL.Models
 {
-    public class RadioModel : IMusicFormatter
+    public class RadioModel : ViewModelBase, IMusicFormatter
     {
+        private bool _isFavorite;
         public string Title { get; set; }
         public string Description { get; set; }
         public string Url { get; set; }
@@ -12,7 +14,13 @@ namespace OnRadio.BL.Models
         public List<StreamModel> Streams { get; set; }
         public int Listenters { get; set; }
         public bool OnAir { get; set; }
-        public bool IsFavorite { get; set; }
+
+        // Should be in RadioViewModel -> too much work mapping these two items, maybe later
+        public bool IsFavorite
+        {
+            get { return _isFavorite; }
+            set { Set(ref _isFavorite, value); }
+        }
 
         public MusicInformation CreateMusicInformation()
         {

@@ -41,18 +41,6 @@ namespace OnRadio.DAL
                         Data = data
                     };
                     conn.InsertOrReplace(record);
-                    //// If there is no record in this type, it means that we have to create it - every type of data will have only 1 record in DB.
-                    //var isEmpty = conn.Table<CachedData>().Where(cachedDataT => cachedDataT.Type == cacheType).FirstOrDefault() == null;
-                    //if (isEmpty)
-                    //{
-                    //    Debug.WriteLine("Record \'" + cacheType.ToString() + "\' will be inserted into DB.");
-                    //    conn.Insert(record);
-                    //}
-                    //else
-                    //{
-                    //    Debug.WriteLine("Record \'" + cacheType.ToString() + "\' is being updated in DB.");
-                    //    conn.Update(record);
-                    //}
                 }
             }
             catch (Exception e)

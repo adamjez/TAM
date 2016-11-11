@@ -45,7 +45,7 @@ namespace OnRadio.App
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = false;
+                this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
@@ -110,7 +110,6 @@ namespace OnRadio.App
                     // Set the default language
                     Language = Windows.Globalization.ApplicationLanguages.Languages[0]
                 };
-
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 

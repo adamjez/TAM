@@ -25,9 +25,7 @@
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>
-                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                    <ContinuumNavigationTransitionInfo />
-                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                <SlideNavigationTransitionInfo/>
             </NavigationThemeTransition>
         </TransitionCollection>
     </Page.Transitions>
@@ -68,7 +66,9 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
-                <TextBlock Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center" Foreground="White"/>
+                <TextBlock Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center" Foreground="White">
+   
+                </TextBlock>
             </Border>
 
 

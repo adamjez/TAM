@@ -309,7 +309,6 @@ namespace OnRadio.App.ViewModels
             }
             Radio.IsFavorite = !Radio.IsFavorite;
             MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, Radio.IsFavorite));
-            RaisePropertyChanged(()=>Radio);
         }
 
         public void Dispose()

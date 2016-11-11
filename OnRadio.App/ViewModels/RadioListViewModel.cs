@@ -169,7 +169,7 @@ namespace OnRadio.App.ViewModels
                     {
                         Type = GroupType.Favorited
                     };
-                    GroupRadioList.Add(favoriteList);
+                    GroupRadioList.Insert(0, favoriteList);
                 }
 
                 favoriteList.Add(selectedRadio);

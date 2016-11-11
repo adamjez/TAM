@@ -39,11 +39,12 @@ namespace OnRadio.App.Installers
             builder.RegisterInstance(navigation)
                .As<INavigationService>();
 
-            
+
+
             // Image Cache
-            var cache = new ImageCache {CacheDuration = TimeSpan.FromDays(7)};
-            cache.InitializeAsync(ApplicationData.Current.LocalCacheFolder, "tmp").GetAwaiter().GetResult();
-            builder.RegisterInstance(cache);
+            //var cache = new ImageCache {CacheDuration = TimeSpan.FromDays(7)};
+            //cache.InitializeAsync(ApplicationData.Current.LocalCacheFolder, "tmp").GetAwaiter().GetResult();
+            //builder.RegisterInstance(cache);
 
             builder.RegisterType<TileManager>()
                 .As<ITileManager>();

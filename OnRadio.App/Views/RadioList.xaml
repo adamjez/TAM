@@ -15,7 +15,7 @@
     mc:Ignorable="d">
 
     <common:MvvmPage.Resources>
-        <CollectionViewSource x:Key="RadioListSource" Source="{Binding GroupRadioList}" IsSourceGrouped="True" />
+        <CollectionViewSource x:Key="RadioListSource" Source="{Binding GroupRadioList}" IsSourceGrouped="True"/>
     </common:MvvmPage.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -48,9 +48,8 @@
 
 
                 </Grid>
-
-                <ListView ItemsSource="{Binding Source={StaticResource RadioListSource}}" Grid.Row="1"
-                      SelectedItem="{Binding Path=SelectedRadioItem, Mode=TwoWay}" SelectionMode="None" IsItemClickEnabled="True">
+          
+                <ListView ItemsSource="{Binding Source={StaticResource RadioListSource}}" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="True">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="ItemClick">
                             <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
