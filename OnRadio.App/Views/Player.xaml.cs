@@ -22,11 +22,5 @@ namespace OnRadio.App.Views
         {
             this.InitializeComponent();
         }
-
-        void OnSongImageLoaded(object sender, SizeChangedEventArgs sizeChangedEventArgs)
-        {
-            ShadowBorder.Height = SongImage.ActualHeight + 10;
-            ShadowBorder.Width = SongImage.ActualWidth + 10;
-        }
     }
 }
