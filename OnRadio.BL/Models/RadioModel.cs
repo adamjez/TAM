@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GalaSoft.MvvmLight;
 
 namespace OnRadio.BL.Models
@@ -31,6 +32,12 @@ namespace OnRadio.BL.Models
                 Artist = string.Empty,
                 Album = string.Empty
             };
+        }
+
+        public bool IsCorrect(string radioName)
+        {
+            return String.Compare(Id, radioName, StringComparison.OrdinalIgnoreCase) == 0 ||
+                   String.Compare(Title, radioName, StringComparison.OrdinalIgnoreCase) == 0;
         }
     }
 }

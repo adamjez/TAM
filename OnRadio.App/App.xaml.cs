@@ -16,6 +16,7 @@ using GalaSoft.MvvmLight.Views;
 using OnRadio.App.ViewModels;
 using OnRadio.App.Views;
 using OnRadio.App.Common;
+using OnRadio.App.Services;
 using OnRadio.DAL;
 
 namespace OnRadio.App
@@ -63,11 +64,10 @@ namespace OnRadio.App
                     InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
 
                 //// Update phrase list.
-                //ViewModel.ViewModelLocator locator = App.Current.Resources["ViewModelLocator"] as ViewModel.ViewModelLocator;
-                //if (locator != null)
-                //{
-                //    await locator.TripViewModel.UpdateDestinationPhraseList();
-                //}
+                ViewModelLocator locator = new ViewModelLocator();
+
+                var cortanaService = locator.Resolve<CortanaService>();
+                await cortanaService.UpdateRadioPhraseList("OnRadioCommandSet_en-us");
             }
             catch (Exception ex)
             {

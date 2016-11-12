@@ -121,6 +121,7 @@
     <Compile Include="Installers\ViewModelInstaller.cs" />
     <Compile Include="Messages\FavoriteChangeMessage.cs" />
     <Compile Include="Models\GroupRadioList.cs" />
+    <Compile Include="Services\CortanaService.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
     <Compile Include="ViewModels\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
@@ -196,9 +197,7 @@
       <Name>OnRadio.PlayCz</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

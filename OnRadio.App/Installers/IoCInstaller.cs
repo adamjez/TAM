@@ -39,7 +39,7 @@ namespace OnRadio.App.Installers
             builder.RegisterInstance(navigation)
                .As<INavigationService>();
 
-
+            builder.RegisterType<CortanaService>();
 
             // Image Cache
             //var cache = new ImageCache {CacheDuration = TimeSpan.FromDays(7)};

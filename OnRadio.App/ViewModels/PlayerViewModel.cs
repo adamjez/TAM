@@ -203,7 +203,7 @@ namespace OnRadio.App.ViewModels
         private async Task LoadRadioAsync()
         {
             Radio = (await _musicService.GetRadiosAsync())
-                .FirstOrDefault(radio => String.Compare(radio.Id, Radio.Id, StringComparison.OrdinalIgnoreCase) == 0);
+                .FirstOrDefault(radio => radio.IsCorrect(Radio.Id));
 
             // ToDo: handle this a show this in proper way
             if (Radio == null)
