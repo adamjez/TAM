@@ -48,6 +48,9 @@ namespace OnRadio.BL.Services
 
         public void Play()
         {
+            if (Stream == null)
+                return;
+
             Player.Source = MediaSource.CreateFromUri(new Uri(Stream.StreamUrl));
             Player.AudioCategory = MediaPlayerAudioCategory.Media;
             Player.Play();
@@ -55,11 +58,15 @@ namespace OnRadio.BL.Services
 
         public void Stop()
         {
+            Player.Pause();
             Player.Source = null;
         }
 
         public void SetMusicInformation(MusicInformation information)
         {
+            if (information == null)
+                return;
+
             // Get the updater.
             var updater = Player.SystemMediaTransportControls.DisplayUpdater;
 

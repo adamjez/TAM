@@ -31,16 +31,20 @@ namespace OnRadio.BL.Services
                 }
             }
 
-            await StorageFileHelper.WriteBytesToLocalFileAsync(buffer, fileName, CreationCollisionOption.ReplaceExisting);
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
-            return DownloadResult.Success(new Uri(PathPrefix + fileName));
+            StorageFile sampleFile = await storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+            await FileIO.WriteBytesAsync(sampleFile, buffer);
+
+            return DownloadResult.Success(new Uri(PathPrefix + sampleFile.Name));
         }
 
         public async Task DeleteAsync(string fileName)
         {
-            var localFile = PathPrefix + fileName;
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
-            var item = await StorageFile.GetFileFromPathAsync(localFile);
+            var item = await storageFolder.GetFileAsync(fileName);
 
             await item.DeleteAsync(StorageDeleteOption.Default);
         }

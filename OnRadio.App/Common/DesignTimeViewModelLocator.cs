@@ -54,7 +54,7 @@ namespace OnRadio.App.Common
         public class DesignPlayerViewModel : PlayerViewModel
         {
             public DesignPlayerViewModel()
-                : base(null, null, null, null)
+                : base(null, null, null, null, null)
             {
             }
 

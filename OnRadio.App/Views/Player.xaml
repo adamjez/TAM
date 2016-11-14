@@ -20,6 +20,13 @@
         <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter"/>
         <converters:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <converters:PlaybackQualityConverter x:Key="PlaybackQualityConverter"/>
+        <converters:RadioPinnedIconConverter x:Key="RadioPinnedIconConverter"/>
+        <converters:BufferingToVisibilityConverter x:Key="BufferingToVisibilityConverter"/>
+        <converters:PlaybackStateToEnabledConverter x:Key="PlaybackStateToEnabledConverter"/>
+
+        <DataTemplate x:Key="TimeValuesDataTemplate">
+            <TextBlock Text="{Binding}" FontSize="24"/>
+        </DataTemplate>
     </common:MvvmPage.Resources>
 
     <Page.Transitions>
@@ -36,8 +43,62 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.RowSpan="3">
 
+        <ContentDialog x:Name="TimerDialog"
+                       FullSizeDesired="False">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Vypnúť prehrávanie o" FontSize="24"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ListView Grid.Column="0" Grid.Row="0" ItemTemplate="{StaticResource TimeValuesDataTemplate}" SelectedItem="{Binding TimerHours, Mode=TwoWay}">
+                        <ListView.Items>
+                            <x:Int32>0</x:Int32>
+                            <x:Int32>1</x:Int32>
+                            <x:Int32>2</x:Int32>
+                            <x:Int32>3</x:Int32>
+                        </ListView.Items>
+                    </ListView>
+                    <ListView Grid.Column="1" Grid.Row="0" ItemTemplate="{StaticResource TimeValuesDataTemplate}" SelectedItem="{Binding TimerMinutes, Mode=TwoWay}">
+                        <ListView.Items>
+                            <x:Int32>0</x:Int32>
+                            <x:Int32>15</x:Int32>
+                            <x:Int32>30</x:Int32>
+                            <x:Int32>45</x:Int32>
+                        </ListView.Items>
+                    </ListView>
+                    <TextBlock Grid.Column="0" Grid.Row="1" FontSize="24">Hodín</TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="1" FontSize="24">Minút</TextBlock>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="20"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1"
+                            Command="{Binding RunTimerCommand}"
+                            Content="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                    <Button Grid.Column="3" 
+                            Command="{Binding CloseTimerCommand}"
+                            Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                </Grid>
+            </Grid>
+        </ContentDialog>
+
+        <Grid Grid.Row="0" Grid.RowSpan="3">
             <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:Blur
@@ -62,6 +123,7 @@
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="10"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
@@ -81,9 +143,18 @@
             </Grid>
 
             <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                <ProgressBar IsIndeterminate="True"
+                         Visibility="{Binding PlaybackSession.PlaybackState, Converter={StaticResource BufferingToVisibilityConverter}}"
+                         VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
+                         Foreground="White"
+                        />
+            </Border>
+
+            <Border Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
                 <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
             </Border>
-            <Border Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+            
+            <Border Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
                 <TextBlock Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed" Foreground="White"/>
             </Border>
         </Grid>
@@ -96,10 +167,11 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
                         Command="{Binding TogglePlayPauseCommand}"
-                        IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
+                        IsEnabled="{Binding Stream, Converter={StaticResource IsNotNullConverter}}"
                         Background="Transparent"
                         >
                     <Viewbox MaxHeight="50" MaxWidth="50">
@@ -109,22 +181,44 @@
                 <!--<Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>-->
 
                 <Grid Grid.Column="1">
-                    <!--<Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Red" StrokeThickness="1px"/>-->
+                    <TextBlock Text="&#xEA3A;" 
+                               Margin="0,4,0,0"
+                               FontFamily="Segoe MDL2 Assets" FontSize="32"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     <Button 
                             Command="{Binding TogglePlaybackQualityCommand}"
                             IsEnabled="{Binding Stream, Converter={StaticResource IsNotNullConverter}}"
                             Background="Transparent"
                             Content="{Binding Stream.Quality, Converter={StaticResource PlaybackQualityConverter}}"
-                            FontSize="32"/>
+                            VerticalAlignment="Center" HorizontalAlignment="Center"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            FontSize="18"/>
                 </Grid>
 
-                <Button Grid.Column="2"
-                        IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
-                        Background="Transparent"
-                        Content="&#xE121;"
-                        FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                <Grid Grid.Column="2">
+                    <TextBlock Text="&#xED67;"
+                               Margin="0,2,0,0"
+                               FontFamily="Segoe MDL2 Assets" FontSize="30"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Visibility="{Binding StopPlaybackTimer, Converter={StaticResource IsNotNullConverter}}"
+                               Foreground="Gray"/>
+                    <Button Command="{Binding ToggleTimerCommand}"
+                            IsEnabled="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlaybackStateToEnabledConverter}}"
+                            Background="Transparent"
+                            Content="&#xE121;"
+                            FontFamily="Segoe MDL2 Assets" FontSize="32"
+                            VerticalAlignment="Center" HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                </Grid>
 
                 <Button Grid.Column="4"
+                        Command="{Binding ToggleRadioPinnedCommand}"
+                        IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
+                        Background="Transparent"
+                        Content="{Binding IsRadioPinned, Converter={StaticResource RadioPinnedIconConverter}}"
+                        FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                
+                <Button Grid.Column="5"
                         Command="{Binding ToggleRadioIsFavoriteCommand}"
                         IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
                         Background="Transparent"

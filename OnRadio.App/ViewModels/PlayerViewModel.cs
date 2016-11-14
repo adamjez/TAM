@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
 using Windows.Media.Playback;
@@ -23,6 +24,7 @@ namespace OnRadio.App.ViewModels
     {
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
+        private readonly ITileManager _tileManager;
         private readonly INavigationService _navigationService;
         private readonly MediaNotify _mediaNotify;
         private RelayCommand _openRadioListCommand;
@@ -30,11 +32,18 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _navigateToPlayerCommand;
         private RelayCommand _toggleRadioIsFavoriteCommand;
         private RelayCommand _togglePlaybackQualityCommand;
+        private RelayCommand _toggleRadioPinnecCommand;
+        private RelayCommand _toggleTimerCommand;
+        private RelayCommand _runTimerCommand;
+        private RelayCommand _closeTimerCommand;
 
         private RadioModel _radio;
         private MusicInformation _information;
 
         private bool _radioLoaded;
+        private int _timerHours;
+        private int _timerMinutes;
+        private Timer _stopPlaybackTimer; 
 
         public RelayCommand OpenRadioListCommand =>
            _openRadioListCommand ?? (_openRadioListCommand = new RelayCommand(OpenRadioList));
@@ -50,6 +59,19 @@ namespace OnRadio.App.ViewModels
 
         public RelayCommand ToggleRadioIsFavoriteCommand =>
            _toggleRadioIsFavoriteCommand ?? (_toggleRadioIsFavoriteCommand = new RelayCommand(ToggleRadioIsFavorite));
+
+        public RelayCommand ToggleRadioPinnedCommand =>
+            _toggleRadioPinnecCommand ?? (_toggleRadioPinnecCommand = new RelayCommand(ToggleRadioPinned));
+
+        public RelayCommand ToggleTimerCommand =>
+            _toggleTimerCommand ?? (_toggleTimerCommand = new RelayCommand(ToggleTimer));
+
+        public RelayCommand RunTimerCommand =>
+            _runTimerCommand ?? (_runTimerCommand = new RelayCommand(RunTimer));
+
+        public RelayCommand CloseTimerCommand =>
+            _closeTimerCommand ?? (_closeTimerCommand = new RelayCommand(CloseTimerDialog));
+
 
         public MusicInformation Information
         {
@@ -72,6 +94,26 @@ namespace OnRadio.App.ViewModels
 
         public StreamModel Stream => _playbackService.Stream;
 
+        public bool IsRadioPinned => _tileManager.Exists(Radio);
+
+        public int TimerHours
+        {
+            get { return _timerHours; }
+            set { Set(ref _timerHours, value); }
+        }
+
+        public int TimerMinutes
+        {
+            get { return _timerMinutes; }
+            set { Set(ref _timerMinutes, value); }
+        }
+
+        public Timer StopPlaybackTimer
+        {
+            get { return _stopPlaybackTimer;}
+            set { Set(ref _stopPlaybackTimer, value); }
+        }
+
         public RadioModel Radio
         {
             get { return _radio; }
@@ -81,11 +123,12 @@ namespace OnRadio.App.ViewModels
         public PlaybackSessionViewModel PlaybackSession { get; private set; }
 
 
-        public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, INavigationService navigationService,
+        public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, ITileManager tileManager, INavigationService navigationService,
             MediaNotify mediaNotify)
         {
             _musicService = musicService;
             _playbackService = playbackService;
+            _tileManager = tileManager;
             _navigationService = navigationService;
             _mediaNotify = mediaNotify;
 
@@ -106,13 +149,19 @@ namespace OnRadio.App.ViewModels
             switch (player.PlaybackSession.PlaybackState)
             {
                 case MediaPlaybackState.Playing:
+                case MediaPlaybackState.Buffering:
+                case MediaPlaybackState.Opening:
                     _playbackService.Stop();
                     Information = Radio.CreateMusicInformation();
+                    if (StopPlaybackTimer != null)
+                        StopTimer();
                     break;
 
                 case MediaPlaybackState.Paused:
                 case MediaPlaybackState.None:
                     _playbackService.Play();
+                    //TODO: What if Information is still null at this point?
+                    //TODO: It should be set as soon as it is available
                     _playbackService.SetMusicInformation(Information);
                     break;
             }
@@ -311,9 +360,70 @@ namespace OnRadio.App.ViewModels
             MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, Radio.IsFavorite));
         }
 
+        public async void ToggleRadioPinned()
+        {
+            if (IsRadioPinned)
+            {
+                await _tileManager.RemoveTileAsync(Radio);
+            }
+            else
+            {
+                await _tileManager.CreateTileAsync(Radio);
+            }
+            RaisePropertyChanged(() => IsRadioPinned);
+        }
+
+        public void ToggleTimer()
+        {
+            if (StopPlaybackTimer != null)
+            {
+                StopTimer();
+            }
+            else
+            {
+                Messenger.Default.Send(new OpenDialogMessage(this, "TimerDialog"));
+            }
+        }
+
+        public void RunTimer()
+        {
+            Messenger.Default.Send(new CloseDialogMessage(this, "TimerDialog"));
+            var dueTime = (TimerHours * 60 + TimerMinutes) * 60 * 1000;
+            StopPlaybackTimer = new Timer(TimerStopPlayback, null, dueTime, 0);
+            
+        }
+
+        public void CloseTimerDialog()
+        {
+            Messenger.Default.Send(new CloseDialogMessage(this, "TimerDialog"));
+        }
+
+        public void StopTimer()
+        {
+            if (StopPlaybackTimer == null)
+                return;
+
+            StopPlaybackTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            StopPlaybackTimer.Dispose();
+            StopPlaybackTimer = null;
+        }
+
+        private void TimerStopPlayback(object state)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(
+                () =>
+                {
+                    _playbackService.Stop();
+                    StopPlaybackTimer.Dispose();
+                    StopPlaybackTimer = null;
+                });
+        }
+
         public void Dispose()
         {
             _mediaNotify.MediaUpdated -= BackgroundMediaUpdate;
+            if (StopPlaybackTimer != null)
+                StopTimer();
             PlaybackSession.Dispose();
         }
     }
