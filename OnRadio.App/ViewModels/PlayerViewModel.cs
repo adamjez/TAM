@@ -136,8 +136,6 @@ namespace OnRadio.App.ViewModels
             _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
         }
 
-        public Brush BackgroundBrush => new SolidColorBrush { Color = Color.FromArgb(100, 0, 0, 0) };
-
         private void OpenRadioList()
         {
             _navigationService.NavigateTo(nameof(RadioList), "refresh");

@@ -8,10 +8,16 @@
     xmlns:converters="using:OnRadio.App.Converters">
 
     <Application.Resources>
-        <common:ViewModelLocator x:Key="ViewModelLocator"/>
-        <common:DesignTimeViewModelLocator x:Key="DesignTimeViewModelLocator"/>
+        <ResourceDictionary>
+            <common:ViewModelLocator x:Key="ViewModelLocator"/>
+            <common:DesignTimeViewModelLocator x:Key="DesignTimeViewModelLocator"/>
 
-        <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter" />
+            <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter" />
+            
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/StyleResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

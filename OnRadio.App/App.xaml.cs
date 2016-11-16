@@ -136,6 +136,8 @@ namespace OnRadio.App
                     if (page == null || viewModel == null || viewModel.Radio.Id != arguments)
                     {
                         rootFrame.Navigate(typeof(Player), arguments);
+
+                        NormalizeFrameBackStack();
                     }
                 }
                 else if (rootFrame.Content == null)
