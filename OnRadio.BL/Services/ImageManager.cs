@@ -1,16 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Microsoft.Toolkit.Uwp;
-using OnRadio.App.Services;
 
 namespace OnRadio.BL.Services
 {
     public class ImageManager : IImageManager
     {
-        private const string PathPrefix = @"ms-appdata:///local/";
-
-
         public async Task<DownloadResult> DownloadAndSaveAsync(string uri, string fileName)
         {
             var distantUri = new Uri(uri);
@@ -31,16 +27,20 @@ namespace OnRadio.BL.Services
                 }
             }
 
-            await StorageFileHelper.WriteBytesToLocalFileAsync(buffer, fileName, CreationCollisionOption.ReplaceExisting);
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
-            return DownloadResult.Success(new Uri(PathPrefix + fileName));
+            StorageFile sampleFile = await storageFolder.CreateFileAsync(fileName,CreationCollisionOption.ReplaceExisting);
+
+            await FileIO.WriteBytesAsync(sampleFile, buffer);
+
+            return DownloadResult.Success(new Uri("ms-appdata:///local/" + sampleFile.Name));
         }
 
         public async Task DeleteAsync(string fileName)
         {
-            var localFile = PathPrefix + fileName;
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
 
-            var item = await StorageFile.GetFileFromPathAsync(localFile);
+            var item = await storageFolder.GetFileAsync(fileName);
 
             await item.DeleteAsync(StorageDeleteOption.Default);
         }

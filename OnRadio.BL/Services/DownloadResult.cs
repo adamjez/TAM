@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OnRadio.App.Services
+namespace OnRadio.BL.Services
 {
     public class DownloadResult
     {
