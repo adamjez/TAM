@@ -110,6 +110,9 @@
     <Compile Include="Controls\MiniPlayer.xaml.cs">
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BufferingToVisibilityConverter.cs" />
+    <Compile Include="Converters\PlaybackStateToEnabledConverter.cs" />
+    <Compile Include="Converters\RadioPinnedIconConverter.cs" />
     <Compile Include="Converters\PlaybackQualityConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
     <Compile Include="Converters\PlaybackStateToButtonIconConverter.cs" />
@@ -119,6 +122,8 @@
     <Compile Include="Helpers\CompositionImageBrush.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
+    <Compile Include="Messages\CloseDialogMessage.cs" />
+    <Compile Include="Messages\OpenDialogMessage.cs" />
     <Compile Include="Messages\FavoriteChangeMessage.cs" />
     <Compile Include="Models\GroupRadioList.cs" />
     <Compile Include="Services\CortanaService.cs" />
