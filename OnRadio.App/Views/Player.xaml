@@ -27,6 +27,7 @@
         <DataTemplate x:Key="TimeValuesDataTemplate">
             <TextBlock Text="{Binding}" FontSize="24"/>
         </DataTemplate>
+
     </common:MvvmPage.Resources>
 
     <Page.Transitions>
@@ -39,13 +40,12 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentDialog x:Name="TimerDialog"
-                       FullSizeDesired="False">
+        <ContentDialog Grid.Row="1" x:Name="TimerDialog" FullSizeDesired="False">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -112,58 +112,91 @@
             </Image>
         </Grid>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="10"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Border Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
-                <TextBlock Text="{Binding Radio.Title}" HorizontalAlignment="Center" FontSize="24" TextWrapping="WrapWholeWords" TextAlignment="Center" Foreground="White">
-   
-                </TextBlock>
-            </Border>
+        <Border Grid.Row="0" Background="{Binding BackgroundBrush}">
+            <TextBlock Text="{Binding Radio.Title}" 
+                       HorizontalAlignment="Center" TextAlignment="Center"
+                       FontSize="24" 
+                       TextWrapping="WrapWholeWords" 
+                       Foreground="White"/>
+        </Border>
 
+        <Pivot Grid.Row="1" Margin="0" HorizontalContentAlignment="Center">
+            <Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <TextBlock Text="{Binding}" FontFamily="Segoe MDL2 Assets"/>
+                    </Grid>
+                </DataTemplate>
+            </Pivot.HeaderTemplate>
+            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+                <PivotItem.Header>
+                    &#xE189;
+                </PivotItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <Grid Grid.Row="2" Grid.Column="1">
-                <controls1:CompositionShadow BlurRadius="100.0" ShadowOpacity="1.0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <controls:ImageEx PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      Source="{Binding Information.ThumbnailUrl}">
-                    </controls:ImageEx>
-                </controls1:CompositionShadow>
-            </Grid>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <controls1:CompositionShadow BlurRadius="100.0" ShadowOpacity="1.0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <controls:ImageEx PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Source="{Binding Information.ThumbnailUrl}">
+                            </controls:ImageEx>
+                        </controls1:CompositionShadow>
+                    </Grid>
 
-            <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
-                <ProgressBar IsIndeterminate="True"
-                         Visibility="{Binding PlaybackSession.PlaybackState, Converter={StaticResource BufferingToVisibilityConverter}}"
-                         VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
-                         Foreground="White"
-                        />
-            </Border>
+                    <Border Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                        <ProgressBar IsIndeterminate="True"
+                                 Visibility="{Binding PlaybackSession.PlaybackState, Converter={StaticResource BufferingToVisibilityConverter}}"
+                                 VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
+                                 Foreground="White"
+                                />
+                    </Border>
 
-            <Border Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
-                <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
-            </Border>
-            
-            <Border Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
-                <TextBlock Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed" Foreground="White"/>
-            </Border>
-        </Grid>
+                    <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                        <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
+                    </Border>
 
-        <Border Grid.Row="1" Background="{Binding BackgroundBrush}">
+                    <Border Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="0" Background="{Binding BackgroundBrush}">
+                        <TextBlock Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed" Foreground="White"/>
+                    </Border>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+                <PivotItem.Header>
+                    &#xE946;
+                </PivotItem.Header>
+                <Grid>
+                    <!--TODO: Radio info-->
+                </Grid>
+            </PivotItem>
+
+            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+                <PivotItem.Header >
+                    &#xE81C;
+                </PivotItem.Header>
+                <Grid>
+                    <!--TODO: Song history-->
+                </Grid>
+            </PivotItem>
+        </Pivot>
+
+        <Border Grid.Row="2" Background="{Binding BackgroundBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -217,7 +250,7 @@
                         Background="Transparent"
                         Content="{Binding IsRadioPinned, Converter={StaticResource RadioPinnedIconConverter}}"
                         FontFamily="Segoe MDL2 Assets" FontSize="32"/>
-                
+
                 <Button Grid.Column="5"
                         Command="{Binding ToggleRadioIsFavoriteCommand}"
                         IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
