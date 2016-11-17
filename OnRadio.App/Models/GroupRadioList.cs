@@ -25,4 +25,10 @@ namespace OnRadio.App.Models
         Favorited,
         RecentlyPlayed
     }
+
+    public enum SortBy
+    {
+        Popularity,
+        Alphabeticaly
+    }
 }

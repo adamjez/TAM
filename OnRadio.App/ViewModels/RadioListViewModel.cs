@@ -23,13 +23,14 @@ namespace OnRadio.App.ViewModels
         private readonly ITileManager _tileManager;
         private readonly INavigationService _navigationService;
 
-        private ObservableCollection<GroupRadioList> _groupRadioList;
+        private ObservableCollection<RadioModel> _allRadioModel;
+        private ObservableCollection<RadioModel> _favoriteRadioModel;
+
         private RelayCommand<ItemClickEventArgs> _itemSelectedCommand;
-        private RelayCommand _sortByPopularityCommand;
-        private RelayCommand _sortAlphabeticallyCommand;
         private RelayCommand _filterListCommand;
 
         private string _searchString;
+        private SortBy _selectedSortBy;
 
         public RadioListViewModel(IMusicService musicService, ITileManager tileManager, INavigationService navigationService)
         {
@@ -41,10 +42,16 @@ namespace OnRadio.App.ViewModels
 
         public List<RadioModel> RadioList { get; set; }
 
-        public ObservableCollection<GroupRadioList> GroupRadioList
+        public ObservableCollection<RadioModel> AllRadioList
         {
-            get { return _groupRadioList; }
-            set { Set(ref _groupRadioList, value); }
+            get { return _allRadioModel; }
+            set { Set(ref _allRadioModel, value); }
+        }
+
+        public ObservableCollection<RadioModel> FavoriteRadioList
+        {
+            get { return _favoriteRadioModel; }
+            set { Set(ref _favoriteRadioModel, value); }
         }
 
         public string SearchString
@@ -53,14 +60,16 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _searchString, value); }
         }
 
+        public SortBy SelectedSortBy
+        {
+            get { return _selectedSortBy; }
+            set { Set(ref _selectedSortBy, value); }
+        }
+
+        public IEnumerable<SortBy> SortBySource => Enum.GetValues(typeof(SortBy)).Cast<SortBy>();
+
         public RelayCommand<ItemClickEventArgs> ItemSelectedCommand =>
             _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand<ItemClickEventArgs>(ItemSelected));
-
-        public RelayCommand SortByPopularityCommand =>
-            _sortByPopularityCommand ?? (_sortByPopularityCommand = new RelayCommand(SortByPopularity));
-
-        public RelayCommand SortAlphabeticallyCommand =>
-            _sortAlphabeticallyCommand ?? (_sortAlphabeticallyCommand = new RelayCommand(SortAlphabetically));
 
         public RelayCommand FilterListCommand =>
             _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));        
@@ -72,82 +81,40 @@ namespace OnRadio.App.ViewModels
             {
                 return;
             }
-            //if (_tileManager.Exists(currentRadio))
-            //{
-            //    await _tileManager.RemoveTileAsync(currentRadio);
 
-            //}
-            //else
-            //{
-            //    await _tileManager.CreateTileAsync(currentRadio);
-
-            //}
             _navigationService.NavigateTo(nameof(Player), arg.ClickedItem);
-        }
-
-        public void SortByPopularity()
-        {
-            //RadioList = new ObservableCollection<RadioModel>(
-            //    RadioList.OrderByDescending(radio => radio.Listenters));
-        }
-
-        public void SortAlphabetically()
-        {
-            //RadioList = new ObservableCollection<RadioModel>(
-            //    RadioList.OrderBy(radio => radio.Title));
         }
 
         public void FilterList()
         {
-            //RadioList = new ObservableCollection<RadioModel>(
-            //    AllRadioList.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()))
-            //);
+            IEnumerable<RadioModel> radios = RadioList;
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                radios = radios.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()));
+            }
+
+            radios = SelectedSortBy == SortBy.Popularity
+                ? radios.OrderByDescending(radio => radio.Listenters)
+                : radios.OrderBy(radio => radio.Title);
+
+            AllRadioList = new ObservableCollection<RadioModel>(radios);
         }
 
         protected override async Task LoadData()
         {
             RadioList = await _musicService.GetRadiosAsync();
 
-            AddFavoriteFlag(RadioList);
-
-            GroupRadioList = new ObservableCollection<GroupRadioList>(CreateGroupedList(RadioList));
+            AllRadioList = new ObservableCollection<RadioModel>(RadioList);
+            FavoriteRadioList = CreateFavoriteRadioList(RadioList);
         }
 
-        private void AddFavoriteFlag(List<RadioModel> items)
+        private ObservableCollection<RadioModel> CreateFavoriteRadioList(List<RadioModel> items)
         {
             List<FavoriteRadio> favList = LocalDatabaseStorage.GetFavorites();
-            foreach(var item in items.Where(radio => favList.Select(f => f.RadioId).Contains(radio.Id)))
-            {
-                item.IsFavorite = true;
-            }
-        }
 
-        public List<GroupRadioList> CreateGroupedList(List<RadioModel> radios)
-        {
-            var groupList = new List<GroupRadioList>();
-
-            var query = radios.GroupBy(radio => radio.IsFavorite)
-                .OrderByDescending(g => g.Key)
-                .Select(g => new {GroupName = g.Key, Items = g});
-
-            foreach (var group in query)
-            {
-                GroupRadioList info = new GroupRadioList
-                {
-                    Type = group.GroupName ? GroupType.Favorited : GroupType.Others
-                };
-
-
-                foreach (var item in group.Items)
-                {
-                    info.Add(item);
-                }
-
-                groupList.Add(info);
-            }
-
-            return groupList;
-
+            return new ObservableCollection<RadioModel>(
+                items.Where(radio => favList.Select(f => f.RadioId)
+                     .Contains(radio.Id)));
         }
 
         public void FavoriteChangeHandler(FavoriteChangeMessage message)
@@ -159,26 +126,13 @@ namespace OnRadio.App.ViewModels
                 return;
             }
 
-            var favoriteList = GroupRadioList.FirstOrDefault(x => x.Type == GroupType.Favorited);
-            var otherList = GroupRadioList.FirstOrDefault(x => x.Type == GroupType.Others);
             if (message.Favorited)
             {
-                if (favoriteList == null)
-                {
-                    favoriteList = new GroupRadioList
-                    {
-                        Type = GroupType.Favorited
-                    };
-                    GroupRadioList.Insert(0, favoriteList);
-                }
-
-                favoriteList.Add(selectedRadio);
-                otherList.Remove(selectedRadio);
+                FavoriteRadioList.Add(selectedRadio);
             }
             else
             {
-                favoriteList?.Remove(selectedRadio);
-                otherList.Add(selectedRadio);
+                FavoriteRadioList.Remove(selectedRadio);
             }
         }
     }
