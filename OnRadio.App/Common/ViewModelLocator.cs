@@ -27,5 +27,10 @@ namespace OnRadio.App.Common
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(Container));
 
         }
+
+        public T Resolve<T>()
+        {
+            return Container.Resolve<T>();
+        }
     }
 }

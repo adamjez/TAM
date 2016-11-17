@@ -15,7 +15,6 @@
     mc:Ignorable="d">
 
     <common:MvvmPage.Resources>
-        <CollectionViewSource x:Key="RadioListSource" Source="{Binding GroupRadioList}" IsSourceGrouped="True"/>
     </common:MvvmPage.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -23,61 +22,107 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <Pivot Grid.Row="0" HorizontalContentAlignment="Center">
+            <Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <TextBlock Text="{Binding}" FontFamily="Segoe MDL2 Assets"/>
+                    </Grid>
+                </DataTemplate>
+            </Pivot.HeaderTemplate>
+            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+                <PivotItem.Header>
+                    &#xE189;
+                </PivotItem.Header>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="TextChanged">
-                                <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
-                            </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
-                    </TextBox>
-                    <Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>
-                    <Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
-                    <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>
-
 
                 </Grid>
-          
-                <ListView ItemsSource="{Binding Source={StaticResource RadioListSource}}" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="True">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="ItemClick">
-                            <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
-                                <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
-                                <TextBlock Text="{Binding Title}" FontWeight="Medium" Padding="8 0 0 0"
-                                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding  Type}" 
-                                       Style="{ThemeResource TitleTextBlockStyle}"/>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                </ListView>
-            </Grid>
-        </ScrollViewer>
+            </PivotItem>
 
+            <PivotItem Margin="0">
+                <PivotItem.Header>
+                    &#xEB52;
+                </PivotItem.Header>
+                <Grid>
+                    <ListView ItemsSource="{Binding FavoriteRadioList}" SelectionMode="None" IsItemClickEnabled="True">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="ItemClick">
+                                <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
+                                    <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
+                                    <TextBlock Text="{Binding Title}" FontWeight="Medium" Padding="8 0 0 0"
+                                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem Margin="0">
+                <PivotItem.Header >
+                    &#xE71D;
+                </PivotItem.Header>
+                <Grid>
+                    <ScrollViewer>
+                        <Grid Margin="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <AutoSuggestBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Hledat radio" QueryIcon="Find" Margin="4">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:EventTriggerBehavior EventName="TextChanged">
+                                            <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
+                                        </core:EventTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </AutoSuggestBox>
+
+                                <ComboBox Grid.Column="1" Margin="4" SelectedItem="{Binding SelectedSortBy, Mode=TwoWay}"
+                                          ItemsSource="{Binding SortBySource, Mode=OneTime}" PlaceholderText="Sort By">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:EventTriggerBehavior EventName="SelectionChanged">
+                                            <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
+                                        </core:EventTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </ComboBox>
+                                <Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>
+                                <!--<Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
+                                <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>-->
+                            </Grid>
+
+                            <ListView ItemsSource="{Binding AllRadioList}" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="True">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="ItemClick">
+                                        <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
+                                            <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
+                                            <TextBlock Text="{Binding Title}" FontWeight="Medium" Padding="8 0 0 0"
+                                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </PivotItem>
+        </Pivot>
+        
         <controls:MiniPlayer Grid.Row="1" Height="60" Visibility="{Binding Loaded, Converter={StaticResource BoolToVisibilityConverter}}" 
                              DataContext="{Binding Player, Source={StaticResource ViewModelLocator}}"/>
     </Grid>
