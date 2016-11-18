@@ -25,6 +25,8 @@ namespace OnRadio.App.ViewModels
 {
     public class PlayerViewModel : LoadingViewModelBase, IDisposable
     {
+        private const string _roamingQualityKey = "streamquality";
+
         private readonly IMusicService _musicService;
         private readonly PlaybackService _playbackService;
         private readonly ITileManager _tileManager;
@@ -46,16 +48,16 @@ namespace OnRadio.App.ViewModels
         private bool _radioLoaded;
         private int _timerHours;
         private int _timerMinutes;
-        private Timer _stopPlaybackTimer; 
+        private Timer _stopPlaybackTimer;
+        private bool _canPinRadio;
+        private bool _canFavoriteRadio;
+        private StreamModel.StreamQuality _selectedStreamQuality;
 
         public RelayCommand OpenRadioListCommand =>
            _openRadioListCommand ?? (_openRadioListCommand = new RelayCommand(OpenRadioList));
 
         public RelayCommand TogglePlayPauseCommand =>
            _togglePlayPauseCommand ?? (_togglePlayPauseCommand = new RelayCommand(TogglePlayPause));
-
-        public RelayCommand TogglePlaybackQualityCommand =>
-            _togglePlaybackQualityCommand ?? (_togglePlaybackQualityCommand = new RelayCommand(TogglePlaybackQuality));
 
         public RelayCommand NavigateToPlayerCommand =>
            _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
@@ -97,6 +99,25 @@ namespace OnRadio.App.ViewModels
 
         public StreamModel Stream => _playbackService.Stream;
 
+        public List<StreamModel.StreamQuality> StreamQualities => new List<StreamModel.StreamQuality>
+        {
+            StreamModel.StreamQuality.High,
+            StreamModel.StreamQuality.Low
+        };
+
+        public StreamModel.StreamQuality SelectedStreamQuality
+        {
+            get { return _selectedStreamQuality; }
+            set
+            {
+                if (_selectedStreamQuality == value)
+                    return;
+
+                Set(ref _selectedStreamQuality, value);
+                UpdateStreamQuality();
+            }
+        }
+
         public bool IsRadioPinned => _tileManager.Exists(Radio);
 
         public int TimerHours
@@ -123,6 +144,30 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radio, value); }
         }
 
+        public bool CanPinRadio
+        {
+            get { return _canPinRadio; }
+            set
+            {
+                Set(ref _canPinRadio, value);
+                RaisePropertyChanged(() => CanPinRadioNotNull);
+            }
+        }
+
+        public bool CanPinRadioNotNull => CanPinRadio && Radio != null;
+
+        public bool CanFavoriteRadio
+        {
+            get { return _canFavoriteRadio; }
+            set
+            {
+                Set(ref _canFavoriteRadio, value);
+                RaisePropertyChanged(() => CanFavoriteRadioNotNull);
+            }
+        }
+
+        public bool CanFavoriteRadioNotNull => CanFavoriteRadio && Radio != null;
+
         public PlaybackSessionViewModel PlaybackSession { get; private set; }
 
 
@@ -137,6 +182,18 @@ namespace OnRadio.App.ViewModels
 
             PlaybackSession = new PlaybackSessionViewModel(playbackService.Player.PlaybackSession);
             _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
+
+            var helper = new RoamingObjectStorageHelper();
+
+            var lastQuality = StreamModel.StreamQuality.High;
+            if (helper.KeyExists(_roamingQualityKey))
+            {
+                lastQuality = helper.Read<StreamModel.StreamQuality>(_roamingQualityKey);
+            }
+            SelectedStreamQuality = lastQuality;
+
+            CanPinRadio = true;
+            CanFavoriteRadio = true;
         }
 
         private void OpenRadioList()
@@ -308,22 +365,7 @@ namespace OnRadio.App.ViewModels
             stream.Quality = StreamModel.StreamQuality.High;
             Radio.Streams.Add(stream);
 
-            _playbackService.Stream = stream;
-
-            var helper = new RoamingObjectStorageHelper();
-            string keyIsLQ = "isLQ";
-            if (helper.KeyExists(keyIsLQ))
-            {
-                StreamModel.StreamQuality lastQuality = helper.Read<StreamModel.StreamQuality>(keyIsLQ);
-                if (lastQuality == StreamModel.StreamQuality.Low)
-                {
-                    StreamModel newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.Low);
-                    if (newQualityStream == null)
-                        return;
-                }
-            }
-
-            RaisePropertyChanged(() => Stream);
+            UpdateStreamQuality();
         }
 
         public async Task LoadInfoAsync()
@@ -352,19 +394,19 @@ namespace OnRadio.App.ViewModels
             });
         }
 
-        public void TogglePlaybackQuality()
+        public void UpdateStreamQuality()
         {
             if (Radio == null)
                 return;
 
             StreamModel newQualityStream = null;
-            switch (Stream.Quality)
+            switch (SelectedStreamQuality)
             {
                 case StreamModel.StreamQuality.High:
-                    newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.Low);
+                    newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.High);
                     break;
                 case StreamModel.StreamQuality.Low:
-                    newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.High);
+                    newQualityStream = Radio.Streams.FirstOrDefault(x => x.Quality == StreamModel.StreamQuality.Low);
                     break;
                 default:
                     throw new ArgumentException("Unhandled stream quality value");
@@ -372,10 +414,11 @@ namespace OnRadio.App.ViewModels
 
             if (newQualityStream == null)
                 return;
+
             _playbackService.Stream = newQualityStream;
 
             var roamingStorage = new RoamingObjectStorageHelper();
-            roamingStorage.Save("isLQ", newQualityStream.Quality);
+            roamingStorage.Save(_roamingQualityKey, newQualityStream.Quality);
 
             if (PlaybackSession.PlaybackState != MediaPlaybackState.Paused)
             {
@@ -383,7 +426,7 @@ namespace OnRadio.App.ViewModels
                 _playbackService.Play();
             }
                 
-            RaisePropertyChanged(()=>Stream);
+            RaisePropertyChanged(() => Stream);
         }
 
         public void ToggleRadioIsFavorite()
@@ -391,6 +434,7 @@ namespace OnRadio.App.ViewModels
             if(Radio == null) 
                 return;
 
+            CanFavoriteRadio = false;
             if (Radio.IsFavorite)
             {
                 LocalDatabaseStorage.DeleteFavorite(Radio.Id);
@@ -401,10 +445,15 @@ namespace OnRadio.App.ViewModels
             }
             Radio.IsFavorite = !Radio.IsFavorite;
             MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, Radio.IsFavorite));
+            CanFavoriteRadio = true;
         }
 
         public async void ToggleRadioPinned()
         {
+            if (Radio == null)
+                return;
+
+            CanPinRadio = false;
             if (IsRadioPinned)
             {
                 await _tileManager.RemoveTileAsync(Radio);
@@ -414,6 +463,7 @@ namespace OnRadio.App.ViewModels
                 await _tileManager.CreateTileAsync(Radio);
             }
             RaisePropertyChanged(() => IsRadioPinned);
+            CanPinRadio = true;
         }
 
         public void ToggleTimer()

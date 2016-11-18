@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using OnRadio.App.ViewModels;
 using OnRadio.BL.Models;
+using OnRadio.BL.Services;
 
 namespace OnRadio.App.Common
 {
@@ -46,7 +47,9 @@ namespace OnRadio.App.Common
         public class DesignPlayerViewModel : PlayerViewModel
         {
             public DesignPlayerViewModel()
-                : base(null, null, null, null, null)
+                : base(null, 
+                      new PlaybackService {Stream = new StreamModel {Quality = StreamModel.StreamQuality.High} },
+                      null, null, null)
             {
             }
 
@@ -63,7 +66,6 @@ namespace OnRadio.App.Common
                     Title = "Very Long Song Title That Needs To Be Shortened",
                     ThumbnailUrl = "http://is4.mzstatic.com/image/thumb/Music49/v4/62/43/31/624331f1-024c-aefb-f3b6-aee95f3097f5/source/600x600bb.jpg"
                 };
-
 
                 return Task.FromResult(true);
             }

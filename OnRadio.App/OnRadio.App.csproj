@@ -111,6 +111,7 @@
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BufferingToVisibilityConverter.cs" />
+    <Compile Include="Converters\ListStreamQualityConverter.cs" />
     <Compile Include="Converters\PlaybackStateToEnabledConverter.cs" />
     <Compile Include="Converters\RadioPinnedIconConverter.cs" />
     <Compile Include="Converters\PlaybackQualityConverter.cs" />

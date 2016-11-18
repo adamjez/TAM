@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Data;
 
 namespace OnRadio.App.Converters
 {
-    class IsNotNullConverter : IValueConverter
+    public class IsNotNullConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

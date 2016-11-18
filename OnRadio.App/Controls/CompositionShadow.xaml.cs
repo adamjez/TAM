@@ -51,6 +51,9 @@ namespace OnRadio.App.Controls
         public CompositionShadow()
         {
             InitializeComponent();
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                return;
+
             DefaultStyleKey = typeof(CompositionShadow);
             SizeChanged += CompositionShadow_SizeChanged;
             Loaded += (object sender, RoutedEventArgs e) =>

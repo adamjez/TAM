@@ -23,9 +23,14 @@
         <converters:RadioPinnedIconConverter x:Key="RadioPinnedIconConverter"/>
         <converters:BufferingToVisibilityConverter x:Key="BufferingToVisibilityConverter"/>
         <converters:PlaybackStateToEnabledConverter x:Key="PlaybackStateToEnabledConverter"/>
+        <converters:ListStreamQualityConverter x:Key="ListStreamQualityConverter"/>
 
         <DataTemplate x:Key="TimeValuesDataTemplate">
             <TextBlock Text="{Binding}" FontSize="24"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="QualityListItem">
+            <TextBlock Text="{Binding Converter={StaticResource ListStreamQualityConverter}}" />
         </DataTemplate>
     </common:MvvmPage.Resources>
 
@@ -42,6 +47,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
         <ContentDialog Grid.Row="1" x:Name="TimerDialog" FullSizeDesired="False">
@@ -119,7 +125,11 @@
                        Foreground="White"/>
         </Border>
 
-        <Pivot Grid.Row="1" Margin="0" HorizontalContentAlignment="Center" Style="{StaticResource PivotStyleDynamicHeader}">
+        <Pivot Grid.Row="1"
+               SelectedIndex="0"
+               HorizontalContentAlignment="Stretch"
+               BorderBrush="{StaticResource BackgroundColorBrush}"
+               Style="{StaticResource PivotStyleDynamicHeader}">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <Grid>
@@ -127,7 +137,7 @@
                     </Grid>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
-            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+            <PivotItem Margin="0">
                 <PivotItem.Header>
                     &#xE189;
                 </PivotItem.Header>
@@ -148,31 +158,38 @@
 
                     <Grid Grid.Row="1" Grid.Column="1">
                         <controls1:CompositionShadow BlurRadius="100.0" ShadowOpacity="1.0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <controls:ImageEx PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            <controls:ImageEx PlaceholderSource="/Assets/AlbumPlaceholder.png"  PlaceholderStretch="Uniform"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"
                                               Source="{Binding Information.ThumbnailUrl}">
                             </controls:ImageEx>
                         </controls1:CompositionShadow>
                     </Grid>
 
-                    <Border Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0" Background="{StaticResource BackgroundColorBrush}">
-                        <ProgressBar IsIndeterminate="True"
-                                 Visibility="{Binding PlaybackSession.PlaybackState, Converter={StaticResource BufferingToVisibilityConverter}}"
-                                 VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
-                                 Foreground="White"
-                                />
-                    </Border>
+                    <Grid Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0">
+                        <Border Background="{StaticResource BackgroundColorBrush}">
+                            <ProgressBar IsIndeterminate="True"
+                                     Visibility="{Binding PlaybackSession.PlaybackState, Converter={StaticResource BufferingToVisibilityConverter}}"
+                                     VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
+                                     Foreground="White"
+                                    />
+                        </Border>
+                    </Grid>
 
                     <Border Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="0" Background="{StaticResource BackgroundColorBrush}">
-                        <TextBlock  Text="{Binding Information.Title}" FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded" Foreground="White"/>
+                        <TextBlock Text="{Binding Information.Title}"
+                                   FontSize="24" TextTrimming="CharacterEllipsis" FontStretch="SemiExpanded"
+                                   Foreground="White"/>
                     </Border>
 
                     <Border Grid.Row="5" Grid.ColumnSpan="3" Grid.Column="0" Background="{StaticResource BackgroundColorBrush}">
-                        <TextBlock Text="{Binding Information.Artist}" FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed" Foreground="White"/>
+                        <TextBlock Text="{Binding Information.Artist}"
+                                   FontSize="18" TextTrimming="CharacterEllipsis" FontStretch="SemiCondensed"
+                                   Foreground="White"/>
                     </Border>
                 </Grid>
             </PivotItem>
 
-            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+            <PivotItem Margin="0">
                 <PivotItem.Header>
                     &#xE946;
                 </PivotItem.Header>
@@ -181,7 +198,7 @@
                 </Grid>
             </PivotItem>
 
-            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+            <PivotItem Margin="0">
                 <PivotItem.Header >
                     &#xE81C;
                 </PivotItem.Header>
@@ -195,7 +212,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="50"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -205,27 +222,53 @@
                         Command="{Binding TogglePlayPauseCommand}"
                         IsEnabled="{Binding Stream, Converter={StaticResource IsNotNullConverter}}"
                         Background="Transparent"
+                        Style="{StaticResource ButtonDisabledStyle}"
                         >
                     <Viewbox MaxHeight="50" MaxWidth="50">
-                        <SymbolIcon  Symbol="{Binding PlaybackSession.PlaybackState, Mode=OneWay, Converter={StaticResource PlaybackStateToButtonIconConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <SymbolIcon Symbol="{Binding PlaybackSession.PlaybackState, Mode=OneWay, Converter={StaticResource PlaybackStateToButtonIconConverter}}"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Foreground="White"/>
                     </Viewbox>
                 </Button>
                 <!--<Image Source="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlayIconConverter}}"/>-->
-
-                <Grid Grid.Column="1">
-                    <TextBlock Text="&#xEA3A;" 
-                               Margin="0,4,0,0"
-                               FontFamily="Segoe MDL2 Assets" FontSize="32"
-                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <Button 
-                            Command="{Binding TogglePlaybackQualityCommand}"
-                            IsEnabled="{Binding Stream, Converter={StaticResource IsNotNullConverter}}"
-                            Background="Transparent"
-                            Content="{Binding Stream.Quality, Converter={StaticResource PlaybackQualityConverter}}"
-                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                            FontSize="18"/>
-                </Grid>
+                <!--Command="{Binding TogglePlaybackQualityCommand}"-->
+                <Button Grid.Column="1"
+                        IsEnabled="{Binding Stream, Converter={StaticResource IsNotNullConverter}}"
+                        Background="Transparent"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Style="{StaticResource ButtonDisabledStyle}"
+                        Foreground="White">
+                    <Button.Flyout>
+                        <Flyout x:Name="QualityFlyout">
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+                                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                                    <Setter Property="IsTabStop" Value="True"/>
+                                    <Setter Property="TabNavigation" Value="Cycle"/>
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <ListView ItemClick="ListViewBase_OnItemClick" IsItemClickEnabled="True"
+                                      ItemsSource="{Binding StreamQualities}"
+                                      SelectedItem="{Binding SelectedStreamQuality, Mode=TwoWay}"
+                                      ItemTemplate="{StaticResource QualityListItem}"
+                                      />
+                        </Flyout>
+                    </Button.Flyout>
+                    <Grid>
+                        <TextBlock 
+                                Text="{Binding Stream.Quality, Converter={StaticResource PlaybackQualityConverter}}"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                FontSize="18"
+                                />
+                        <TextBlock Text="&#xEA3A;"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Margin="0,4,0,0"
+                                FontFamily="Segoe MDL2 Assets" FontSize="32"
+                                />
+                    </Grid>
+                </Button>
 
                 <Grid Grid.Column="2">
                     <TextBlock Text="&#xED67;"
@@ -240,22 +283,28 @@
                             Content="&#xE121;"
                             FontFamily="Segoe MDL2 Assets" FontSize="32"
                             VerticalAlignment="Center" HorizontalAlignment="Center"
-                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Foreground="White"
+                            Style="{StaticResource ButtonDisabledStyle}"/>
                 </Grid>
 
                 <Button Grid.Column="4"
                         Command="{Binding ToggleRadioPinnedCommand}"
-                        IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
+                        IsEnabled="{Binding CanPinRadioNotNull}"
                         Background="Transparent"
                         Content="{Binding IsRadioPinned, Converter={StaticResource RadioPinnedIconConverter}}"
-                        FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                        FontFamily="Segoe MDL2 Assets" FontSize="32"
+                        Foreground="White"
+                        Style="{StaticResource ButtonDisabledStyle}"/>
 
                 <Button Grid.Column="5"
                         Command="{Binding ToggleRadioIsFavoriteCommand}"
-                        IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
+                        IsEnabled="{Binding CanFavoriteRadioNotNull}"
                         Background="Transparent"
                         Content="{Binding Radio.IsFavorite, Converter={StaticResource FavoriteIconConverter}}"
-                        FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                        FontFamily="Segoe MDL2 Assets" FontSize="32"
+                        Foreground="White"
+                        Style="{StaticResource ButtonDisabledStyle}"/>
             </Grid>
         </Border>
     </Grid>

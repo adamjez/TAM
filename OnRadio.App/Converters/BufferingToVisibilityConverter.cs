@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Data;
 
 namespace OnRadio.App.Converters
 {
-    class BufferingToVisibilityConverter : IValueConverter
+    public class BufferingToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

@@ -5,6 +5,7 @@ using Windows.Graphics.Imaging;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Messaging;
@@ -41,6 +42,11 @@ namespace OnRadio.App.Views
             {
                 TimerDialog.Hide();
             }
+        }
+
+        private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            QualityFlyout.Hide();
         }
     }
 }
