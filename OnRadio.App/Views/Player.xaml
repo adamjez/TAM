@@ -16,6 +16,7 @@
     mc:Ignorable="d">
 
     <common:MvvmPage.Resources>
+        <converters:IsNullConverter x:Key="IsNullConverter"/>
         <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
         <converters:PlaybackStateToButtonIconConverter x:Key="PlaybackStateToButtonIconConverter"/>
         <converters:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
@@ -273,12 +274,6 @@
                 </Button>
 
                 <Grid Grid.Column="0">
-                    <TextBlock Text="&#xED67;"
-                               Margin="0,2,0,0"
-                               FontFamily="Segoe MDL2 Assets" FontSize="30"
-                               VerticalAlignment="Center" HorizontalAlignment="Center"
-                               Visibility="{Binding StopPlaybackTimer, Converter={StaticResource IsNotNullConverter}}"
-                               Foreground="Gray"/>
                     <Button Command="{Binding ToggleTimerCommand}"
                             IsEnabled="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlaybackStateToEnabledConverter}}"
                             Background="Transparent"
@@ -286,8 +281,21 @@
                             FontFamily="Segoe MDL2 Assets" FontSize="32"
                             VerticalAlignment="Center" HorizontalAlignment="Center"
                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Visibility="{Binding StopPlaybackTimer, Converter={StaticResource IsNotNullConverter}}"
                             Foreground="White"
-                            Style="{StaticResource ButtonDisabledStyle}"/>
+                            Style="{StaticResource BlinkingButton}"/>
+                    <Button x:Name="TimerButton"
+                            Command="{Binding ToggleTimerCommand}"
+                            IsEnabled="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlaybackStateToEnabledConverter}}"
+                            Background="Transparent"
+                            Content="&#xE121;"
+                            FontFamily="Segoe MDL2 Assets" FontSize="32"
+                            VerticalAlignment="Center" HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            Visibility="{Binding StopPlaybackTimer, Converter={StaticResource IsNullConverter}}"
+                            Foreground="White"
+                            Style="{StaticResource ButtonDisabledStyle}">
+                    </Button>
                 </Grid>
 
                 <Button Grid.Column="5"
