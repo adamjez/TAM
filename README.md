@@ -2,13 +2,7 @@
 
 ## TODO
 
-### List Radio
-* Pridat Pivot do listRadio
-* Vyhledavani sprovoznit a jenom v seznamu vsech + Zmenit design razeni a sprovoznit
-
 ### Player
-* play do stredu, 
-* marginovani??
 * Historie pisnicek 
 * Info o Radiu
 
