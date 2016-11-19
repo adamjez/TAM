@@ -8,11 +8,7 @@
 
 ### Player
 * play do stredu, 
-* marginovani, 
-* ztmavit pozadi a barvu do static resource, 
-* styl pivota do static resource
-* vyreseni graficky meneni kvality radia
-* lepsi logika za vyberom kvality streamu
+* marginovani??
 * Historie pisnicek 
 * Info o Radiu
 
@@ -20,7 +16,6 @@
 
 * Logo Aplikace
 * Ukladani poslednich radii
-* ukladni kvality radia
 * Stranka About 
 * Prevest texty do cestiny - TODO lokalizace
 * Pripani dlazdic a davani oblibeni ze RadioList do vsech (nejspis pomoci menuflyout pri podrzeni)
