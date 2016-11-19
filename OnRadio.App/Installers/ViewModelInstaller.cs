@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using OnRadio.App.Commands;
 using OnRadio.App.ViewModels;
 
 namespace OnRadio.App.Installers
@@ -10,6 +11,9 @@ namespace OnRadio.App.Installers
             builder.RegisterType<PlayerViewModel>()
                 .SingleInstance();
             builder.RegisterType<RadioListViewModel>();
+
+            builder.RegisterType<ToggleRadioPinCommand>();
+            builder.RegisterType<FavoriteRadioCommand>();
         }
     }
 }

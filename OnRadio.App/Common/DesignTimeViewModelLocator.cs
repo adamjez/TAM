@@ -14,7 +14,7 @@ namespace OnRadio.App.Common
         public class DesignRadioListViewModel : RadioListViewModel
         {
             public DesignRadioListViewModel()
-                : base(null, null, null)
+                : base(null, null, null, null)
             {
 
             }
@@ -49,7 +49,7 @@ namespace OnRadio.App.Common
             public DesignPlayerViewModel()
                 : base(null, 
                       new PlaybackService {Stream = new StreamModel {Quality = StreamModel.StreamQuality.High} },
-                      null, null, null)
+                      null, null, null, null, null, null)
             {
             }
 

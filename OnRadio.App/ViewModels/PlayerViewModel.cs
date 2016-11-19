@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using OnRadio.BL.Services;
 using Windows.Media.Playback;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
@@ -18,8 +16,7 @@ using OnRadio.BL.Interfaces;
 using OnRadio.BL.Models;
 using OnRadio.DAL;
 using Microsoft.Toolkit.Uwp;
-using System.Diagnostics;
-using OnRadio.App.Helpers;
+using OnRadio.App.Commands;
 
 namespace OnRadio.App.ViewModels
 {
@@ -32,12 +29,10 @@ namespace OnRadio.App.ViewModels
         private readonly ITileManager _tileManager;
         private readonly INavigationService _navigationService;
         private readonly MediaNotify _mediaNotify;
+        private readonly LastRadiosStorage _lastRadiosStorage;
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
         private RelayCommand _navigateToPlayerCommand;
-        private RelayCommand _toggleRadioIsFavoriteCommand;
-        private RelayCommand _togglePlaybackQualityCommand;
-        private RelayCommand _toggleRadioPinnecCommand;
         private RelayCommand _toggleTimerCommand;
         private RelayCommand _runTimerCommand;
         private RelayCommand _closeTimerCommand;
@@ -50,8 +45,6 @@ namespace OnRadio.App.ViewModels
         private int _timerHours;
         private int _timerMinutes;
         private Timer _stopPlaybackTimer;
-        private bool _canPinRadio;
-        private bool _canFavoriteRadio;
         private StreamModel.StreamQuality _selectedStreamQuality;
 
         public RelayCommand OpenRadioListCommand =>
@@ -62,12 +55,6 @@ namespace OnRadio.App.ViewModels
 
         public RelayCommand NavigateToPlayerCommand =>
            _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
-
-        public RelayCommand ToggleRadioIsFavoriteCommand =>
-           _toggleRadioIsFavoriteCommand ?? (_toggleRadioIsFavoriteCommand = new RelayCommand(ToggleRadioIsFavorite));
-
-        public RelayCommand ToggleRadioPinnedCommand =>
-            _toggleRadioPinnecCommand ?? (_toggleRadioPinnecCommand = new RelayCommand(ToggleRadioPinned));
 
         public RelayCommand ToggleTimerCommand =>
             _toggleTimerCommand ?? (_toggleTimerCommand = new RelayCommand(ToggleTimer));
@@ -119,8 +106,6 @@ namespace OnRadio.App.ViewModels
             }
         }
 
-        public bool IsRadioPinned => _tileManager.Exists(Radio);
-
         public int TimerHours
         {
             get { return _timerHours; }
@@ -145,47 +130,23 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radio, value); }
         }
 
-        public RadioInfoModel RadioInfo
-        {
-            get { return _radioInfo; }
-            set { Set(ref _radioInfo, value); }
-        }
-
-        public bool CanPinRadio
-        {
-            get { return _canPinRadio; }
-            set
-            {
-                Set(ref _canPinRadio, value);
-                RaisePropertyChanged(() => CanPinRadioNotNull);
-            }
-        }
-
-        public bool CanPinRadioNotNull => CanPinRadio && Radio != null;
-
-        public bool CanFavoriteRadio
-        {
-            get { return _canFavoriteRadio; }
-            set
-            {
-                Set(ref _canFavoriteRadio, value);
-                RaisePropertyChanged(() => CanFavoriteRadioNotNull);
-            }
-        }
-
-        public bool CanFavoriteRadioNotNull => CanFavoriteRadio && Radio != null;
-
         public PlaybackSessionViewModel PlaybackSession { get; private set; }
 
+        public ToggleRadioPinCommand ToggleRadioPinCommand { get; set; }
+
+        public FavoriteRadioCommand FavoriteRadioCommand { get; set; }
 
         public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, ITileManager tileManager, INavigationService navigationService,
-            MediaNotify mediaNotify)
+            MediaNotify mediaNotify, LastRadiosStorage lastRadiosStorage, ToggleRadioPinCommand toggleRadioPinCommand, FavoriteRadioCommand favoriteRadioCommand)
         {
             _musicService = musicService;
             _playbackService = playbackService;
             _tileManager = tileManager;
             _navigationService = navigationService;
             _mediaNotify = mediaNotify;
+            _lastRadiosStorage = lastRadiosStorage;
+            ToggleRadioPinCommand = toggleRadioPinCommand;
+            FavoriteRadioCommand = favoriteRadioCommand;
 
             PlaybackSession = new PlaybackSessionViewModel(playbackService.Player.PlaybackSession);
             _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
@@ -198,10 +159,8 @@ namespace OnRadio.App.ViewModels
                 lastQuality = helper.Read<StreamModel.StreamQuality>(_roamingQualityKey);
             }
             SelectedStreamQuality = lastQuality;
-
-            CanPinRadio = true;
-            CanFavoriteRadio = true;
         }
+
 
         private void OpenRadioList()
         {
@@ -242,8 +201,6 @@ namespace OnRadio.App.ViewModels
         {
             var radio = argument as RadioModel;
 
-            SaveRadio(radio);
-
             if (radio != null)
             {
                 NavigatedViaModel(radio);
@@ -263,27 +220,6 @@ namespace OnRadio.App.ViewModels
             }
            
             base.Initialize(argument);
-        }
-
-        public async void SaveRadio(RadioModel radio)
-        {
-            var helper = new RoamingObjectStorageHelper();
-            FIFOStack<string> lastRadios;
-
-            string keyRadiosHistory = "LastRadios";
-            if (await helper.FileExistsAsync(keyRadiosHistory))
-            {
-                lastRadios = await helper.ReadFileAsync<FIFOStack<string>>(keyRadiosHistory);
-            }
-            else
-            {
-                lastRadios = new FIFOStack<string>();
-                lastRadios.SetCapacity(5);
-            }
-            lastRadios.Push(radio.Title);
-            lastRadios.DebugPrint();
-
-            await helper.SaveFileAsync(keyRadiosHistory, lastRadios);
         }
 
         private void NavigatedViaModel(RadioModel radio)
@@ -322,12 +258,14 @@ namespace OnRadio.App.ViewModels
         protected override async Task LoadData()
         {
             _playbackService.Stop();
-
             
             if (!_radioLoaded)
             {
                 await LoadRadioAsync();
             }
+            Radio.IsPinned = _tileManager.Exists(Radio);
+            await _lastRadiosStorage.Add(Radio.Id);
+            MessengerInstance.Send(new RecentAddedMessage(this, Radio.Id));
 
             _mediaNotify.Enabled = Radio.OnAir;
 
@@ -439,7 +377,6 @@ namespace OnRadio.App.ViewModels
             }
 
             RadioInfo = await _musicService.GetRadioInfo(Radio.Id);
-            Debug.WriteLine(RadioInfo.Address);
 
         }
 
@@ -489,43 +426,6 @@ namespace OnRadio.App.ViewModels
             }
                 
             RaisePropertyChanged(() => Stream);
-        }
-
-        public void ToggleRadioIsFavorite()
-        {
-            if(Radio == null) 
-                return;
-
-            CanFavoriteRadio = false;
-            if (Radio.IsFavorite)
-            {
-                LocalDatabaseStorage.DeleteFavorite(Radio.Id);
-            }
-            else
-            {
-                LocalDatabaseStorage.InsertFavorite(Radio.Id);
-            }
-            Radio.IsFavorite = !Radio.IsFavorite;
-            MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, Radio.IsFavorite));
-            CanFavoriteRadio = true;
-        }
-
-        public async void ToggleRadioPinned()
-        {
-            if (Radio == null)
-                return;
-
-            CanPinRadio = false;
-            if (IsRadioPinned)
-            {
-                await _tileManager.RemoveTileAsync(Radio);
-            }
-            else
-            {
-                await _tileManager.CreateTileAsync(Radio);
-            }
-            RaisePropertyChanged(() => IsRadioPinned);
-            CanPinRadio = true;
         }
 
         public void ToggleTimer()

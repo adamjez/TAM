@@ -1,8 +1,5 @@
-﻿using System;
-using Windows.Storage;
-using Autofac;
+﻿using Autofac;
 using GalaSoft.MvvmLight.Views;
-using Microsoft.Toolkit.Uwp.UI;
 using OnRadio.App.Services;
 using OnRadio.App.Views;
 using OnRadio.BL.Interfaces;
@@ -32,10 +29,10 @@ namespace OnRadio.App.Installers
             builder.RegisterType<MediaNotify>()
                 .SingleInstance();
 
-
             var navigation = new NavigationService();
             navigation.Configure(nameof(Player), typeof(Player));
             navigation.Configure(nameof(RadioList), typeof(RadioList));
+            navigation.Configure(nameof(About), typeof(About));
             builder.RegisterInstance(navigation)
                .As<INavigationService>();
 
@@ -51,6 +48,9 @@ namespace OnRadio.App.Installers
 
             builder.RegisterType<ImageManager>()
                .As<IImageManager>();
+
+            builder.RegisterType<LastRadiosStorage>();
+
         }
     }
 }

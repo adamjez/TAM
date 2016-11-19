@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Numerics;
-using Windows.Foundation;
-using Windows.Graphics.Imaging;
-using Windows.UI;
-using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media.Imaging;
 using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using OnRadio.App.Common;
-using OnRadio.App.Helpers;
 using OnRadio.App.Messages;
 
 namespace OnRadio.App.Views
