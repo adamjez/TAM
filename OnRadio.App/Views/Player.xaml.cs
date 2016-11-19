@@ -24,8 +24,15 @@ namespace OnRadio.App.Views
         public Player()
         {
             this.InitializeComponent();
+            Unloaded += Unload;
             Messenger.Default.Register<OpenDialogMessage>(this, OpenDialog);
             Messenger.Default.Register<CloseDialogMessage>(this, CloseDialog);
+        }
+
+        private void Unload(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Unregister<OpenDialogMessage>(this, OpenDialog);
+            Messenger.Default.Unregister<CloseDialogMessage>(this, CloseDialog);
         }
 
         public async void OpenDialog(OpenDialogMessage message)
