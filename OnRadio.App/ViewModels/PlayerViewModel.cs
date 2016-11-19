@@ -345,25 +345,76 @@ namespace OnRadio.App.ViewModels
             _radioLoaded = true;
         }
 
+        private async Task<StreamModel> LoadBestHighQualityStream(List<StreamFormatModel> formats)
+        {
+            // Prioritize best quality
+            // See doc/aac-vs-mp3-quality-comparison.jpg
+            var orderedStreamFormats = new List<Tuple<int, string>>
+            {
+                new Tuple<int, string>(256, "aac"),
+                new Tuple<int, string>(192, "aac"),
+                new Tuple<int, string>(320, "mp3"),
+                new Tuple<int, string>(160, "aac"),
+                new Tuple<int, string>(192, "mp3"),
+                new Tuple<int, string>(128, "aac"),
+                new Tuple<int, string>(160, "mp3"),
+                new Tuple<int, string>(96, "aac"),
+                new Tuple<int, string>(128, "mp3"),
+                new Tuple<int, string>(96, "mp3"),
+                new Tuple<int, string>(64, "aac"),
+                new Tuple<int, string>(64, "mp3"),
+            };
+
+            StreamFormatModel selectedStream = null;
+            var selectedBitrate = 0;
+            // Try to match any of those formats
+            foreach (var streamFormat in orderedStreamFormats)
+            {
+                var bitrate = streamFormat.Item1;
+                var format = streamFormat.Item2;
+                selectedStream = formats.FirstOrDefault(x => x.Bitrates.Contains(bitrate) && x.Format.ToLower() == format);
+                if (selectedStream != null)
+                {
+                    selectedBitrate = bitrate;
+                    break;
+                }
+            }
+
+            // If it is not possible to pick from configuration list, just select the highest bitrate stream
+            if (selectedStream == null)
+            {
+                selectedStream = formats.OrderBy(x => x.Bitrates.Max()).First();
+                selectedBitrate = selectedStream.Bitrates.Max();
+            }
+            var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
+            stream.Quality = StreamModel.StreamQuality.High;
+            return stream;
+        }
+
+        private async Task<StreamModel> LoadBestLowQualityStream(List<StreamFormatModel> formats)
+        {
+            // Prioritize lowest bitrate, if possible select AAC, then MP3 and lastly OGG
+            // Because alphabetically AAC < MP3 < OGG, orderding by format string is sufficient
+            var selectedStream = formats.OrderBy(x => x.Bitrates.Min()).ThenBy(x => x.Format.ToLower()).First();
+            var selectedBitrate = selectedStream.Bitrates.Min();
+            var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
+            stream.Quality = StreamModel.StreamQuality.Low;
+            return stream;
+        }
+
         public async Task LoadStreamAsync()
         {
-            var streams = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
+            var formats = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
 
             Radio.Streams = new List<StreamModel>();
 
             // Select Low Quality stream
-            var selectedStream = streams.OrderBy(x => x.Bitrates.Min()).First();
-            var selectedBitrate = selectedStream.Bitrates.Min();
-            var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
-            stream.Quality = StreamModel.StreamQuality.Low;
-            Radio.Streams.Add(stream);
+            var lqStream = await LoadBestLowQualityStream(formats);
+            Radio.Streams.Add(lqStream);
 
             // Select High Quality stream
-            selectedStream = streams.OrderBy(x => x.Bitrates.Max()).First();
-            selectedBitrate = selectedStream.Bitrates.Max();
-            stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
-            stream.Quality = StreamModel.StreamQuality.High;
-            Radio.Streams.Add(stream);
+            var hqStream = await LoadBestHighQualityStream(formats);
+            Radio.Streams.Add(hqStream);
 
             UpdateStreamQuality();
         }
