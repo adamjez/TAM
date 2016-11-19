@@ -130,6 +130,12 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radio, value); }
         }
 
+        public RadioInfoModel RadioInfo
+        {
+            get { return _radioInfo; }
+            set { Set(ref _radioInfo, value); }
+        }
+
         public PlaybackSessionViewModel PlaybackSession { get; private set; }
 
         public ToggleRadioPinCommand ToggleRadioPinCommand { get; set; }
