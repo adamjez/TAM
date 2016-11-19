@@ -112,6 +112,7 @@
     <Compile Include="Models\HistorySongModel.cs" />
     <Compile Include="Models\IMusicFormatter.cs" />
     <Compile Include="Models\MusicInformation.cs" />
+    <Compile Include="Models\RadioInfoModel.cs" />
     <Compile Include="Models\SongModel.cs" />
     <Compile Include="Models\StreamFormatModel.cs" />
     <Compile Include="Models\StyleModel.cs" />

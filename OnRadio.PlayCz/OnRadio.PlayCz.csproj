@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiRadioInfo.cs" />
+    <Compile Include="ApiRadioInfoSocial.cs" />
     <Compile Include="ApiRadioItem.cs" />
     <Compile Include="ApiResponse.cs" />
     <Compile Include="ApiSongItem.cs" />

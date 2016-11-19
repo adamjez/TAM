@@ -173,5 +173,31 @@ namespace OnRadio.PlayCz
                 })
                 .ToList();
         }
+
+        public async Task<RadioInfoModel> GetRadioInfo(string radioId)
+        {
+            var response =
+                await _httpClient.GetStringAsync(BaseUrl + @"/json/getRadioInfo/" + WebUtility.UrlEncode(radioId));
+
+            JObject result = JObject.Parse(response);
+
+            var info = result["data"]["radio_info"].ToObject<ApiRadioInfo>();
+
+            return new RadioInfoModel()
+            {
+                Id = radioId,
+                Web1 = info.Web1,
+                Web2 = info.Web2,
+                Email1 = info.Email1,
+                Email2 = info.Email2,
+                Phone1 = info.Phone1,
+                Phone2 = info.Phone2,
+                Address = info.Address,
+                Facebook = info.Social.Facebook,
+                Gplus = info.Social.Gplus,
+                Twitter = info.Social.Twitter,
+                Youtube = info.Social.Youtube
+            };
+        }
     }
 }

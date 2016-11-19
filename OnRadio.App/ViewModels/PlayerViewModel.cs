@@ -43,6 +43,7 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _closeTimerCommand;
 
         private RadioModel _radio;
+        private RadioInfoModel _radioInfo;
         private MusicInformation _information;
 
         private bool _radioLoaded;
@@ -142,6 +143,12 @@ namespace OnRadio.App.ViewModels
         {
             get { return _radio; }
             set { Set(ref _radio, value); }
+        }
+
+        public RadioInfoModel RadioInfo
+        {
+            get { return _radioInfo; }
+            set { Set(ref _radioInfo, value); }
         }
 
         public bool CanPinRadio
@@ -430,6 +437,10 @@ namespace OnRadio.App.ViewModels
             {
                 Information = Radio.CreateMusicInformation();
             }
+
+            RadioInfo = await _musicService.GetRadioInfo(Radio.Id);
+            Debug.WriteLine(RadioInfo.Address);
+
         }
 
         public async void BackgroundMediaUpdate(object sender, EventArgs args)

@@ -193,8 +193,71 @@
                 <PivotItem.Header>
                     &#xE946;
                 </PivotItem.Header>
-                <Grid>
-                    <!--TODO: Radio info-->
+                <Grid  Background="{StaticResource BackgroundColorBrush}" >
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="&#xE12B;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Web1}"/>
+                        <LineBreak/>
+                        <Run Text="{Binding RadioInfo.Web2}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="&#xE717;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Phone1}"/>
+                        <LineBreak/>
+                        <Run Text="{Binding RadioInfo.Phone2}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="&#xE119;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Email1}"/>
+                        <LineBreak/>
+                        <Run Text="{Binding RadioInfo.Email2}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="&#xE80F;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Address}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Facebook" TextAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Facebook}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Twitter" TextAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Twitter}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Google plus" TextAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Gplus}"/>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Youtube" TextAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="7" Grid.Column="1">
+                        <Run Text="{Binding RadioInfo.Youtube}"/>
+                    </TextBlock>
                 </Grid>
             </PivotItem>
 
