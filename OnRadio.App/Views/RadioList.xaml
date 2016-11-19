@@ -10,11 +10,19 @@
     xmlns:common="using:OnRadio.App.Common"
     xmlns:converters="using:OnRadio.App.Converters"
     xmlns:controls="using:OnRadio.App.Controls"
+    xmlns:models="using:OnRadio.BL.Models"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=RadioList}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
     mc:Ignorable="d">
 
     <common:MvvmPage.Resources>
+        <DataTemplate x:Key="RadioListTemplate" x:DataType="models:RadioModel">
+            <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
+                <Image Source="{x:Bind LogoUrl}" Width="45px" Height="45px"></Image>
+                <TextBlock Text="{x:Bind Title}" FontWeight="Medium" Padding="8 0 0 0"
+                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
+            </StackPanel>
+        </DataTemplate>
     </common:MvvmPage.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -22,20 +30,26 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Pivot Grid.Row="0" HorizontalContentAlignment="Center">
+        <Pivot Grid.Row="0" IsHeaderItemsCarouselEnabled="True" SelectedIndex="1" Margin="0">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <Grid>
-                        <TextBlock Text="{Binding}" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="{Binding}" FontFamily="Segoe MDL2 Assets" />
                     </Grid>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
-            <PivotItem HorizontalContentAlignment="Center" Margin="0">
+            <PivotItem Margin="0">
                 <PivotItem.Header>
-                    &#xE189;
+                    &#xE81C;
                 </PivotItem.Header>
                 <Grid>
-
+                    <ListView ItemsSource="{Binding RecentRadioList}" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{StaticResource RadioListTemplate}">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="ItemClick">
+                                <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                    </ListView>
                 </Grid>
             </PivotItem>
 
@@ -44,21 +58,12 @@
                     &#xEB52;
                 </PivotItem.Header>
                 <Grid>
-                    <ListView ItemsSource="{Binding FavoriteRadioList}" SelectionMode="None" IsItemClickEnabled="True">
+                    <ListView ItemsSource="{Binding FavoriteRadioList}" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{StaticResource RadioListTemplate}">
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="ItemClick">
                                 <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
-                                    <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
-                                    <TextBlock Text="{Binding Title}" FontWeight="Medium" Padding="8 0 0 0"
-                                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
                     </ListView>
                 </Grid>
             </PivotItem>
@@ -76,7 +81,7 @@
                             </Grid.RowDefinitions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <AutoSuggestBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -88,7 +93,7 @@
                                     </interactivity:Interaction.Behaviors>
                                 </AutoSuggestBox>
 
-                                <ComboBox Grid.Column="1" Margin="4" SelectedItem="{Binding SelectedSortBy, Mode=TwoWay}"
+                                <ComboBox Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedSortBy, Mode=TwoWay}"
                                           ItemsSource="{Binding SortBySource, Mode=OneTime}" PlaceholderText="Sort By">
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="SelectionChanged">
@@ -96,26 +101,16 @@
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </ComboBox>
-                                <Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>
-                                <!--<Button Grid.Column="1" Content="A" Command="{Binding SortAlphabeticallyCommand}"></Button>
-                                <Button Grid.Column="2" Content="P" Command="{Binding SortByPopularityCommand}"></Button>-->
+                                <!--<Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>-->
                             </Grid>
 
-                            <ListView ItemsSource="{Binding AllRadioList}" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="True">
+                            <ListView ItemsSource="{Binding AllRadioList}" Grid.Row="1" SelectionMode="None"
+                                      IsItemClickEnabled="True" ItemTemplate="{StaticResource RadioListTemplate}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="ItemClick">
                                         <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
-                                            <Image Source="{Binding LogoUrl}" Width="45px" Height="45px"></Image>
-                                            <TextBlock Text="{Binding Title}" FontWeight="Medium" Padding="8 0 0 0"
-                                           TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
                             </ListView>
                         </Grid>
                     </ScrollViewer>
@@ -123,7 +118,15 @@
             </PivotItem>
         </Pivot>
         
-        <controls:MiniPlayer Grid.Row="1" Height="60" Visibility="{Binding Loaded, Converter={StaticResource BoolToVisibilityConverter}}" 
+        <Button Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4"
+                        Command="{Binding AboutNavigateCommand}"
+                        Background="Transparent"
+                        Content="&#xE946;"
+                        FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+
+        <controls:CompositionShadow Grid.Row="1" BlurRadius="100.0" ShadowOpacity="1.0">
+            <controls:MiniPlayer  Height="60" Visibility="{Binding Loaded, Converter={StaticResource BoolToVisibilityConverter}}" 
                              DataContext="{Binding Player, Source={StaticResource ViewModelLocator}}"/>
+        </controls:CompositionShadow>
     </Grid>
 </common:MvvmPage>

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight;
+using OnRadio.BL.Helpers;
 
 namespace OnRadio.BL.Models
 {
     public class RadioModel : ViewModelBase, IMusicFormatter
     {
         private bool _isFavorite;
+        private bool _isPinned;
+
         public string Title { get; set; }
         public string Description { get; set; }
         public string Url { get; set; }
@@ -21,6 +24,12 @@ namespace OnRadio.BL.Models
         {
             get { return _isFavorite; }
             set { Set(ref _isFavorite, value); }
+        }
+
+        public bool IsPinned
+        {
+            get { return _isPinned; }
+            set { Set(ref _isPinned, value); }
         }
 
         public MusicInformation CreateMusicInformation()

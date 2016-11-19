@@ -108,7 +108,7 @@
                 <interactivity:Interaction.Behaviors>
                     <behaviors:Blur
                             x:Name="BlurBehavior" 
-                            Value="6" 
+                            Value="10" 
                             Duration="2000" 
                             Delay="0" 
                             AutomaticallyStart="True" />
@@ -289,10 +289,11 @@
                 </Grid>
 
                 <Button Grid.Column="4"
-                        Command="{Binding ToggleRadioPinnedCommand}"
-                        IsEnabled="{Binding CanPinRadioNotNull}"
+                        Command="{Binding ToggleRadioPinCommand}"
+                        CommandParameter="{Binding Radio}"
+                        IsEnabled="{Binding Radio, Converter={StaticResource IsNotNullConverter}}"
                         Background="Transparent"
-                        Content="{Binding IsRadioPinned, Converter={StaticResource RadioPinnedIconConverter}}"
+                        Content="{Binding Radio.IsPinned, Converter={StaticResource RadioPinnedIconConverter}}"
                         FontFamily="Segoe MDL2 Assets" FontSize="32"
                         Foreground="White"
                         Style="{StaticResource ButtonDisabledStyle}"/>

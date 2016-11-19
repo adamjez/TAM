@@ -101,6 +101,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundApp.cs" />
+    <Compile Include="Commands\ToggleRadioPinCommand.cs" />
     <Compile Include="Common\DesignTimeViewModelLocator.cs" />
     <Compile Include="Common\MvvmPage.cs" />
     <Compile Include="Common\ViewModelLocator.cs" />
@@ -121,7 +122,6 @@
     <Compile Include="Converters\PlayIconConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Helpers\CompositionImageBrush.cs" />
-    <Compile Include="Helpers\FIFOStack.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
     <Compile Include="Messages\CloseDialogMessage.cs" />
@@ -133,6 +133,9 @@
     <Compile Include="ViewModels\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\RadioListViewModel.cs" />
+    <Compile Include="Views\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
     </Compile>
@@ -185,6 +188,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Player.xaml">
       <Generator>MSBuild:Compile</Generator>

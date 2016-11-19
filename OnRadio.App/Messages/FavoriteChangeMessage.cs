@@ -16,4 +16,16 @@ namespace OnRadio.App.Messages
             Favorited = favorited;
         }
     }
+
+    public class RecentAddedMessage : MessageBase
+    {
+        public string RadioId { get; set; }
+
+        public RecentAddedMessage(object sender, string radioId)
+            : base(sender)
+        {
+            Sender = sender;
+            RadioId = radioId;
+        }
+    }
 }

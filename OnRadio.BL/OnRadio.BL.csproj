@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\FIFOStack.cs" />
     <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Interfaces\IHttpClient.cs" />
     <Compile Include="Models\HistorySongModel.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Services\ImageManager.cs" />
     <Compile Include="Services\IMediaNotify.cs" />
     <Compile Include="Services\ITileManager.cs" />
+    <Compile Include="Services\LastRadiosStorage.cs" />
     <Compile Include="Services\MediaNotify.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Interfaces\IMusicService.cs" />
@@ -141,11 +143,6 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="GalaSoft.MvvmLight">
-      <HintPath>..\..\..\..\.nuget\packages\MvvmLightLibs\5.3.0\lib\windows81\GalaSoft.MvvmLight.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
