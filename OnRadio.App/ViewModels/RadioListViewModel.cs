@@ -33,6 +33,7 @@ namespace OnRadio.App.ViewModels
 
         private string _searchString;
         private SortBy _selectedSortBy;
+        private int _activeListIndex;
 
         public RadioListViewModel(IMusicService musicService, ITileManager tileManager, INavigationService navigationService, LastRadiosStorage lastRadiosStorage)
         {
@@ -42,6 +43,8 @@ namespace OnRadio.App.ViewModels
             _lastRadiosStorage = lastRadiosStorage;
             MessengerInstance.Register<FavoriteChangeMessage>(this, FavoriteChangeHandler);
             MessengerInstance.Register<RecentAddedMessage>(this, RecentChangeHandler);
+
+            ActiveListIndex = (int)PivotItemType.All;
         }
 
         public List<RadioModel> RadioList { get; set; }
@@ -68,6 +71,12 @@ namespace OnRadio.App.ViewModels
         {
             get { return _searchString; }
             set { Set(ref _searchString, value); }
+        }
+
+        public int ActiveListIndex
+        {
+            get { return _activeListIndex; }
+            set { Set(ref _activeListIndex, value); }
         }
 
         public SortBy SelectedSortBy
@@ -119,8 +128,16 @@ namespace OnRadio.App.ViewModels
 
             AllRadioList = new ObservableCollection<RadioModel>(RadioList);
             FavoriteRadioList = CreateFavoriteRadioList(RadioList);
-
             RecentRadioList = await CreateRecentRadioList(RadioList);
+
+            if (FavoriteRadioList.Any())
+            {
+                ActiveListIndex = (int)PivotItemType.Favorite;
+            }
+            else if (RecentRadioList.Any())
+            {
+                ActiveListIndex = (int)PivotItemType.Recent;
+            }
         }
 
         private ObservableCollection<RadioModel> CreateFavoriteRadioList(List<RadioModel> items)

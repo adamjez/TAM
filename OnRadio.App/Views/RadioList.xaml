@@ -18,10 +18,16 @@
 
     <common:MvvmPage.Resources>
         <DataTemplate x:Key="RadioListTemplate" x:DataType="models:RadioModel">
-            <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
+            <StackPanel Orientation="Horizontal" Margin="0 6 0 6" Holding="UIElement_OnHolding">
                 <Image Source="{x:Bind LogoUrl}" Width="45px" Height="45px"></Image>
                 <TextBlock Text="{x:Bind Title}" FontWeight="Medium" Padding="8 0 0 0"
                            TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="EditButton" Text="Favorite"/>
+                        <MenuFlyoutItem x:Name="DeleteButton" Text="Pin"/>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
             </StackPanel>
         </DataTemplate>
         <converters:EmptyCollectionVisibilityConverter x:Key="EmptyCollectionVisibilityConverter"/>
@@ -32,7 +38,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Pivot Grid.Row="0" IsHeaderItemsCarouselEnabled="True" SelectedIndex="1" Margin="0">
+        <ProgressRing IsActive="{Binding Loading}" Width="100" Height="100"></ProgressRing>
+        <Pivot Grid.Row="0" IsHeaderItemsCarouselEnabled="True" SelectedIndex="{Binding ActiveListIndex}" Margin="0">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <Grid>

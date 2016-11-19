@@ -129,7 +129,8 @@
     <Compile Include="Messages\CloseDialogMessage.cs" />
     <Compile Include="Messages\OpenDialogMessage.cs" />
     <Compile Include="Messages\FavoriteChangeMessage.cs" />
-    <Compile Include="Models\GroupRadioList.cs" />
+    <Compile Include="Models\PivotItemType.cs" />
+    <Compile Include="Models\SortBy.cs" />
     <Compile Include="Services\CortanaService.cs" />
     <Compile Include="ViewModels\LoadingViewModelBase.cs" />
     <Compile Include="ViewModels\PlaybackSessionViewModel.cs" />
