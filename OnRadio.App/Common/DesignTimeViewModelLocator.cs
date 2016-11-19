@@ -49,7 +49,7 @@ namespace OnRadio.App.Common
             public DesignPlayerViewModel()
                 : base(null, 
                       new PlaybackService {Stream = new StreamModel {Quality = StreamModel.StreamQuality.High} },
-                      null, null, null, null, null)
+                      null, null, null, null, null, null)
             {
             }
 

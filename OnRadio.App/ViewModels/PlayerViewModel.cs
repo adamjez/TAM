@@ -33,7 +33,6 @@ namespace OnRadio.App.ViewModels
         private RelayCommand _openRadioListCommand;
         private RelayCommand _togglePlayPauseCommand;
         private RelayCommand _navigateToPlayerCommand;
-        private RelayCommand _toggleRadioIsFavoriteCommand;
         private RelayCommand _toggleTimerCommand;
         private RelayCommand _runTimerCommand;
         private RelayCommand _closeTimerCommand;
@@ -45,7 +44,6 @@ namespace OnRadio.App.ViewModels
         private int _timerHours;
         private int _timerMinutes;
         private Timer _stopPlaybackTimer;
-        private bool _canFavoriteRadio;
         private StreamModel.StreamQuality _selectedStreamQuality;
 
         public RelayCommand OpenRadioListCommand =>
@@ -56,9 +54,6 @@ namespace OnRadio.App.ViewModels
 
         public RelayCommand NavigateToPlayerCommand =>
            _navigateToPlayerCommand ?? (_navigateToPlayerCommand = new RelayCommand(NavigateToPlayer));
-
-        public RelayCommand ToggleRadioIsFavoriteCommand =>
-           _toggleRadioIsFavoriteCommand ?? (_toggleRadioIsFavoriteCommand = new RelayCommand(ToggleRadioIsFavorite));
 
         public RelayCommand ToggleTimerCommand =>
             _toggleTimerCommand ?? (_toggleTimerCommand = new RelayCommand(ToggleTimer));
@@ -134,24 +129,14 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radio, value); }
         }
 
-        public bool CanFavoriteRadio
-        {
-            get { return _canFavoriteRadio; }
-            set
-            {
-                Set(ref _canFavoriteRadio, value);
-                RaisePropertyChanged(() => CanFavoriteRadioNotNull);
-            }
-        }
-
-        public bool CanFavoriteRadioNotNull => CanFavoriteRadio && Radio != null;
-
         public PlaybackSessionViewModel PlaybackSession { get; private set; }
 
         public ToggleRadioPinCommand ToggleRadioPinCommand { get; set; }
 
+        public FavoriteRadioCommand FavoriteRadioCommand { get; set; }
+
         public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, ITileManager tileManager, INavigationService navigationService,
-            MediaNotify mediaNotify, LastRadiosStorage lastRadiosStorage, ToggleRadioPinCommand toggleRadioPinCommand)
+            MediaNotify mediaNotify, LastRadiosStorage lastRadiosStorage, ToggleRadioPinCommand toggleRadioPinCommand, FavoriteRadioCommand favoriteRadioCommand)
         {
             _musicService = musicService;
             _playbackService = playbackService;
@@ -160,6 +145,7 @@ namespace OnRadio.App.ViewModels
             _mediaNotify = mediaNotify;
             _lastRadiosStorage = lastRadiosStorage;
             ToggleRadioPinCommand = toggleRadioPinCommand;
+            FavoriteRadioCommand = favoriteRadioCommand;
 
             PlaybackSession = new PlaybackSessionViewModel(playbackService.Player.PlaybackSession);
             _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
@@ -172,8 +158,6 @@ namespace OnRadio.App.ViewModels
                 lastQuality = helper.Read<StreamModel.StreamQuality>(_roamingQualityKey);
             }
             SelectedStreamQuality = lastQuality;
-
-            CanFavoriteRadio = true;
         }
 
 
@@ -438,25 +422,6 @@ namespace OnRadio.App.ViewModels
             }
                 
             RaisePropertyChanged(() => Stream);
-        }
-
-        public void ToggleRadioIsFavorite()
-        {
-            if(Radio == null) 
-                return;
-
-            CanFavoriteRadio = false;
-            if (Radio.IsFavorite)
-            {
-                LocalDatabaseStorage.DeleteFavorite(Radio.Id);
-            }
-            else
-            {
-                LocalDatabaseStorage.InsertFavorite(Radio.Id);
-            }
-            Radio.IsFavorite = !Radio.IsFavorite;
-            MessengerInstance.Send(new FavoriteChangeMessage(this, Radio.Id, Radio.IsFavorite));
-            CanFavoriteRadio = true;
         }
 
         public void ToggleTimer()

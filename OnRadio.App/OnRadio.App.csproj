@@ -101,6 +101,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundApp.cs" />
+    <Compile Include="Commands\FavoriteRadioCommand.cs" />
     <Compile Include="Commands\ToggleRadioPinCommand.cs" />
     <Compile Include="Common\DesignTimeViewModelLocator.cs" />
     <Compile Include="Common\MvvmPage.cs" />
@@ -112,6 +113,7 @@
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BufferingToVisibilityConverter.cs" />
+    <Compile Include="Converters\EmptyCollectionVisibilityConverter.cs" />
     <Compile Include="Converters\ListStreamQualityConverter.cs" />
     <Compile Include="Converters\PlaybackStateToEnabledConverter.cs" />
     <Compile Include="Converters\RadioPinnedIconConverter.cs" />

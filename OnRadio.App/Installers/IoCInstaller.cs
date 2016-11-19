@@ -1,9 +1,5 @@
-﻿using System;
-using Windows.Storage;
-using Autofac;
+﻿using Autofac;
 using GalaSoft.MvvmLight.Views;
-using Microsoft.Toolkit.Uwp.UI;
-using OnRadio.App.Commands;
 using OnRadio.App.Services;
 using OnRadio.App.Views;
 using OnRadio.BL.Interfaces;
@@ -55,7 +51,6 @@ namespace OnRadio.App.Installers
 
             builder.RegisterType<LastRadiosStorage>();
 
-            builder.RegisterType<ToggleRadioPinCommand>();
         }
     }
 }

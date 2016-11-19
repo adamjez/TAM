@@ -11,6 +11,7 @@
     xmlns:converters="using:OnRadio.App.Converters"
     xmlns:controls="using:OnRadio.App.Controls"
     xmlns:models="using:OnRadio.BL.Models"
+    xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=RadioList}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=RadioList}"
     mc:Ignorable="d">
@@ -23,6 +24,7 @@
                            TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
             </StackPanel>
         </DataTemplate>
+        <converters:EmptyCollectionVisibilityConverter x:Key="EmptyCollectionVisibilityConverter"/>
     </common:MvvmPage.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -38,7 +40,7 @@
                     </Grid>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
-            <PivotItem Margin="0">
+            <PivotItem Margin="0 8 0 0">
                 <PivotItem.Header>
                     &#xE81C;
                 </PivotItem.Header>
@@ -50,10 +52,17 @@
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
                     </ListView>
+                    <TextBlock Text="Tady se objeví historie poslouchaných rádii" 
+                               Style="{StaticResource TitleTextBlockStyle}" 
+                               Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" 
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               DataContext="{Binding RecentRadioList}"
+                               Visibility="{Binding Count, Converter={StaticResource EmptyCollectionVisibilityConverter}}"/>
                 </Grid>
             </PivotItem>
 
-            <PivotItem Margin="0">
+            <PivotItem Margin="0 8 0 0">
                 <PivotItem.Header>
                     &#xEB52;
                 </PivotItem.Header>
@@ -65,16 +74,24 @@
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
                     </ListView>
+                    <TextBlock Text="Zatím zde nejsou žádná oblíbená rádia :-(" 
+                               Style="{StaticResource TitleTextBlockStyle}" 
+                               Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" 
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               DataContext="{Binding FavoriteRadioList}"
+                               Visibility="{Binding Count, Converter={StaticResource EmptyCollectionVisibilityConverter}}"/>
                 </Grid>
             </PivotItem>
 
-            <PivotItem Margin="0">
+            <PivotItem Margin="0 8 0 0">
                 <PivotItem.Header >
                     &#xE71D;
                 </PivotItem.Header>
                 <Grid>
                     <ScrollViewer>
-                        <Grid Margin="4">
+                        <Grid Margin="0 4 0 0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -85,7 +102,7 @@
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <AutoSuggestBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         PlaceholderText="Hledat radio" QueryIcon="Find" Margin="4">
+                                         PlaceholderText="Hledat rádio" QueryIcon="Find" Margin="4">
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="TextChanged">
                                             <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />
@@ -101,17 +118,15 @@
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </ComboBox>
-                                <!--<Button Grid.Column="0" Visibility="Collapsed" Content="F" Command="{Binding FilterListCommand}"></Button>-->
                             </Grid>
-
-                            <ListView ItemsSource="{Binding AllRadioList}" Grid.Row="1" SelectionMode="None"
-                                      IsItemClickEnabled="True" ItemTemplate="{StaticResource RadioListTemplate}">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="ItemClick">
-                                        <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
-                                    </core:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                            </ListView>
+                                <ListView ItemsSource="{Binding AllRadioList}" Grid.Row="1" SelectionMode="None"
+                                          IsItemClickEnabled="True" ItemTemplate="{StaticResource RadioListTemplate}">
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:EventTriggerBehavior EventName="ItemClick">
+                                            <core:InvokeCommandAction Command="{Binding Path=ItemSelectedCommand}" />
+                                        </core:EventTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </ListView>
                         </Grid>
                     </ScrollViewer>
                 </Grid>

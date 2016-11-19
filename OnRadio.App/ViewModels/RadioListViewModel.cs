@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.VoiceCommands;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Messages;
@@ -128,9 +127,15 @@ namespace OnRadio.App.ViewModels
         {
             List<FavoriteRadio> favList = LocalDatabaseStorage.GetFavorites();
 
-            return new ObservableCollection<RadioModel>(
-                items.Where(radio => favList.Select(f => f.RadioId)
-                     .Contains(radio.Id)));
+            var result = new ObservableCollection<RadioModel>(
+                items.Where(radio => favList.Select(f => f.RadioId).Contains(radio.Id)));
+
+            foreach (var radio in result)
+            {
+                radio.IsFavorite = true;
+            }
+
+            return result;
         }
 
         private async Task<ObservableCollection<RadioModel>> CreateRecentRadioList(List<RadioModel> items)
@@ -186,6 +191,7 @@ namespace OnRadio.App.ViewModels
             }
 
             RecentRadioList.Insert(0, selectedRadio);
+            RaisePropertyChanged(() => RecentRadioList);
         }
     }
 }
