@@ -11,7 +11,7 @@
         {
             return new SongModel()
             {
-                Title = "undefined"
+                Title = "Nedefinované"
             };
         }
 
