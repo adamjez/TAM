@@ -12,6 +12,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls1="using:OnRadio.App.Controls"
     xmlns:models="using:OnRadio.BL.Models"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
     mc:Ignorable="d">
@@ -26,7 +27,8 @@
         <converters:BufferingToVisibilityConverter x:Key="BufferingToVisibilityConverter"/>
         <converters:PlaybackStateToEnabledConverter x:Key="PlaybackStateToEnabledConverter"/>
         <converters:ListStreamQualityConverter x:Key="ListStreamQualityConverter"/>
-
+        <converters:EmptyCollectionVisibilityConverter x:Key="EmptyCollectionVisibilityConverter"/>
+        
         <DataTemplate x:Key="TimeValuesDataTemplate">
             <TextBlock Text="{Binding}" FontSize="24"/>
         </DataTemplate>
@@ -124,6 +126,21 @@
                 </TextBlock>
             </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="HistorySongItem" x:DataType="models:HistorySongModel">
+            <StackPanel Orientation="Horizontal" Margin="0 6 0 6">
+                <Image Source="{x:Bind ThumbnailUrl}" Width="60px" Height="60px"/>
+                <StackPanel Padding="8 0 0 0">
+                    <TextBlock Text="{x:Bind Title}" FontWeight="Medium" 
+                               TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold" Foreground="White"/>
+                    <TextBlock Text="{x:Bind Artist}"
+                                   Style="{StaticResource BodyTextBlockStyle}" Foreground="White"/>
+                    <TextBlock Text="{x:Bind PlayedAt}"
+                                   Style="{StaticResource BodyTextBlockStyle}" FontFamily="Segoe UI Semibold" Foreground="White"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
     </common:MvvmPage.Resources>
 
     <Page.Transitions>
@@ -215,11 +232,19 @@
                        Foreground="White"/>
         </Border>
 
+
+        <ProgressRing Grid.Row="1" IsActive="{Binding IsHistoryLoading}" Width="100" Height="100"></ProgressRing>
+
         <Pivot Grid.Row="1"
-               SelectedIndex="0"
+               SelectedIndex="{Binding SelectedPivot, Mode=TwoWay}" 
                HorizontalContentAlignment="Stretch"
                BorderBrush="{StaticResource BackgroundColorBrush}"
                Style="{StaticResource PivotStyleDynamicHeader}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="SelectionChanged">
+                    <core:InvokeCommandAction Command="{Binding Path=LoadHistoryCommand}" CommandParameter="{Binding SelectedPivot}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <Grid>
@@ -291,8 +316,18 @@
                 <PivotItem.Header >
                     &#xE81C;
                 </PivotItem.Header>
-                <Grid>
-                    <!--TODO: Song history-->
+                <Grid Margin="0 25 0 25"  Background="{StaticResource BackgroundColorBrush}">
+                    <ScrollViewer>
+                        <ListView ItemsSource="{Binding History}" ItemTemplate="{StaticResource HistorySongItem}" IsItemClickEnabled="False"/>
+                    </ScrollViewer>
+                    <TextBlock Text="Funkce není pro toto rádio momentálně dostupná." 
+                               Style="{StaticResource TitleTextBlockStyle}" 
+                               Foreground="White" 
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               DataContext="{Binding History}"
+                               Visibility="{Binding Count, Converter={StaticResource EmptyCollectionVisibilityConverter}}"/>
                 </Grid>
             </PivotItem>
         </Pivot>

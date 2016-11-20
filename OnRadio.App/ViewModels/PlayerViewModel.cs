@@ -40,8 +40,12 @@ namespace OnRadio.App.ViewModels
         private RadioModel _radio;
         private RadioInfoModel _radioInfo;
         private MusicInformation _information;
+        private List<HistorySongModel> _history;
+
+        private int _selectedPivot;
 
         private bool _radioLoaded;
+        private bool _isHistoryLoading;
         private int _timerHours;
         private int _timerMinutes;
         private Timer _stopPlaybackTimer;
@@ -118,6 +122,18 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _timerMinutes, value); }
         }
 
+        public int SelectedPivot
+        {
+            get { return _selectedPivot; }
+            set { Set(ref _selectedPivot, value); }
+        }
+
+        public bool IsHistoryLoading
+        {
+            get { return _isHistoryLoading; }
+            set { Set(ref _isHistoryLoading, value); }
+        }
+
         public Timer StopPlaybackTimer
         {
             get { return _stopPlaybackTimer;}
@@ -136,11 +152,19 @@ namespace OnRadio.App.ViewModels
             set { Set(ref _radioInfo, value); }
         }
 
+        public List<HistorySongModel> History
+        {
+            get { return _history;}
+            set { Set(ref _history, value); }
+        }
+
         public PlaybackSessionViewModel PlaybackSession { get; private set; }
 
         public ToggleRadioPinCommand ToggleRadioPinCommand { get; set; }
 
         public FavoriteRadioCommand FavoriteRadioCommand { get; set; }
+
+        public LoadHistoryCommand LoadHistoryCommand { get; set; }
 
         public PlayerViewModel(IMusicService musicService, PlaybackService playbackService, ITileManager tileManager, INavigationService navigationService,
             MediaNotify mediaNotify, LastRadiosStorage lastRadiosStorage, ToggleRadioPinCommand toggleRadioPinCommand, FavoriteRadioCommand favoriteRadioCommand)
@@ -153,6 +177,7 @@ namespace OnRadio.App.ViewModels
             _lastRadiosStorage = lastRadiosStorage;
             ToggleRadioPinCommand = toggleRadioPinCommand;
             FavoriteRadioCommand = favoriteRadioCommand;
+            LoadHistoryCommand = new LoadHistoryCommand(musicService, this);
 
             PlaybackSession = new PlaybackSessionViewModel(playbackService.Player.PlaybackSession);
             _mediaNotify.MediaUpdated += BackgroundMediaUpdate;
@@ -256,6 +281,8 @@ namespace OnRadio.App.ViewModels
         {
             Information = null;
             Radio = null;
+            RadioInfo = null;
+            History = null;
             _radioLoaded = false;
 
             Loaded = false;

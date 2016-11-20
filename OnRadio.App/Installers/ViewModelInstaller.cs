@@ -14,6 +14,7 @@ namespace OnRadio.App.Installers
 
             builder.RegisterType<ToggleRadioPinCommand>();
             builder.RegisterType<FavoriteRadioCommand>();
+            builder.RegisterType<LoadHistoryCommand>();
         }
     }
 }

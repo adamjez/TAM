@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="BackgroundApp.cs" />
     <Compile Include="Commands\FavoriteRadioCommand.cs" />
+    <Compile Include="Commands\LoadHistoryCommand.cs" />
     <Compile Include="Commands\ToggleRadioPinCommand.cs" />
     <Compile Include="Common\DesignTimeViewModelLocator.cs" />
     <Compile Include="Common\MvvmPage.cs" />
