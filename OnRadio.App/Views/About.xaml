@@ -26,7 +26,7 @@
         </DataTemplate>
     </common:MvvmPage.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,5,5,5">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,5,10,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
