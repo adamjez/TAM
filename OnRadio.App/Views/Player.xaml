@@ -27,6 +27,7 @@
         <converters:BufferingToVisibilityConverter x:Key="BufferingToVisibilityConverter"/>
         <converters:PlaybackStateToEnabledConverter x:Key="PlaybackStateToEnabledConverter"/>
         <converters:ListStreamQualityConverter x:Key="ListStreamQualityConverter"/>
+        <converters:TimeToRelativeTimeConventer x:Key="TimeToRelativeTimeConventer"/>
         <converters:EmptyCollectionVisibilityConverter x:Key="EmptyCollectionVisibilityConverter"/>
         
         <DataTemplate x:Key="TimeValuesDataTemplate">
@@ -135,7 +136,7 @@
                                TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold" Foreground="White"/>
                     <TextBlock Text="{x:Bind Artist}"
                                    Style="{StaticResource BodyTextBlockStyle}" Foreground="White"/>
-                    <TextBlock Text="{x:Bind PlayedAt}"
+                    <TextBlock Text="{x:Bind PlayedAt, Converter={StaticResource TimeToRelativeTimeConventer}}" 
                                    Style="{StaticResource BodyTextBlockStyle}" FontFamily="Segoe UI Semibold" Foreground="White"/>
                 </StackPanel>
             </StackPanel>

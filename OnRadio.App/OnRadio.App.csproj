@@ -126,6 +126,7 @@
     <Compile Include="Converters\PlayIconConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\StringToUriConverter.cs" />
+    <Compile Include="Converters\TimeToRelativeTimeConventer.cs" />
     <Compile Include="Exceptions\AppException.cs" />
     <Compile Include="Exceptions\RadioNotFoundException.cs" />
     <Compile Include="Helpers\CompositionImageBrush.cs" />
