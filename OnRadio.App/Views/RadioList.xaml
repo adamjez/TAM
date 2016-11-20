@@ -64,7 +64,7 @@
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
                     </ListView>
-                    <TextBlock Text="Tady se objeví historie poslouchaných rádii" 
+                    <TextBlock Text="Tady se objeví historie poslouchaných rádií" 
                                Style="{StaticResource TitleTextBlockStyle}" 
                                Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" 
                                TextAlignment="Center"

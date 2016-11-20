@@ -49,7 +49,7 @@ namespace OnRadio.App.Common
 
         public async Task ShowNetworkErroDialog()
         {
-            MessageDialog dialog = new MessageDialog("Bohužel není dostupné potřebné internetové připojení." +
+            MessageDialog dialog = new MessageDialog("Potřebné internetové připojení bohužel není dostupné." +
                                                      " Zkontrojte nastavení sítě a spusťte aplikaci znovu.", "Nastala chyba");
             dialog.Commands.Add(new UICommand("Rozumím", CloseApplication));
             await DispatcherHelper.ExecuteOnUIThreadAsync(() => dialog.ShowAsync());
