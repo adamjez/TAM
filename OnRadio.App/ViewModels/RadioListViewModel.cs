@@ -112,7 +112,15 @@ namespace OnRadio.App.ViewModels
             IEnumerable<RadioModel> radios = RadioList;
             if (!string.IsNullOrEmpty(SearchString))
             {
-                radios = radios.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()));
+                if (SearchString.StartsWith("#") && SearchString.Length > 1)
+                {
+                     var filterStyle = SearchString.Remove(0, 1).ToLower();
+                     radios = radios.Where(radio => radio.Styles != null && radio.Styles.Select(style => style.ToLower()).Contains(filterStyle));
+                }
+                else
+                {
+                    radios = radios.Where(radio => radio.Title.ToLower().Contains(SearchString.ToLower()));
+                }
             }
 
             radios = SelectedSortBy == SortBy.Popularity

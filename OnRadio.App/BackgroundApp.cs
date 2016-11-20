@@ -10,6 +10,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp;
 using OnRadio.App.Common;
+using OnRadio.App.Exceptions;
 
 namespace OnRadio.App
 {
@@ -126,7 +127,7 @@ namespace OnRadio.App
 
         private async void App_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
-            if (e.Exception is HttpRequestException)
+            if (e.Exception is HttpRequestException || e.Exception is AppException)
             {
                 // Try to display dialog
                 Frame rootFrame = Window.Current.Content as Frame;
@@ -137,7 +138,15 @@ namespace OnRadio.App
                 {
                     e.Handled = true;
 
-                    await page.ShowErroDialog();
+                    if (e.Exception is HttpRequestException)
+                    {
+                        await page.ShowNetworkErroDialog();
+                    }
+                    else
+                    {
+                        var exc = (AppException) e.Exception;
+                        await page.ShowErroDialog(exc.UserFriendlyMessage, exc.Title);
+                    }
                 }
             }
         }

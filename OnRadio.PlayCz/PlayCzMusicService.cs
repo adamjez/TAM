@@ -47,7 +47,8 @@ namespace OnRadio.PlayCz
                     Url = item.Value.Weburl,
                     LogoUrl = item.Value.Logo,
                     Listenters = item.Value.Listeners,
-                    OnAir = item.Value.Onair
+                    OnAir = item.Value.Onair,
+                    Styles = item.Value.Styles
                 };
 
                 radios.Add(radio);

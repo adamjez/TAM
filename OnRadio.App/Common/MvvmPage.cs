@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -9,6 +7,7 @@ using OnRadio.App.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp;
+using OnRadio.App.Views;
 
 namespace OnRadio.App.Common
 {
@@ -48,17 +47,29 @@ namespace OnRadio.App.Common
             base.OnNavigatedTo(e);
         }
 
-        public async Task ShowErroDialog()
+        public async Task ShowNetworkErroDialog()
         {
-            MessageDialog dialog = new MessageDialog("Bohužel není dostupné potřebné internetové připojení." +
+            MessageDialog dialog = new MessageDialog("Potřebné internetové připojení bohužel není dostupné." +
                                                      " Zkontrojte nastavení sítě a spusťte aplikaci znovu.", "Nastala chyba");
             dialog.Commands.Add(new UICommand("Rozumím", CloseApplication));
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() => dialog.ShowAsync());
+        }
+        public async Task ShowErroDialog(string message, string title)
+        {
+            MessageDialog dialog = new MessageDialog(message, title);
+            dialog.Commands.Add(new UICommand("Rozumím", NavigateToRadioList));
             await DispatcherHelper.ExecuteOnUIThreadAsync(() => dialog.ShowAsync());
         }
 
         private void CloseApplication(IUICommand command)
         {
             CoreApplication.Exit();
+        }
+
+        private void NavigateToRadioList(IUICommand command)
+        {
+            Frame.Navigate(typeof(RadioList));
+            Frame.BackStack.Clear();
         }
     }
 }

@@ -7,9 +7,99 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="using:OnRadio.App.Common"
     mc:Ignorable="d">
+    
+    <common:MvvmPage.Resources>
+        <DataTemplate x:Key="AuthorsListTemplate">
+            <Grid Margin="10,5,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0">
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="&#xE77B;" FontSize="20" FontFamily="Segoe MDL2 Assets"/>
+                </Border>
+                <Border Grid.Column="2">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding}" FontSize="20"/>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </common:MvvmPage.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,5,10,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" FontSize="32">O aplikaci</TextBlock>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" FontSize="24" x:Name="AppName">Název aplikace</TextBlock>
+        <TextBlock Grid.Row="1" FontSize="20" x:Name="Version">Verze</TextBlock>
+        </Grid>
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" FontSize="24">Autoři</TextBlock>
+            <ItemsControl Grid.Row="1" ItemTemplate="{StaticResource AuthorsListTemplate}">
+                <ItemsControl.Items>
+                    <x:String>Adam Jež</x:String>
+                    <x:String>Ivan Ševčík</x:String>
+                    <x:String>Ladislav Šulák</x:String>
+                    <x:String>Petr Švaňa</x:String>
+                </ItemsControl.Items>
+            </ItemsControl>
+        </Grid>
+        <Grid Grid.Row="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Vytvořeno ve spolupráci s" FontSize="24"/>
+            <Button Grid.Row="1" 
+                    Click="OpenPlayCzWeb"
+                    Background="Transparent" 
+                    HorizontalContentAlignment="Center" HorizontalAlignment="Stretch">
+                <Image  Source="/Assets/PlayCz.png" MaxHeight="60"/>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" Grid.Column="0">
+                <TextBlock Text="Líbi se Vám aplikace?" FontSize="20" VerticalAlignment="Center"/>
+            </Border>
+            <Border Grid.Row="2" Grid.Column="0">
+                <TextBlock Text="Vadí Vám něco?" FontSize="20" VerticalAlignment="Center"/>
+            </Border>
+            <Button Grid.Row="0" Grid.Column="2" Content="Ohodnoťte ji"
+                    Click="OpenRateApp"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+            <Button Grid.Row="2" Grid.Column="2" Content="Napište nám"
+                    Click="SendFeedback"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+        </Grid>
     </Grid>
 </common:MvvmPage>
 

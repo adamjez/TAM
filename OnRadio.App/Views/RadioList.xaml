@@ -20,8 +20,13 @@
         <DataTemplate x:Key="RadioListTemplate" x:DataType="models:RadioModel">
             <StackPanel Orientation="Horizontal" Margin="0 6 0 6" Holding="UIElement_OnHolding">
                 <Image Source="{x:Bind LogoUrl}" Width="45px" Height="45px"></Image>
-                <TextBlock Text="{x:Bind Title}" FontWeight="Medium" Padding="8 0 0 0"
+                <StackPanel Padding="8 0 0 0">
+                    <TextBlock Text="{x:Bind Title}" FontWeight="Medium" 
                            TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold"/>
+                    <TextBlock Text="{x:Bind Styles, Converter={StaticResource CollectionToHashtagStringConverter}}"
+                               Style="{StaticResource BodyTextBlockStyle}" Foreground="Gray"/>
+                </StackPanel>
+            
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem x:Name="EditButton" Text="Favorite"/>
@@ -59,7 +64,7 @@
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
                     </ListView>
-                    <TextBlock Text="Tady se objeví historie poslouchaných rádii" 
+                    <TextBlock Text="Tady se objeví historie poslouchaných rádií" 
                                Style="{StaticResource TitleTextBlockStyle}" 
                                Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" 
                                TextAlignment="Center"

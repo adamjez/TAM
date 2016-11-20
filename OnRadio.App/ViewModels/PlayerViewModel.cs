@@ -16,6 +16,7 @@ using OnRadio.BL.Models;
 using OnRadio.DAL;
 using Microsoft.Toolkit.Uwp;
 using OnRadio.App.Commands;
+using OnRadio.App.Exceptions;
 using DispatcherHelper = Microsoft.Toolkit.Uwp.DispatcherHelper;
 
 namespace OnRadio.App.ViewModels
@@ -316,7 +317,7 @@ namespace OnRadio.App.ViewModels
 
             // ToDo: handle this a show this in proper way
             if (Radio == null)
-                throw new ArgumentException("Radio doesn't exists");
+                throw new RadioNotFoundException();
 
             Radio.IsFavorite = LocalDatabaseStorage.IsFavorite(Radio.Id);
 
