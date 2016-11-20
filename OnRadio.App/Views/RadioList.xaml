@@ -105,8 +105,8 @@
                             </Grid.RowDefinitions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                                    <ColumnDefinition Width="11*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <AutoSuggestBox Grid.Column="0" Text="{Binding Path=SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PlaceholderText="Hledat rádio" QueryIcon="Find" Margin="4">
@@ -118,7 +118,7 @@
                                 </AutoSuggestBox>
 
                                 <ComboBox Grid.Column="1" Margin="4" HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedSortBy, Mode=TwoWay}"
-                                          ItemsSource="{Binding SortBySource, Mode=OneTime}" PlaceholderText="Sort By">
+                                          ItemsSource="{Binding SortBySource, Mode=OneTime}" PlaceholderText="Řadit podle">
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="SelectionChanged">
                                             <core:InvokeCommandAction Command="{Binding Path=FilterListCommand}" />

@@ -175,8 +175,8 @@
                             <x:Int32>45</x:Int32>
                         </ListView.Items>
                     </ListView>
-                    <TextBlock Grid.Column="0" Grid.Row="1" FontSize="24">Hodín</TextBlock>
-                    <TextBlock Grid.Column="1" Grid.Row="1" FontSize="24">Minút</TextBlock>
+                    <TextBlock Grid.Column="0" Grid.Row="1" FontSize="24">Hodin</TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="1" FontSize="24">Minut</TextBlock>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -199,12 +199,10 @@
         <Grid Grid.Row="0" Grid.RowSpan="3">
             <Image Source="{Binding Radio.LogoUrl}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:Blur
-                            x:Name="BlurBehavior" 
-                            Value="10" 
-                            Duration="2000" 
-                            Delay="0" 
-                            AutomaticallyStart="True" />
+                    <behaviors:Blur Value="10" 
+                                    Duration="2000" 
+                                    Delay="0" 
+                                    AutomaticallyStart="True" />
                 </interactivity:Interaction.Behaviors>
             </Image>
         </Grid>

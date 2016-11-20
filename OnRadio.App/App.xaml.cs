@@ -76,8 +76,8 @@ namespace OnRadio.App
         {
             CreateRootFrame(state, arguments, prelaunchActivated);
             LocalDatabaseStorage.CreateDatabase();
-            SaveRoamingSettings();
-            LoadRoamingSettings();
+            //SaveRoamingSettings();
+            //LoadRoamingSettings();
         }
 
 

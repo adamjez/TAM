@@ -3,6 +3,6 @@
     public enum SortBy
     {
         Popularity,
-        Alphabeticaly
+        Abecedy
     }
 }

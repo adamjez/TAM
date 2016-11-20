@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Http;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.System;
 using Windows.UI.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp;
+using OnRadio.App.Common;
 
 namespace OnRadio.App
 {
@@ -115,6 +120,26 @@ namespace OnRadio.App
             // Subscribe to regular lifecycle events to display a toast notification
             Suspending += App_Suspending;
             Resuming += App_Resuming;
+
+            UnhandledException += App_UnhandledException;
+        }
+
+        private async void App_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.Exception is HttpRequestException)
+            {
+                // Try to display dialog
+                Frame rootFrame = Window.Current.Content as Frame;
+
+                var page = rootFrame?.Content as MvvmPage;
+
+                if (page != null)
+                {
+                    e.Handled = true;
+
+                    await page.ShowErroDialog();
+                }
+            }
         }
 
         /// <summary>
