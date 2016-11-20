@@ -7,7 +7,6 @@ using OnRadio.BL.Services;
 using Windows.Media.Playback;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Views;
 using OnRadio.App.Messages;
 using OnRadio.App.Views;
@@ -17,6 +16,7 @@ using OnRadio.BL.Models;
 using OnRadio.DAL;
 using Microsoft.Toolkit.Uwp;
 using OnRadio.App.Commands;
+using DispatcherHelper = Microsoft.Toolkit.Uwp.DispatcherHelper;
 
 namespace OnRadio.App.ViewModels
 {
@@ -393,7 +393,7 @@ namespace OnRadio.App.ViewModels
 
             var song = await _musicService.GetOnAirAsync(Radio.Id);
 
-            await DispatcherHelper.RunAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 Information = song.CreateMusicInformation();
             });
@@ -469,9 +469,9 @@ namespace OnRadio.App.ViewModels
             StopPlaybackTimer = null;
         }
 
-        private void TimerStopPlayback(object state)
+        private async void TimerStopPlayback(object state)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(
+            await DispatcherHelper.ExecuteOnUIThreadAsync(
                 () =>
                 {
                     _playbackService.Stop();

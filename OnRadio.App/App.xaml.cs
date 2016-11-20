@@ -1,5 +1,4 @@
-﻿using OnRadio.App.Installers;
-using System;
+﻿using System;
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -10,15 +9,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Autofac;
-using GalaSoft.MvvmLight.Threading;
-using GalaSoft.MvvmLight.Views;
 using OnRadio.App.ViewModels;
 using OnRadio.App.Views;
 using OnRadio.App.Common;
 using OnRadio.App.Services;
 using OnRadio.DAL;
-using Windows.Foundation;
 using Microsoft.Toolkit.Uwp;
 
 namespace OnRadio.App
@@ -79,14 +74,10 @@ namespace OnRadio.App
 
         private void OnLaunchCore(ApplicationExecutionState state, string arguments, bool prelaunchActivated)
         {
-            DispatcherHelper.Initialize();
-
             CreateRootFrame(state, arguments, prelaunchActivated);
             LocalDatabaseStorage.CreateDatabase();
             SaveRoamingSettings();
             LoadRoamingSettings();
-
-
         }
 
 

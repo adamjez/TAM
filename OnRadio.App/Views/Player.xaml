@@ -11,6 +11,7 @@
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls1="using:OnRadio.App.Controls"
+    xmlns:models="using:OnRadio.BL.Models"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
     mc:Ignorable="d">
@@ -30,8 +31,98 @@
             <TextBlock Text="{Binding}" FontSize="24"/>
         </DataTemplate>
 
+        <Style TargetType="TextBlock" x:Key="TextBlockRadioInfoStyle">
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0 10 0 10" />
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="SymbolTextBlockRadioInfoStyle" BasedOn="{StaticResource TextBlockRadioInfoStyle}">
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="24"/>
+        </Style>
+
         <DataTemplate x:Key="QualityListItem">
             <TextBlock Text="{Binding Converter={StaticResource ListStreamQualityConverter}}" />
+        </DataTemplate>
+        
+        <DataTemplate x:Key="RadioInfoPivotItem" x:DataType="models:RadioInfoModel">
+            <Grid Background="{StaticResource BackgroundColorBrush}" VerticalAlignment="Center">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="&#xE12B;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="0" Grid.Column="1">
+                    <Hyperlink NavigateUri="{x:Bind Web1, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Web1}"/>
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="&#xE717;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1">
+                    <Hyperlink NavigateUri="{x:Bind Phone1, Converter={StaticResource TelToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Phone1}" />
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="&#xE119;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}" />
+                <TextBlock Grid.Row="2" Grid.Column="1">
+                    <Hyperlink NavigateUri="{x:Bind Email1, Converter={StaticResource EmailToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Email1}" />
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="&#xE80F;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1">
+                    <Run Text="{x:Bind Address}"/>
+                </TextBlock>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Facebook" Style="{StaticResource TextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="4" Grid.Column="1">
+                    <Hyperlink NavigateUri="{x:Bind Facebook, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Facebook}" />
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Twitter" Style="{StaticResource TextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="5" Grid.Column="1">
+                    <Hyperlink NavigateUri="{x:Bind Twitter, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Twitter}"/>
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Google+" Style="{StaticResource TextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="6" Grid.Column="1">
+                    <Hyperlink NavigateUri="{x:Bind Gplus, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Gplus}"/>
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Row="7" Grid.Column="0" Text="Youtube" Style="{StaticResource TextBlockRadioInfoStyle}"/>
+                <TextBlock Grid.Row="7" Grid.Column="1" TextTrimming="CharacterEllipsis">
+                    <Hyperlink NavigateUri="{x:Bind Youtube, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                        <Run Text="{x:Bind Youtube}"/>
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
         </DataTemplate>
     </common:MvvmPage.Resources>
 
@@ -134,7 +225,7 @@
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <Grid>
-                        <TextBlock Text="{Binding}" MinWidth="70" TextAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="{Binding}" MinWidth="70" TextAlignment="Center" Foreground="White" FontFamily="Segoe MDL2 Assets"/>
                     </Grid>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
@@ -192,76 +283,10 @@
                 </Grid>
             </PivotItem>
 
-            <PivotItem Margin="0">
+            <PivotItem Margin="0" ContentTemplate="{StaticResource RadioInfoPivotItem}" DataContext="{Binding RadioInfo}">
                 <PivotItem.Header>
                     &#xE946;
                 </PivotItem.Header>
-                <Grid  Background="{StaticResource BackgroundColorBrush}" >
-                    <Grid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="White"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"></ColumnDefinition>
-                        <ColumnDefinition Width="5*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="&#xE12B;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Web1}"/>
-                        <LineBreak/>
-                        <Run Text="{Binding RadioInfo.Web2}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="&#xE717;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Phone1}"/>
-                        <LineBreak/>
-                        <Run Text="{Binding RadioInfo.Phone2}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="&#xE119;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Email1}"/>
-                        <LineBreak/>
-                        <Run Text="{Binding RadioInfo.Email2}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="&#xE80F;" TextAlignment="Center" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Address}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Facebook" TextAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Facebook}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Twitter" TextAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Twitter}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Google plus" TextAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Grid.Row="6" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Gplus}"/>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Youtube" TextAlignment="Center" FontWeight="Bold"/>
-                    <TextBlock Grid.Row="7" Grid.Column="1">
-                        <Run Text="{Binding RadioInfo.Youtube}"/>
-                    </TextBlock>
-                </Grid>
             </PivotItem>
 
             <PivotItem Margin="0">

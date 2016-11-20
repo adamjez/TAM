@@ -1,7 +1,8 @@
 ﻿using System;
 using Windows.Media.Playback;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Threading;
+using Microsoft.Toolkit.Uwp;
+
 
 namespace OnRadio.App.ViewModels
 {
@@ -23,7 +24,7 @@ namespace OnRadio.App.ViewModels
         {
             if (disposed) return;
 
-            await DispatcherHelper.RunAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 if (disposed) return;
                 RaisePropertyChanged(nameof(PlaybackState));
