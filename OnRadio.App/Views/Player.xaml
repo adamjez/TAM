@@ -137,7 +137,7 @@
                     <TextBlock Text="{x:Bind Artist}"
                                    Style="{StaticResource BodyTextBlockStyle}" Foreground="White"/>
                     <TextBlock Text="{x:Bind PlayedAt, Converter={StaticResource TimeToRelativeTimeConventer}}" 
-                                   Style="{StaticResource BodyTextBlockStyle}" FontFamily="Segoe UI Semibold" Foreground="White"/>
+                                   Style="{StaticResource BodyTextBlockStyle}" FontFamily="Segoe UI Semibold" Foreground="LightGray"/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
