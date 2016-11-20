@@ -27,12 +27,12 @@
                                Style="{StaticResource BodyTextBlockStyle}" Foreground="Gray"/>
                 </StackPanel>
             
-                <FlyoutBase.AttachedFlyout>
+                <!--<FlyoutBase.AttachedFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem x:Name="EditButton" Text="Favorite"/>
                         <MenuFlyoutItem x:Name="DeleteButton" Text="Pin"/>
                     </MenuFlyout>
-                </FlyoutBase.AttachedFlyout>
+                </FlyoutBase.AttachedFlyout>-->
             </StackPanel>
         </DataTemplate>
         <converters:EmptyCollectionVisibilityConverter x:Key="EmptyCollectionVisibilityConverter"/>
