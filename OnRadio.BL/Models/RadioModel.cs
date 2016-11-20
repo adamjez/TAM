@@ -16,6 +16,8 @@ namespace OnRadio.BL.Models
         public string Id { get; set; }
         public string LogoUrl { get; set; }
         public List<StreamModel> Streams { get; set; }
+        public IList<string> Styles { get; set; }
+
         public int Listenters { get; set; }
         public bool OnAir { get; set; }
 

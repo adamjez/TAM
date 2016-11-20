@@ -17,6 +17,7 @@
             <converters:StringToUriConverter x:Key="StringToUriConverter"/>
             <converters:EmailToUriConverter x:Key="EmailToUriConverter"/>
             <converters:TelToUriConverter x:Key="TelToUriConverter"/>
+            <converters:CollectionToHashtagStringConverter x:Key="CollectionToHashtagStringConverter"/>
             
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/StyleResource.xaml" />

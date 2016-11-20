@@ -28,9 +28,9 @@ namespace OnRadio.PlayCz
         public bool Onair { get; set; }
 
         [JsonProperty(PropertyName = "style")]
-        public IList<string> Style { get; set; }
+        public IList<string> Styles { get; set; }
 
         [JsonProperty(PropertyName = "region")]
-        public IList<string> Region { get; set; }
+        public IList<string> Regions { get; set; }
     }
 }

@@ -113,6 +113,7 @@
       <DependentUpon>MiniPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BufferingToVisibilityConverter.cs" />
+    <Compile Include="Converters\CollectionToHashtagStringConverter.cs" />
     <Compile Include="Converters\EmptyCollectionVisibilityConverter.cs" />
     <Compile Include="Converters\ListStreamQualityConverter.cs" />
     <Compile Include="Converters\PlaybackStateToEnabledConverter.cs" />
@@ -124,6 +125,8 @@
     <Compile Include="Converters\PlayIconConverter.cs" />
     <Compile Include="Converters\IsNullConverter.cs" />
     <Compile Include="Converters\StringToUriConverter.cs" />
+    <Compile Include="Exceptions\AppException.cs" />
+    <Compile Include="Exceptions\RadioNotFoundException.cs" />
     <Compile Include="Helpers\CompositionImageBrush.cs" />
     <Compile Include="Installers\IoCInstaller.cs" />
     <Compile Include="Installers\ViewModelInstaller.cs" />
