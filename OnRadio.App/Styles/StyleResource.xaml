@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <SolidColorBrush  Color="#000000" Opacity="0.5" x:Key="BackgroundColorBrush" />
+    <SolidColorBrush  Color="#000000" Opacity="0.7" x:Key="DarkerBackgroundColorBrush" />
+
 
     <Style x:Key="PivotStyleDynamicHeader" TargetType="Pivot">
         <Setter Property="Margin" Value="0"/>

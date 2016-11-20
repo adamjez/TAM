@@ -280,6 +280,7 @@ namespace OnRadio.App.ViewModels
 
         private void Clear()
         {
+            SelectedPivot = 0;
             Information = null;
             Radio = null;
             RadioInfo = null;
