@@ -41,7 +41,7 @@ namespace OnRadio.App.Views
 
         private async void SendFeedback(object sender, RoutedEventArgs e)
         {
-            const string emailAddress = "mailto:?to=ivan-sevcik@hotmail.com&subject=Nazor na aplikaci";
+            const string emailAddress = "mailto:?to=on-radio@outlook.com&subject=Nazor na aplikaci";
             var uri = new Uri(emailAddress);
 
             await Launcher.LaunchUriAsync(uri);

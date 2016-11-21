@@ -26,6 +26,16 @@
         </DataTemplate>
     </common:MvvmPage.Resources>
 
+    <common:MvvmPage.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <CommonNavigationTransitionInfo/>
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </common:MvvmPage.Transitions>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,5,10,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
