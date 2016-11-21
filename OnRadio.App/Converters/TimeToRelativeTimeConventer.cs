@@ -21,7 +21,7 @@ namespace OnRadio.App.Converters
             if (delta < 2 * minute)
                 return "před minutou";
 
-            if (delta < 90 * minute)
+            if (delta < 60 * minute)
                 return "před " + ts.Minutes + " minutami";
 
             if (delta < 2*hour)
