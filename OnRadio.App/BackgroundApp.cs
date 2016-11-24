@@ -127,7 +127,9 @@ namespace OnRadio.App
 
         private async void App_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
-            if (e.Exception is HttpRequestException || e.Exception is AppException)
+            var httpExc = e.Exception as HttpRequestException;
+            var appExc = e.Exception as AppException;
+            if (httpExc != null || appExc != null)
             {
                 // Try to display dialog
                 Frame rootFrame = Window.Current.Content as Frame;
@@ -138,14 +140,13 @@ namespace OnRadio.App
                 {
                     e.Handled = true;
 
-                    if (e.Exception is HttpRequestException)
+                    if (httpExc != null)
                     {
                         await page.ShowNetworkErroDialog();
                     }
-                    else
+                    else if (appExc != null)
                     {
-                        var exc = (AppException) e.Exception;
-                        await page.ShowErroDialog(exc.UserFriendlyMessage, exc.Title);
+                        await page.ShowErroDialog(appExc.UserFriendlyMessage, appExc.Title);
                     }
                 }
             }

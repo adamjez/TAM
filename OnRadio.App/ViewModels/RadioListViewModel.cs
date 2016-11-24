@@ -132,26 +132,27 @@ namespace OnRadio.App.ViewModels
 
         protected override async Task LoadData()
         {
-            RadioList = await _musicService.GetRadiosAsync();
+            var favorites = LocalDatabaseStorage.GetFavorites();
+            var recents = (await _lastRadiosStorage.Get()).ToList();
 
-            AllRadioList = new ObservableCollection<RadioModel>(RadioList);
-            FavoriteRadioList = CreateFavoriteRadioList(RadioList);
-            RecentRadioList = await CreateRecentRadioList(RadioList);
-
-            if (FavoriteRadioList.Any())
+            if (favorites.Any())
             {
                 ActiveListIndex = (int)PivotItemType.Favorite;
             }
-            else if (RecentRadioList.Any())
+            else if (recents.Any())
             {
                 ActiveListIndex = (int)PivotItemType.Recent;
             }
+
+            RadioList = await _musicService.GetRadiosAsync();
+
+            AllRadioList = new ObservableCollection<RadioModel>(RadioList);
+            FavoriteRadioList = CreateFavoriteRadioList(favorites, RadioList);
+            RecentRadioList = CreateRecentRadioList(recents, RadioList);
         }
 
-        private ObservableCollection<RadioModel> CreateFavoriteRadioList(List<RadioModel> items)
+        private ObservableCollection<RadioModel> CreateFavoriteRadioList(List<FavoriteRadio> favList, List<RadioModel> items)
         {
-            List<FavoriteRadio> favList = LocalDatabaseStorage.GetFavorites();
-
             var result = new ObservableCollection<RadioModel>(
                 items.Where(radio => favList.Select(f => f.RadioId).Contains(radio.Id)));
 
@@ -163,10 +164,8 @@ namespace OnRadio.App.ViewModels
             return result;
         }
 
-        private async Task<ObservableCollection<RadioModel>> CreateRecentRadioList(List<RadioModel> items)
+        private ObservableCollection<RadioModel> CreateRecentRadioList(IEnumerable<string> recentRadios, List<RadioModel> items)
         {
-            var recentRadios = await _lastRadiosStorage.Get();
-
             var result = new ObservableCollection<RadioModel>();
             foreach (var radioId in recentRadios)
             {
