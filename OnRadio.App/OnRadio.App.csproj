@@ -163,7 +163,6 @@
   <ItemGroup>
     <Content Include="Assets\AlbumPlaceholder.png" />
     <Content Include="Assets\Logo\logo.png" />
-    <Content Include="Assets\Logo\logo.svg" />
     <Content Include="Assets\Logo\NewStoreLogo.scale-100.png" />
     <Content Include="Assets\Logo\NewStoreLogo.scale-125.png" />
     <Content Include="Assets\Logo\NewStoreLogo.scale-150.png" />
@@ -204,6 +203,7 @@
     <Content Include="Assets\Logo\Square71x71Logo.scale-150.png" />
     <Content Include="Assets\Logo\Square71x71Logo.scale-200.png" />
     <Content Include="Assets\Logo\Square71x71Logo.scale-400.png" />
+    <Content Include="Assets\Logo\logo.svg" />
     <Content Include="Assets\Logo\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Logo\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Logo\Wide310x150Logo.scale-150.png" />
