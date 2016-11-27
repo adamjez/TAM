@@ -7,6 +7,7 @@
     <SolidColorBrush  Color="#AAAAAA" Opacity="1.0" x:Key="PlayerDisabledColorBrush" />
     <SolidColorBrush  Color="#888888" Opacity="1.0" x:Key="PlayerSelectionBackgroundBrush" />
     <SolidColorBrush  Color="#666666" Opacity="1.0" x:Key="PlayerSelectionBorderBrush" />
+    <SolidColorBrush  Color="#000000" Opacity="0.7" x:Key="DarkerBackgroundColorBrush" />
 
     <Style x:Key="PivotStyleDynamicHeader" TargetType="Pivot">
         <Setter Property="Margin" Value="0"/>

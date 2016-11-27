@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Input;
 using OnRadio.App.ViewModels;
 using OnRadio.BL.Interfaces;
@@ -8,7 +7,7 @@ namespace OnRadio.App.Commands
 {
     public class LoadHistoryCommand : ICommand
     {
-        private bool _canLoad = true;
+        private bool _isLoading;
 
         private IMusicService _musicService;
 
@@ -22,30 +21,26 @@ namespace OnRadio.App.Commands
 
         public bool CanExecute(object parameter)
         {
-            int Index = (int) parameter;
-            return Index == 2 && CanLoad;
+            int index = (int) parameter;
+            return index == 1 && !IsLoading;
         }
 
         public async void Execute(object parameter)
         {
-            CanLoad = false;
-            _playerViewModel.IsHistoryLoading = true;
+            IsLoading = true;
 
-            var hist = await _musicService.GetOnAirHistoryAsync(_playerViewModel.Radio.Id);
+            _playerViewModel.History = await _musicService.GetOnAirHistoryAsync(_playerViewModel.Radio.Id);
 
-            _playerViewModel.History = hist;
-            _playerViewModel.IsHistoryLoading = false;
-
-            CanLoad = true;
-
+            IsLoading = false;
         }
 
-        public bool CanLoad
+        public bool IsLoading
         {
-            get { return _canLoad; }
+            get { return _isLoading; }
             set
             {
-                _canLoad = value;
+                _isLoading = value;
+                _playerViewModel.IsHistoryLoading = value;
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
         }

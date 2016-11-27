@@ -27,6 +27,7 @@
         <converters:BufferingToVisibilityConverter x:Key="BufferingToVisibilityConverter"/>
         <converters:PlaybackStateToEnabledConverter x:Key="PlaybackStateToEnabledConverter"/>
         <converters:ListStreamQualityConverter x:Key="ListStreamQualityConverter"/>
+        <converters:TimeToRelativeTimeConventer x:Key="TimeToRelativeTimeConventer"/>
         <converters:EmptyCollectionVisibilityConverter x:Key="EmptyCollectionVisibilityConverter"/>
         
         <DataTemplate x:Key="TimeValuesDataTemplate">
@@ -50,7 +51,7 @@
         </DataTemplate>
         
         <DataTemplate x:Key="RadioInfoPivotItem" x:DataType="models:RadioInfoModel">
-            <Grid Background="{StaticResource BackgroundColorBrush}" VerticalAlignment="Center">
+            <Grid Background="{StaticResource DarkerBackgroundColorBrush}" VerticalAlignment="Center">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="Foreground" Value="White" />
@@ -73,56 +74,56 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="&#xE12B;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="0" Grid.Column="1">
-                    <Hyperlink NavigateUri="{x:Bind Web1, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Web1}"/>
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Web1, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Web1}"/>
+                </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="&#xE717;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="1" Grid.Column="1">
-                    <Hyperlink NavigateUri="{x:Bind Phone1, Converter={StaticResource TelToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Phone1}" />
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Phone1, Converter={StaticResource TelToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Phone1}" />
+                </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="&#xE119;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}" />
                 <TextBlock Grid.Row="2" Grid.Column="1">
-                    <Hyperlink NavigateUri="{x:Bind Email1, Converter={StaticResource EmailToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Email1}" />
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Email1, Converter={StaticResource EmailToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Email1}" />
+                </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="&#xE80F;" Style="{StaticResource SymbolTextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="3" Grid.Column="1">
-                    <Run Text="{x:Bind Address}"/>
+                <Run Text="{x:Bind Address}"/>
                 </TextBlock>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Facebook" Style="{StaticResource TextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="4" Grid.Column="1">
-                    <Hyperlink NavigateUri="{x:Bind Facebook, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Facebook}" />
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Facebook, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Facebook}" />
+                </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Grid.Row="5" Grid.Column="0" Text="Twitter" Style="{StaticResource TextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="5" Grid.Column="1">
-                    <Hyperlink NavigateUri="{x:Bind Twitter, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Twitter}"/>
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Twitter, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Twitter}"/>
+                </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Grid.Row="6" Grid.Column="0" Text="Google+" Style="{StaticResource TextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="6" Grid.Column="1">
-                    <Hyperlink NavigateUri="{x:Bind Gplus, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Gplus}"/>
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Gplus, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Gplus}"/>
+                </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Grid.Row="7" Grid.Column="0" Text="YouTube" Style="{StaticResource TextBlockRadioInfoStyle}"/>
                 <TextBlock Grid.Row="7" Grid.Column="1" TextTrimming="CharacterEllipsis">
-                    <Hyperlink NavigateUri="{x:Bind Youtube, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                        <Run Text="{x:Bind Youtube}"/>
-                    </Hyperlink>
+                <Hyperlink NavigateUri="{x:Bind Youtube, Converter={StaticResource StringToUriConverter}}" Foreground="White">
+                    <Run Text="{x:Bind Youtube}"/>
+                </Hyperlink>
                 </TextBlock>
             </Grid>
         </DataTemplate>
@@ -135,8 +136,8 @@
                                TextTrimming="CharacterEllipsis" FontSize="16" FontFamily="Segoe UI Semibold" Foreground="White"/>
                     <TextBlock Text="{x:Bind Artist}"
                                    Style="{StaticResource BodyTextBlockStyle}" Foreground="White"/>
-                    <TextBlock Text="{x:Bind PlayedAt}"
-                                   Style="{StaticResource BodyTextBlockStyle}" FontFamily="Segoe UI Semibold" Foreground="White"/>
+                    <TextBlock Text="{x:Bind PlayedAt, Converter={StaticResource TimeToRelativeTimeConventer}}" 
+                                   Style="{StaticResource BodyTextBlockStyle}" FontFamily="Segoe UI Semibold" Foreground="LightGray"/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
@@ -232,9 +233,6 @@
                        Foreground="White"/>
         </Border>
 
-
-        <ProgressRing Grid.Row="1" IsActive="{Binding IsHistoryLoading}" Width="100" Height="100"></ProgressRing>
-
         <Pivot Grid.Row="1"
                SelectedIndex="{Binding SelectedPivot, Mode=TwoWay}" 
                HorizontalContentAlignment="Stretch"
@@ -306,21 +304,13 @@
                 </Grid>
             </PivotItem>
 
-            <PivotItem Margin="0" ContentTemplate="{StaticResource RadioInfoPivotItem}" DataContext="{Binding RadioInfo}">
-                <PivotItem.Header>
-                    &#xE946;
-                </PivotItem.Header>
-            </PivotItem>
-
             <PivotItem Margin="0">
                 <PivotItem.Header >
                     &#xE81C;
                 </PivotItem.Header>
-                <Grid Margin="0 25 0 25"  Background="{StaticResource BackgroundColorBrush}">
-                    <ScrollViewer>
-                        <ListView ItemsSource="{Binding History}" ItemTemplate="{StaticResource HistorySongItem}" IsItemClickEnabled="False"/>
-                    </ScrollViewer>
-                    <TextBlock Text="Funkce není pro toto rádio momentálně dostupná." 
+                <Grid Margin="0 32 0 32"  Background="{StaticResource DarkerBackgroundColorBrush}">
+                    <ListView ItemsSource="{Binding History}" ItemTemplate="{StaticResource HistorySongItem}" SelectionMode="None" IsItemClickEnabled="False"/>
+                    <TextBlock Text="Historie skladeb není pro toto rádio momentálně dostupná." 
                                Style="{StaticResource TitleTextBlockStyle}" 
                                Foreground="White" 
                                TextAlignment="Center"
@@ -328,7 +318,15 @@
                                VerticalAlignment="Center"
                                DataContext="{Binding History}"
                                Visibility="{Binding Count, Converter={StaticResource EmptyCollectionVisibilityConverter}}"/>
+                    <ProgressRing IsActive="{Binding IsHistoryLoading}" Width="100" Height="100" Foreground="White"></ProgressRing>
+
                 </Grid>
+            </PivotItem>
+
+            <PivotItem Margin="0" ContentTemplate="{StaticResource RadioInfoPivotItem}" DataContext="{Binding RadioInfo}">
+                <PivotItem.Header>
+                    &#xE946;
+                </PivotItem.Header>
             </PivotItem>
         </Pivot>
 

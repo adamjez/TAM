@@ -22,11 +22,11 @@ namespace OnRadio.App.Views
 
         private void UIElement_OnHolding(object sender, HoldingRoutedEventArgs e)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            // If you need the clicked element:
-            // Item whichOne = senderElement.DataContext as Item;
-            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
-            flyoutBase.ShowAt(senderElement);
+            //FrameworkElement senderElement = sender as FrameworkElement;
+            //// If you need the clicked element:
+            //// Item whichOne = senderElement.DataContext as Item;
+            //FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            //flyoutBase.ShowAt(senderElement);
         }
     }
 }
