@@ -379,16 +379,20 @@
                         </Flyout>
                     </Button.Flyout>
                     <Grid>
-                        <TextBlock 
-                                Text="{Binding Stream.Quality, Converter={StaticResource PlaybackQualityConverter}}"
-                                VerticalAlignment="Center" HorizontalAlignment="Center"
-                                FontSize="18"
-                                />
-                        <TextBlock Text="&#xEA3A;"
-                                VerticalAlignment="Center" HorizontalAlignment="Center"
-                                Margin="0,4,0,0"
-                                FontFamily="Segoe MDL2 Assets" FontSize="32"
-                                />
+                        <Border>
+                            <TextBlock 
+                                    Text="{Binding Stream.Quality, Converter={StaticResource PlaybackQualityConverter}}"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    FontSize="16"
+                                    />
+                        </Border>
+                        <Border>
+                            <TextBlock Text="&#xEA3A;"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Margin="0,6,0,0"
+                                    FontFamily="Segoe MDL2 Assets" FontSize="32"
+                                    />
+                        </Border>
                     </Grid>
                 </Button>
 
