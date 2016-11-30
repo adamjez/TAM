@@ -53,7 +53,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="RadioInfoPivotItem" x:DataType="models:RadioInfoModel">
-            <Grid Background="{StaticResource DarkerBackgroundColorBrush}" VerticalAlignment="Center">
+            <Grid Background="{StaticResource DarkerBackgroundColorBrush}" VerticalAlignment="Center" Padding="12">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="Foreground" Value="White" />
@@ -100,17 +100,15 @@
                 <Run Text="{x:Bind Address}"/>
                 </TextBlock>
 
-                <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1"
+                    <Button Grid.Column="0"
                             Tag="{Binding Facebook}"
                             Click="MediaButtonClick"
                             IsEnabled="{Binding Facebook, Converter={StaticResource IsNotEmptyConverter}}"
@@ -118,11 +116,11 @@
                             Width="50" Height="50"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Style="{StaticResource ButtonDisabledStyle}"
-                            Padding="0" Margin="0">
+                            Padding="0" Margin="10">
                         <Image Source="{Binding Facebook, Converter={StaticResource MediaIconConverter},ConverterParameter='facebook'}"
                                Stretch="UniformToFill"/>
                     </Button>
-                    <Button Grid.Column="2"
+                    <Button Grid.Column="1"
                             Tag="{Binding Twitter}"
                             Click="MediaButtonClick"
                             IsEnabled="{Binding Twitter, Converter={StaticResource IsNotEmptyConverter}}"
@@ -130,11 +128,11 @@
                             MaxWidth="50" MaxHeight="50"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Style="{StaticResource ButtonDisabledStyle}"
-                            Padding="0" Margin="0">
+                            Padding="0" Margin="10">
                         <Image Source="{Binding Twitter, Converter={StaticResource MediaIconConverter},ConverterParameter='twitter'}"
                                Stretch="UniformToFill"/>
                     </Button>
-                    <Button Grid.Column="3"
+                    <Button Grid.Column="2"
                             Tag="{Binding Gplus}"
                             Click="MediaButtonClick"
                             IsEnabled="{Binding Gplus, Converter={StaticResource IsNotEmptyConverter}}"
@@ -142,11 +140,11 @@
                             MaxWidth="50" MaxHeight="50"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Style="{StaticResource ButtonDisabledStyle}"
-                            Padding="0" Margin="0">
+                            Padding="0" Margin="10">
                         <Image Source="{Binding Gplus, Converter={StaticResource MediaIconConverter},ConverterParameter='gplus'}"
                                Stretch="UniformToFill"/>
                     </Button>
-                    <Button Grid.Column="4"
+                    <Button Grid.Column="3"
                             Tag="{Binding Youtube}"
                             Click="MediaButtonClick"
                             IsEnabled="{Binding Youtube, Converter={StaticResource IsNotEmptyConverter}}"
@@ -154,38 +152,11 @@
                             MaxWidth="50" MaxHeight="50"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Style="{StaticResource ButtonDisabledStyle}"
-                            Padding="0" Margin="0">
+                            Padding="0" Margin="10">
                         <Image Source="{Binding Youtube, Converter={StaticResource MediaIconConverter},ConverterParameter='youtube'}"
                                Stretch="UniformToFill"/>
                     </Button>
                 </Grid>
-                <!--<TextBlock Grid.Row="4" Grid.Column="0" Text="Facebook" Style="{StaticResource TextBlockRadioInfoStyle}"/>
-                <TextBlock Grid.Row="4" Grid.Column="1">
-                <Hyperlink NavigateUri="{x:Bind Facebook, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                    <Run Text="{x:Bind Facebook}" />
-                </Hyperlink>
-                </TextBlock>
-
-                <TextBlock Grid.Row="5" Grid.Column="0" Text="Twitter" Style="{StaticResource TextBlockRadioInfoStyle}"/>
-                <TextBlock Grid.Row="5" Grid.Column="1">
-                <Hyperlink NavigateUri="{x:Bind Twitter, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                    <Run Text="{x:Bind Twitter}"/>
-                </Hyperlink>
-                </TextBlock>
-
-                <TextBlock Grid.Row="6" Grid.Column="0" Text="Google+" Style="{StaticResource TextBlockRadioInfoStyle}"/>
-                <TextBlock Grid.Row="6" Grid.Column="1">
-                <Hyperlink NavigateUri="{x:Bind Gplus, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                    <Run Text="{x:Bind Gplus}"/>
-                </Hyperlink>
-                </TextBlock>
-
-                <TextBlock Grid.Row="7" Grid.Column="0" Text="YouTube" Style="{StaticResource TextBlockRadioInfoStyle}"/>
-                <TextBlock Grid.Row="7" Grid.Column="1" TextTrimming="CharacterEllipsis">
-                <Hyperlink NavigateUri="{x:Bind Youtube, Converter={StaticResource StringToUriConverter}}" Foreground="White">
-                    <Run Text="{x:Bind Youtube}"/>
-                </Hyperlink>
-                </TextBlock>-->
             </Grid>
         </DataTemplate>
 

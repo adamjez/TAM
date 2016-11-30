@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Views;
+using Microsoft.Toolkit.Uwp;
 using OnRadio.App.Messages;
 using OnRadio.App.Models;
 using OnRadio.App.Views;
@@ -91,7 +92,12 @@ namespace OnRadio.App.ViewModels
             _itemSelectedCommand ?? (_itemSelectedCommand = new RelayCommand<ItemClickEventArgs>(ItemSelected));
 
         public RelayCommand FilterListCommand =>
-            _filterListCommand ?? (_filterListCommand = new RelayCommand(FilterList));
+            _filterListCommand ?? (_filterListCommand = new RelayCommand(async () =>
+            {
+                Loading = true;
+                await Task.Run(FilterList);
+                Loading = false;
+            }));
 
         public RelayCommand AboutNavigateCommand =>
             _aboutNavigateCommand ?? (_aboutNavigateCommand = new RelayCommand(() => _navigationService.NavigateTo(nameof(About))));
@@ -107,7 +113,7 @@ namespace OnRadio.App.ViewModels
             _navigationService.NavigateTo(nameof(Player), arg.ClickedItem);
         }
 
-        public void FilterList()
+        public async Task FilterList()
         {
             IEnumerable<RadioModel> radios = RadioList;
             if (!string.IsNullOrEmpty(SearchString))
@@ -127,7 +133,10 @@ namespace OnRadio.App.ViewModels
                 ? radios.OrderByDescending(radio => radio.Listenters)
                 : radios.OrderBy(radio => radio.Title);
 
-            AllRadioList = new ObservableCollection<RadioModel>(radios);
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            {
+                AllRadioList = new ObservableCollection<RadioModel>(radios);
+            });
         }
 
         protected override async Task LoadData()

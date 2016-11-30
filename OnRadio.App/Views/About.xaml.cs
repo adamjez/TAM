@@ -21,7 +21,7 @@ namespace OnRadio.App.Views
             var packageId = package.Id;
             var version = packageId.Version;
 
-            AppName.Text = $"{packageId.Name}";
+            AppName.Text = $"On-Radio";
             Version.Text = $"Verze {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
 

@@ -12,7 +12,7 @@ namespace OnRadio.App.Converters
             //const string pauseIcon = "ms-appx:/Icons/pause.png";
 
             const string playIcon = "\uE102";
-            const string pauseIcon = "\uE15B";
+            const string pauseIcon = "\uE002";
 
             if (value is MediaPlaybackState)
             {

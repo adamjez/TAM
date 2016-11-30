@@ -8,6 +8,7 @@ namespace OnRadio.BL.Services
     public class LastRadiosStorage
     {
         private const string KeyRadiosHistory = "LastRadios";
+        private const int LastRadioCapacity = 10;
 
         public async Task Add(string id)
         {
@@ -20,7 +21,7 @@ namespace OnRadio.BL.Services
             }
             else
             {
-                lastRadios = new FIFOStack<string> {Capacity = 5};
+                lastRadios = new FIFOStack<string> {Capacity = LastRadioCapacity };
             }
 
             lastRadios.Push(id);

@@ -164,7 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlbumPlaceholder.png" />
-    <Content Include="Assets\Logo\logo-SplashScreen.png" />
     <Content Include="Assets\Logo\logo.png" />
     <Content Include="Assets\Logo\NewStoreLogo.scale-100.png" />
     <Content Include="Assets\Logo\NewStoreLogo.scale-125.png" />
