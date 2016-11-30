@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Messaging;
@@ -45,6 +46,14 @@ namespace OnRadio.App.Views
         private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
         {
             QualityFlyout.Hide();
+        }
+
+        private async void MediaButtonClick(object sender, RoutedEventArgs e)
+        {
+            var url = (string)((Button)sender).Tag;
+            var uri = new Uri(url);
+
+            await Launcher.LaunchUriAsync(uri);
         }
     }
 }

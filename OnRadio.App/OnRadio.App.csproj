@@ -118,8 +118,10 @@
     <Compile Include="Converters\BufferingToVisibilityConverter.cs" />
     <Compile Include="Converters\CollectionToHashtagStringConverter.cs" />
     <Compile Include="Converters\EmptyCollectionVisibilityConverter.cs" />
+    <Compile Include="Converters\IsNotEmptyConverter.cs" />
     <Compile Include="Converters\ListStreamQualityConverter.cs" />
     <Compile Include="Converters\PlaybackStateToEnabledConverter.cs" />
+    <Compile Include="Converters\MediaIconConverter.cs" />
     <Compile Include="Converters\RadioPinnedIconConverter.cs" />
     <Compile Include="Converters\PlaybackQualityConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
@@ -211,14 +213,14 @@
     <Content Include="Assets\Logo\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Logo\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\PlayCz.png" />
-    <Content Include="Icons\pause.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\play.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\star.png" />
-    <Content Include="Icons\star_blank.png" />
+    <Content Include="Icons\facebook.png" />
+    <Content Include="Icons\facebook_dis.png" />
+    <Content Include="Icons\gplus.png" />
+    <Content Include="Icons\gplus_dis.png" />
+    <Content Include="Icons\twitter.png" />
+    <Content Include="Icons\twitter_dis.png" />
+    <Content Include="Icons\youtube.png" />
+    <Content Include="Icons\youtube_dis.png" />
     <Content Include="OnRadioCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
