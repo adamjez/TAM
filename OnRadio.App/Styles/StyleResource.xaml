@@ -112,7 +112,7 @@
                                         <AdaptiveTrigger MinWindowWidth="500" />
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="HeaderClipper.HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Target="HeaderClipper.HorizontalContentAlignment" Value="Center" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
