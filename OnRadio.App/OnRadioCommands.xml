@@ -8,6 +8,7 @@
       <Example> Play Beat radio </Example>
       <ListenFor RequireAppName="BeforeOrAfterPhrase"> play {radio} [radio] </ListenFor>
       <ListenFor RequireAppName="ExplicitlySpecified"> play {radio} [radio] with {builtin:AppName} </ListenFor>
+      <ListenFor RequireAppName="ExplicitlySpecified"> play {radio} [radio] on {builtin:AppName} </ListenFor>
       <Feedback> Playing {radio} </Feedback>
       <Navigate />
     </Command>

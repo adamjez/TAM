@@ -51,6 +51,7 @@ namespace OnRadio.App.ViewModels
         private int _timerMinutes;
         private Timer _stopPlaybackTimer;
         private StreamModel.StreamQuality _selectedStreamQuality;
+        private bool _isTimerOpened;
 
         public RelayCommand OpenRadioListCommand =>
            _openRadioListCommand ?? (_openRadioListCommand = new RelayCommand(OpenRadioList));
@@ -133,6 +134,12 @@ namespace OnRadio.App.ViewModels
         {
             get { return _isHistoryLoading; }
             set { Set(ref _isHistoryLoading, value); }
+        }
+
+        public bool IsTimerOpened
+        {
+            get { return _isTimerOpened; }
+            set { Set(ref _isTimerOpened, value); }
         }
 
         public Timer StopPlaybackTimer
@@ -471,13 +478,14 @@ namespace OnRadio.App.ViewModels
             }
             else
             {
-                Messenger.Default.Send(new OpenDialogMessage(this, "TimerDialog"));
+                IsTimerOpened = true;
             }
         }
 
         public void RunTimer()
         {
-            Messenger.Default.Send(new CloseDialogMessage(this, "TimerDialog"));
+            IsTimerOpened = false;
+
             var dueTime = (TimerHours * 60 + TimerMinutes) * 60 * 1000;
             StopPlaybackTimer = new Timer(TimerStopPlayback, null, dueTime, 0);
             

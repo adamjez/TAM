@@ -13,6 +13,7 @@
     xmlns:controls1="using:OnRadio.App.Controls"
     xmlns:models="using:OnRadio.BL.Models"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:helpers="using:OnRadio.App.Helpers"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Player}"
     d:DataContext="{Binding Source={StaticResource DesignTimeViewModelLocator}, Path=Player}"
     mc:Ignorable="d">
@@ -438,7 +439,60 @@
                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                             Visibility="{Binding StopPlaybackTimer, Converter={StaticResource IsNotNullConverter}}"
                             Foreground="White"
-                            Style="{StaticResource BlinkingButton}"/>
+                            Style="{StaticResource BlinkingButton}"
+                            x:Name="OpenTimerButton">
+                        <Button.Flyout>
+                            <Flyout helpers:FlyoutHelper.IsOpen="{Binding IsTimerOpened, Mode=TwoWay}" 
+                                    helpers:FlyoutHelper.Parent="{Binding ElementName=OpenTimerButton}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Vypnout přehrávání za" FontSize="24"/>
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <ListView Grid.Column="0" Grid.Row="0" ItemTemplate="{StaticResource TimeValuesDataTemplate}" SelectedItem="{Binding TimerHours, Mode=TwoWay}">
+                                            <ListView.Items>
+                                                <x:Int32>0</x:Int32>
+                                                <x:Int32>1</x:Int32>
+                                                <x:Int32>2</x:Int32>
+                                                <x:Int32>3</x:Int32>
+                                            </ListView.Items>
+                                        </ListView>
+                                        <ListView Grid.Column="1" Grid.Row="0" ItemTemplate="{StaticResource TimeValuesDataTemplate}" SelectedItem="{Binding TimerMinutes, Mode=TwoWay}">
+                                            <ListView.Items>
+                                                <x:Int32>0</x:Int32>
+                                                <x:Int32>15</x:Int32>
+                                                <x:Int32>30</x:Int32>
+                                                <x:Int32>45</x:Int32>
+                                            </ListView.Items>
+                                        </ListView>
+                                        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="24">Hodin</TextBlock>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="24">Minut</TextBlock>
+                                    </Grid>
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="20"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="1" Command="{Binding RunTimerCommand}" Content="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                                        <Button Grid.Column="3" Command="{Binding CloseTimerCommand}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="32"/>
+                                    </Grid>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                     <Button x:Name="TimerButton"
                             Command="{Binding ToggleTimerCommand}"
                             IsEnabled="{Binding PlaybackSession.PlaybackState, Converter={StaticResource PlaybackStateToEnabledConverter}}"
