@@ -281,8 +281,12 @@ namespace OnRadio.App.ViewModels
                 // Loading different radio 
                 Clear();
             }
-            // Page navigated from Secondary Tile
-            Radio = new RadioModel() {Id = argument};
+
+            if (Radio == null)
+            {
+                // Page navigated from Secondary Tile
+                Radio = new RadioModel() { Id = argument };
+            }
         }
 
         private void Clear()
