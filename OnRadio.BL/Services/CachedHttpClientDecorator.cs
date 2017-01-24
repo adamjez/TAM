@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OnRadio.BL.Interfaces;
 using System.Diagnostics;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using OnRadio.DAL;
 
@@ -28,12 +29,11 @@ namespace OnRadio.BL.Services
 
             try
             {
-                var lifetime = JObject.Parse(result)["_lifetime"];
+                var lifetime = JToken.Parse(result).Value<int?>("_lifetime");
 
-                if (lifetime != null && lifetime.Type == JTokenType.Integer)
+                if (lifetime != null)
                 {
-                    var lifetimeNumber = lifetime.Value<int>();
-                    var expirationDate = DateTime.UtcNow.AddSeconds(lifetimeNumber);
+                    var expirationDate = DateTime.UtcNow.AddSeconds((int)lifetime);
 
                     LocalDatabaseStorage.InsertOrUpdateCachedData(url, Convert.ToDateTime(expirationDate), result);
                 }

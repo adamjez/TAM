@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="34181AdamJe.On-Radio" Publisher="CN=55EA1097-6F8D-417E-A427-32BB0FB55B06" Version="1.1.13.0" />
+  <Identity Name="34181AdamJe.On-Radio" Publisher="CN=55EA1097-6F8D-417E-A427-32BB0FB55B06" Version="1.1.15.0" />
   <mp:PhoneIdentity PhoneProductId="d03cbb96-b3f6-42c1-ad6f-d86aa1379e26" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>On-Radio</DisplayName>

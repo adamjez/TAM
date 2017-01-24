@@ -71,6 +71,23 @@ namespace OnRadio.App.ViewModels
         public RelayCommand CloseTimerCommand =>
             _closeTimerCommand ?? (_closeTimerCommand = new RelayCommand(CloseTimerDialog));
 
+        // Prioritize best quality
+        // See doc/aac-vs-mp3-quality-comparison.jpg
+        private static readonly List<Tuple<int, string>> OrderedStreamFormats = new List<Tuple<int, string>>
+            {
+                new Tuple<int, string>(256, "aac"),
+                new Tuple<int, string>(192, "aac"),
+                new Tuple<int, string>(320, "mp3"),
+                new Tuple<int, string>(160, "aac"),
+                new Tuple<int, string>(192, "mp3"),
+                new Tuple<int, string>(128, "aac"),
+                new Tuple<int, string>(160, "mp3"),
+                new Tuple<int, string>(96, "aac"),
+                new Tuple<int, string>(128, "mp3"),
+                new Tuple<int, string>(96, "mp3"),
+                new Tuple<int, string>(64, "aac"),
+                new Tuple<int, string>(64, "mp3"),
+            };
 
         public MusicInformation Information
         {
@@ -327,7 +344,6 @@ namespace OnRadio.App.ViewModels
             Radio = (await _musicService.GetRadiosAsync())
                 .FirstOrDefault(radio => radio.IsCorrect(Radio.Id));
 
-            // ToDo: handle this a show this in proper way
             if (Radio == null)
                 throw new RadioNotFoundException();
 
@@ -338,35 +354,20 @@ namespace OnRadio.App.ViewModels
 
         private async Task<StreamModel> LoadBestHighQualityStream(List<StreamFormatModel> formats)
         {
-            // Prioritize best quality
-            // See doc/aac-vs-mp3-quality-comparison.jpg
-            var orderedStreamFormats = new List<Tuple<int, string>>
+            if (formats.Count == 0)
             {
-                new Tuple<int, string>(256, "aac"),
-                new Tuple<int, string>(192, "aac"),
-                new Tuple<int, string>(320, "mp3"),
-                new Tuple<int, string>(160, "aac"),
-                new Tuple<int, string>(192, "mp3"),
-                new Tuple<int, string>(128, "aac"),
-                new Tuple<int, string>(160, "mp3"),
-                new Tuple<int, string>(96, "aac"),
-                new Tuple<int, string>(128, "mp3"),
-                new Tuple<int, string>(96, "mp3"),
-                new Tuple<int, string>(64, "aac"),
-                new Tuple<int, string>(64, "mp3"),
-            };
+                throw new ArgumentException("Cannot load high quality stream from zero formats",nameof(formats));
+            }
 
             StreamFormatModel selectedStream = null;
-            var selectedBitrate = 0;
             // Try to match any of those formats
-            foreach (var streamFormat in orderedStreamFormats)
+            foreach (var streamFormat in OrderedStreamFormats)
             {
                 var bitrate = streamFormat.Item1;
                 var format = streamFormat.Item2;
                 selectedStream = formats.FirstOrDefault(x => x.Bitrates.Contains(bitrate) && x.Format.ToLower() == format);
                 if (selectedStream != null)
                 {
-                    selectedBitrate = bitrate;
                     break;
                 }
             }
@@ -375,15 +376,19 @@ namespace OnRadio.App.ViewModels
             if (selectedStream == null)
             {
                 selectedStream = formats.OrderBy(x => x.Bitrates.Max()).First();
-                selectedBitrate = selectedStream.Bitrates.Max();
             }
-            var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedBitrate);
+
+            var stream = await _musicService.GetRadioStreamAsync(Radio.Id, selectedStream.Format, selectedStream.Bitrates.Max());
             stream.Quality = StreamModel.StreamQuality.High;
             return stream;
         }
 
         private async Task<StreamModel> LoadBestLowQualityStream(List<StreamFormatModel> formats)
         {
+            if (formats.Count == 0)
+            {
+                throw new ArgumentException("Cannot load low quality stream from zero formats", nameof(formats));
+            }
             // Prioritize lowest bitrate, if possible select AAC, then MP3 and lastly OGG
             // Because alphabetically AAC < MP3 < OGG, orderding by format string is sufficient
             var selectedStream = formats.OrderBy(x => x.Bitrates.Min()).ThenBy(x => x.Format.ToLower()).First();
@@ -396,6 +401,11 @@ namespace OnRadio.App.ViewModels
         public async Task LoadStreamAsync()
         {
             var formats = await _musicService.GetAllRadioStreamsAsync(Radio.Id);
+
+            if (formats.Count == 0)
+            {
+                throw new StreamsNotFoundException();
+            }
 
             Radio.Streams = new List<StreamModel>();
 
@@ -415,9 +425,14 @@ namespace OnRadio.App.ViewModels
             if (Radio.OnAir)
             {
                 var song = await _musicService.GetOnAirAsync(Radio.Id);
-                Information = song.CreateMusicInformation();
+                if (song != null)
+                {
+                    Information = song.CreateMusicInformation();
+                }
             }
-            else
+
+
+            if(Information == null)
             {
                 Information = Radio.CreateMusicInformation();
             }
@@ -432,6 +447,11 @@ namespace OnRadio.App.ViewModels
                 return;
 
             var song = await _musicService.GetOnAirAsync(Radio.Id);
+
+            if (song == null)
+            {
+                return;
+            }
 
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
@@ -488,7 +508,7 @@ namespace OnRadio.App.ViewModels
 
         public void RunTimer()
         {
-            IsTimerOpened = false;
+            CloseTimerDialog();
 
             var dueTime = (TimerHours * 60 + TimerMinutes) * 60 * 1000;
             StopPlaybackTimer = new Timer(TimerStopPlayback, null, dueTime, 0);
@@ -497,7 +517,7 @@ namespace OnRadio.App.ViewModels
 
         public void CloseTimerDialog()
         {
-            Messenger.Default.Send(new CloseDialogMessage(this, "TimerDialog"));
+            IsTimerOpened = false;
         }
 
         public void StopTimer()

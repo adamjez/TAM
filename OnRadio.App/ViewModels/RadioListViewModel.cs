@@ -115,6 +115,11 @@ namespace OnRadio.App.ViewModels
 
         public async Task FilterList()
         {
+            if (RadioList == null || RadioList.Count == 0)
+            {
+                return;
+            }
+
             IEnumerable<RadioModel> radios = RadioList;
             if (!string.IsNullOrEmpty(SearchString))
             {

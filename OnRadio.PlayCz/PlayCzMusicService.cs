@@ -80,7 +80,7 @@ namespace OnRadio.PlayCz
             }
             catch (HttpRequestException)
             {
-                return SongModel.CreateUndefined();
+                return null;
             }
         }
 

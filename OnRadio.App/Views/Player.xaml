@@ -313,11 +313,18 @@
 
                     <Grid Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0">
                         <Border Background="{StaticResource BackgroundColorBrush}">
-                            <ProgressBar IsIndeterminate="True"
+                            <Grid>
+                                <ProgressBar IsIndeterminate="True"
                                      Visibility="{Binding PlaybackSession.PlaybackState, Converter={StaticResource BufferingToVisibilityConverter}}"
                                      VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
                                      Foreground="White"
                                     />
+                                <ProgressBar IsIndeterminate="True"
+                                     Visibility="{Binding Loading, Converter={StaticResource BoolToVisibilityConverter}}"
+                                     VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"
+                                     Foreground="White"
+                                    />
+                            </Grid>
                         </Border>
                     </Grid>
 
